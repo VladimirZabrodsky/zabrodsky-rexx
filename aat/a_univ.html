@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2001-->
+<html lang="en">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<meta charset="windows-1250">
+<TITLE>Technique: Universal Unit</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Passing parameters, how to use function from album
+	with array global parameter, copy, interpret, value, array in string, externaldata queue "/>
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_univ.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_univ.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Technique: Universal Unit</h1><hr><br>
+<p>
+Assume the following task, we wish to find the median of the <code>B.</code> 
+array of size <code>N = 10001</code>. We can't use the straightforward solution, 
+for example the code of the <code><a href="a_modi.html#modifind">MODIFIND</a></code> 
+function because it works only with the <code>A.</code> array.
+<br><span class="green">Note to testing environment: </span>Windows 2000 Professional, 
+132MB RAM, processor x86Family 6 Mode 6 Stepping 5. 
+</p>
+<h2>First solution</h2><p>
+We rewrite the code of the <code>MODIFIND</code> function for work with 
+<code>B.</code> array. The program <code>PROGRAM1</code> displays on the screen the 
+result <code>0.698</code> seconds and values of medians. In practice we could write 
+a program for automatic changes of identifiers.
+
+<a name="test">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM1 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  S = S MODIFIND1(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND1: procedure expose B.
+parse arg N, K
+L = 1; R = N
+do while L &lt; R
+  X = B.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while B.I &lt; X; I = I + 1; end
+    do while X &lt; B.J; J = J - 1; end
+    W = B.I; B.I = B.J; B.J = W
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return B.K
+</code>
+</pre>
+</div>
+</p>
+<h2>Second solution</h2><p>
+First of all we will copy the <code>B.</code> array into the <code>A.</code> array 
+and then call the original <code><a href="a_modi.html#modifind">MODIFIND</a></code> 
+function. The <code>PROGRAM2</code> displays <code>0.912</code> seconds. In this 
+case we have to reserve the <code>A.</code> array for passing parameters.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM2 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  do J = 1 to N; A.J = B.J; end
+  S = S MODIFIND(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND: procedure expose A.
+...
+</code>
+</pre>
+</div> 
+
+
+</p>
+<h2>Third solution</h2><p>
+The name of the array is stored in the <code>Stemv</code> variable. In this case we 
+have to reserve only one variable for passing parameters - the <code>Stemv</code> 
+variable. The <code>PROGRAM3.1</code> using <code>interpret</code> statement 
+displays <code>0.793</code> seconds. It is really effective but hard to code 
+solution.  <code>PROGRAM3.2</code> using the <code>VALUE</code> function displays 
+<code>0.962</code> seconds. In this cases is the program code almost unreadable.
+
+<a name="3_1">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM3_1 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+StemV = 'B.'
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+S = S MODIFIND3_1(N, K)
+Total = Total + TIME("R")
+end
+say Total / 10 "seconds"; say S
+exit
+MODIFIND3_1: procedure expose (StemV)
+parse arg N, K
+L = 1; R = N
+interpret,
+'do while L &lt; R ;',
+  'X = 'StemV'K; I = L; J = R ;',
+  'do until J &lt; K | K &lt; I ;',
+    'do while 'StemV'I &lt; X; I = I + 1; end ;',
+    'do while X &lt; 'StemV'J; J = J - 1; end;',
+    'W = 'StemV'I; 'StemV'I = 'StemV'J;',
+    StemV'J = W;',
+    'I = I + 1; J = J - 1;',
+  'end;',
+  'if J &lt; K then L = I;',
+  'if K &lt; I then R = J;',
+'end;',
+'return 'StemV'K'
+
+
+/* PROGRAM3_2 */
+N = 10001; K = 5001; Stemv = "B."
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  S = S MODIFIND3_2(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "seconds"; say S
+exit
+MODIFIND3_2: procedure expose Stemv (Stemv)
+parse arg N, K
+L = 1; R = N
+do while L &lt; R
+  X = VALUE(Stemv || K); I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while VALUE(Stemv || I) &lt; X
+      I = I + 1
+    end
+    do while X &lt; VALUE(Stemv || J)
+      J = J - 1
+    end
+    W = VALUE(Stemv || I, VALUE(Stemv || J))
+    T = VALUE(Stemv || J, W)
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return VALUE(Stemv || K)
+</code>
+</pre>
+</div>
+
+
+</p>
+<h2>Fourth solution</h2><p>
+This is the first really general solution. <code>MODIFIND4</code> can be an internal 
+or external function. For special parameter passing, we use the external data queue. 
+The <code>PROGRAM4</code> displays <code>3.449</code> seconds.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM4 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  do J = 1 to N; queue B.J; end
+  S = S MODIFIND4(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND4: procedure
+parse arg N, K
+do J = 1 to N; pull A.J; end
+L = 1; R = N
+do while L &lt; R
+  X = A.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while A.I &lt; X; I = I + 1; end
+    do while X &lt; A.J; J = J - 1; end
+    W = A.I; A.I = A.J; A.J = W
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return A.K
+</code>
+</pre>
+</div>
+
+
+
+
+</p>
+<h2>Fifth solution</h2><p>
+
+Suppose the elements of <code>B.</code> array  are words. Then for passing 
+parameters, we can use a string as shown in the following program. It is second 
+general solution. Also, the <code>MODIFIND5</code> function can be coded as an 
+external routine.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM5 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  String = ""
+  do J = 1 to N
+    String = String B.J
+  end
+  S = S MODIFIND5(N, K, String)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND5: procedure
+parse arg N, K, String
+do J = 1 to N
+  parse var String A.J String
+end
+L = 1; R = N
+do while L &lt; R
+  X = A.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while A.I &lt; X; I = I + 1; end
+    do while X &lt; A.J; J = J - 1; end
+    W = A.I; A.I = A.J; A.J = W
+    I = I + 1; J = J - 1
+end
+if J &lt; K then L = I
+if K &lt; I then R = J
+end
+return A.K
+</code>
+</pre>
+</div>
+This program displays <code>12.825</code> seconds; with the external version of 
+<code>MODIFIND5</code> displays <code>12.885</code> seconds.
+</p>
+<h3>Conclusion</h3><p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COMPARISON OF METHOD
+
+Method  External?   Tool for transferring    Time   Disadvantage
+1          no	    none                     0.698  one routine for every array
+2          no	    array A.                 0.912  copy into A.
+3.1        no	    variable + INTERPRET     0.793  unreadable code
+3.2        no	    variable + VALUE	     0.962  unreadable code
+4          yes	    external data queue	     3.328  slower
+5          yes	    string                  12.825  slower, lexical analyse
+</code>
+</pre>
+</div>
+</p>
+<h3>Co-author</h3><p>
+Tobias Herp</a> - the solution <code>PROGRAM3_1</code>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+

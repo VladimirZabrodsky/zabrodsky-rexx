@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Matcher for real strings</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Fastest solution of string-matching problem 
+	for  real strings" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_simp.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_simp.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Matcher for real strings</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+The text is an array <code>T.1, T.2,..., T.N</code> and the pattern is an array 
+<code>P.1, P.2, ..., P.M</code>. The elements of <code>P.</code> and <code>T.</code>
+ are characters drawn from a finite alphabet <code>Sigma.</code>, <code>Sigma.</code>
+ is an array of <code>R</code> elements. We say that pattern <code>P.</code> occurs 
+ with shift <code>S</code> in text <code>T.</code> if 
+ <code>0 &lt;= S &lt;= N - M</code> and if  <code>T.SpJ=P.J</code>, where 
+ <code>SpJ</code> indicates <code>S + J</code>, for <code>J = 1, ..., M</code>. 
+ String-matching problem is  the problem of finding all valid shifts with which a 
+ given pattern occurs in a given text. 
+ 
+</p><br><h3>Algorithm</h3><p>
+When a text and a pattern are real strings (symbols of alphabet are real 
+characters
+ such as <code>'a'</code> or <code>X'0E'</code>), there is a natural solution by 
+ the <code>POS</code> built-in function of the Rexx language.
+</p><br>
+<h3>Practice</h3><p>
+In the first 320KB of <code>Text</code> (<code>REGINA.DOC</code>) finds 
+<code>REAL_STRING_MATCHER</code> all occurence of the pattren <code>Regina</code> 
+after 0.1 seconds. <code><a href="a_kmp.html#kmp_matcher">KMP_MATCHER</a></code> 
+makes the same after 406 seconds and  
+<code><a href="a_boye.html#boyer_moore_matcher">BOYER_MOORE_MATCHER</a></code> 
+after 89 seconds.
+<br>(Windows 2000 Professional 
+environment on the computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5)
+
+</p><br><h3>Implementace</h3><p>
+Unit: internal subroutine
+<br>&nbsp;
+<br>Parameters: a string <code>Text</code>, a string <code>Pattern</code>
+<br>&nbsp;
+<br>Output: displays on the screen <code>Pattern occurs with shift</code> <i>S</i> 
+for all valid shift <i>S</i>
+
+<a name="real_string_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+REAL_STRING_MATCHER: parse arg Text, Pattern
+do F = 0 until F = 0
+  F = POS(Pattern, Text, F + 1)
+  if F &gt; 0 then
+    say "Pattern occurs with shift" F - 1
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+STRING-MATCHING PROBLEM
+<br><a href="a_naiv.html">Naive string matcher</a>
+<br>
+<br><a href="a_boye.html">Boyer-Moore algorithm</a>
+<br>
+<br><a href="a_kmp.html">Knuth-Morris-Pratt matcher</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,754 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2021-->
+<HTML lang="en">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+	<TITLE>refleXXio</TITLE>
+	<link rel="icon" 
+		type="image/x-icon" 
+		href="favicon.ico" />
+	<META name="DESCRIPTION" content="Reflections on the programming are inspired by work on the Album of Algorithms and Techniques,
+	finding 10000-th Fibonacci number, WEndy Krieger, short circuiting in rexx?, p+n trick by Walter Pachl, Kavan's inspiration, 
+	Rexx code tends to run slowly?, from pseudocode to program, awesome probability theory" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../vzstyle.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html"    class="active">refleXXio</a>
+    <a href="../cz_aat/reflexio.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<p>
+<h1><span class="grey lowercase">refle</span><span class="reflexio">XX</span><span class="grey lowercase">io</span></h1><p>
+
+Reflections, from Late Latin <i>reflexio</i>, on the programming are inspired by work on the Album 
+of Algorithms and Techniques for Standard Rexx.
+<br></p>
+<hr>
+<br>
+<h2>Contents</h2><p>
+<span class="red">&psi;</span><a href="#fib10000">FINDING <i>10000</i>-TH FIBONACCI NUMBER</a>
+<br>
+<br><span class="red">&psi;</span><a href="#andor">SHORT CIRCUITING IN REXX?</a>
+<br>
+<br><span class="red">&psi;</span><a href="#accuracy">P+<I>N</I> TRICK BY WALTER PACHL</a>
+<br>
+<br><span class="red">&psi;</span><a href="#kavan">KAVAN'S INSPIRATION</a>
+<br>
+<br><span class="red">&psi;</span><a href="#slowly">REXX CODE TENDS TO RUN SLOWLY?</a>
+<br>
+<br><span class="red">&psi;</span><a href="#pseudocode">FROM PSEUDOCODE TO PROGRAM</a>
+<br>
+<br><span class="red">&psi;</span><a href="#prob">AWESOME PROBABILITY THEORY</a>
+</p>
+<br>
+<hr>
+<br>
+<h2>4th July 2021</h2><p>
+<a name="fib10000">&nbsp;</a>Practice with <a href="a_memfis.html">Wendy Krieger's 
+functions</a> 
+<br><br>
+<H3>Finding <i>10000</i>-th Fibonacci number</h3><p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* 10000th term of Fibonacci sequence
+33644764876431783266621612005107543310302148460680063906564769974680081442166662
+36815559551363373402558206533268083615937373479048386526826304089246305643188735
+45443695598274916066020998841839338646527313000888302692356736131351175792974378
+54413752130520504347701602264758318906527890855154366159582987279682987510631200
+57542878345321551510387081829896979161312785626503319548714021428753269818796204
+69360978799003509623022910263681314931952756302278376284415403605844025721143349
+61180023091208287046088923962328835461505776583271252546093591128203925285393434
+62090424524892940390170623388899108584106518317336043747073790855263176432573399
+37128719375877468974799263058370657428301616374089691784263786242128352581128205
+16370298089332099905707920064367426202389783111470054074998459250360633560933883
+83192338678305613643535189213327973290813373264265263398976392272340788292817795
+35805709936910491754708089318410561463223382174656373212482263830921032977016480
+54726243842374862411453093812206564914032751086643394517512161526545361333111314
+04243685480510676584349352383695965342807176877532834823434555736671973139274627
+36291082106792807847180353291311767789246590899386354593278945237776744061922403
+37638674004021330343297496902028328145933418826817683893072003634795623117103101
+29195316979460763273758925353077255237594378843450406771555577905645044301664011
+94625809722167297586150269684431469520346149322911059706762432685159928347098912
+84706740862008587135016260312071903172086094081298321581077282076353186624611278
+24553720853236530577595643007251774431505153960090516860322034916322264088524885
+24331580515348496224348482993809050704834824493274537326245677558790891871908036
+62058009594743150052402532709746995318770724376825907419939632265984147498193609
+28522394503970716544315642132815768890805878318340491743455627052022356484649519
+61124602683139709750693826487066132645076650746115126775227486215986425307112984
+41182622661057163515069260029861704945425047491378115154139941550671256271197133
+25276363193960690289565028826860836224108205056243070179497617112123306607331005
+9947366875
+*/
+call TIME("R")
+K = 10000 /* Kth term Fibonacci sequence, for K = 10000 */
+/* number of digits in the 10000th Fibonacci number using Binet’s Formula: */
+C = CEILING(K * LN((1 + SQRT5())/2)/LN10() - (LN(5)/2)/LN10())
+numeric digits C
+p = 10 ** C
+WF10000 = FIBONMOD(K, P)
+say TIME("R") "sec"
+/* my PC with Intel Pentium Gold 5400, 16GB RAM displays 0.033 sec - 0.040 sec */
+V = ""
+do i = 2
+  S = SOURCELINE(i)
+  if S = "*/" then leave
+  V = V || SOURCELINE(i)
+end
+if WF10000 == V then say "OK!"
+exit
+</code>
+</pre>
+</div>
+</p>
+<br>
+<br>
+<hr>
+<a name="andor">&nbsp;</a>
+<h2>14th September 2001</h2><p>
+I sent the first version of following article to comp.lang.rexx on 13th September
+<br>
+<h3>Short circuiting in Rexx?</h3>
+<h4>1. Reason for my reflexion</h4><p>
+Walter Pachl from Vienna found the error in the HEAPSORT
+implementation, which was included in my Album of algorithms and
+techniques:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+HEAPSORT: procedure expose A.
+parse arg N
+do I = N % 2 to 1 by -1
+  call SIFT I, N
+end
+do I = N to 2 by -1
+  W = A.1; A.1 = A.I; A.I = W
+  call SIFT 1, I - 1
+end
+return
+
+SIFT: procedure expose A.
+parse arg L, R
+I = L; W = A.I; J = 2 * I
+Jp1 = J + 1
+if J &lt; R & A.J &lt; A.Jp1 then J = Jp1
+do while J &lt;= R & W &lt; A.J
+  A.I = A.J; I = J; J = 2 * I
+  Jp1 = J + 1
+  if J &lt; R & A.J &lt; A.Jp1 then J = Jp1
+end
+A.I = W
+return
+</code>
+</pre>
+</div>
+The code of the <code>SIFT</code> procedure is invalid. It will cause the 
+<code>NOVALUE</code> condition in 
+course evaluation of the <code>J&lt;R &amp; A.J&lt;A.Jp1</code> expression
+for <code>R = N</code> and <code>J = N</code> because variable <code>A.Jp1</code>, where <code>Jp1 = N + 1</code>, is
+uninitialized for the array <code>A.1,...,A.N</code>
+I returned to the original version of Niklaus Wirth's program in the
+book <i>Algorithms and data structure</i>, Prentice Hall, 1986. This is
+almost the same code but Wirth's program is written in Modula and
+there is the difference between Rexx and Modula in evaluation of
+expressions with logical operators AND and OR. In Rexx for <code>A &amp; B</code>, 
+<code>A |
+B</code> both operands are always evaluated. In Modula this expressions are
+evaluated in short circuit fashion, which means the second operand may
+not be evaluated if the first operand can determine the outcome.
+</p>
+<h4>2. Normal logical AND, OR and short circuit logical AND, OR
+</h4><p>
+<b>2.1:</b> According ANSI X3J18-199X 7.4.8 the expression <code>lhs &amp; rhs</code>
+ ("<code>&amp;</code>" is
+the normal logical AND operator) is evaluated
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+if rhs \== '0' then
+  if rhs \== '1' then call #Syntax_error
+Value='0'
+if lhs == '1' then
+  if rhs == '1' then Value='1'
+</code>
+</pre>
+</div>
+<b>2.2:</b> Likewise <code>lhs | rhs</code> ("<code>|</code>" is the normal logical 
+OR operator) is
+evaluated
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+if rhs \== '0' then
+  if rhs \== '1' then call #Syntax_error
+Value='1'
+if lhs == '0' then
+  if rhs == '0' then Value='0'
+</code>
+</pre>
+</div>
+For evaluation of AND or OR we can use another, more effective
+algorithm. I propose to denote this short circuit AND, OR operators as
+"<code>&amp;*</code>" and "<code>|*</code>". The asterisk means: "zero or one next 
+operand will
+evaluated".
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+Value=lhs
+if Value then do
+  if rhs \== '0' then
+    if rhs \== '1' then call #Syntax_error
+  Value=rhs
+end
+</code>
+</pre>
+</div>
+<b>2.4:</b> And likewise <code>lhs |* rhs</code> is evaluated
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+Value=lhs
+if \lhs then do
+  if rhs \== '0' then
+    if rhs \== '1' then call #Syntax_error
+  Value=rhs
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>3. Short curcuit AND, OR operators in present-day classic Rexx</h4><p>
+Suppose that <code>{S}</code> is a (long) sequence of statements then equivalent
+code to code with "<code>&amp;*</code>" and "<code>|*</code>" follows (statements 
+written on one row).
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+3.1: if A &amp;* B then {S} <span class="green">(is equivalent to)</span>
+           if A then if B then {S}
+
+3.2: do while A &amp;* B; {S}; end <span class="green">(is equivalent to)</span>
+           do while A; if B then {S}; end
+
+3.3: if A |* B then {S} <span class="green">(is equivalent to)</span>
+3.3.1:       do 1; if \A then if \B then leave; {S}; end
+or 3.3.2:     do 1; if \A then if \B then iterate; {S}; end
+or 3.3.3:     if A then {S}; else if B then {S}
+or 3.3.4:     if A then call SUB; else if B then call SUB
+                          <span class="green">where the SUB subroutine is</span>
+                          SUB: {S}; return
+
+3.4: do while A |* B; {S}; end <span class="green">(is equivalent to)</span>
+     do forever; if \A then if \B then leave; {S}; end
+</code>
+</pre>
+</div>
+<br></p>
+<p class="green">REVIEW AND NOTES</p><br>
+<p>3.1 and 3.2 are readable; maybe also 3.4. Really problem
+ is 3.3 case.
+3.3.1 and 3.3.2 are almost not readable; 3.3.3 is not suitable for
+often changed <code>{S}</code>. And 3.3.4? - one subroutine into the bargain, it is
+not elegant ...
+<br>
+<h4>4. Good examples of using short circuit AND, OR
+</h4><p>
+<b>4.1:</b> Now it is easy to translate from Modula to Rexx. In case 
+<code>HEAPSORT</code>
+can be the result optimized, for example, thanks bypassing evaluation
+of <code>A.J &lt; A.Jp1</code> when <code>J &gt;= R</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+...
+SIFT: procedure expose A.
+...
+if J &lt; R &amp;* A.J &lt; A.Jp1 then J = Jp1
+do while J &lt;= R &amp;* W &lt; A.J
+  ...
+  if J &lt; R &amp;* A.J &lt; A.Jp1 then J = Jp1
+end
+...
+</code>
+</pre>
+</div></p>
+<h4>Generalization:</h4><p>
+<br>- Facilitation of a translation of short circuiting from Ada, C, C++,
+GNU Pascal, Java, JavaScript, Lisp, Modula, Perl, VAX Pascal, VB.Net
+to Rexx and, of course, vice versa.
+<br>- More effective code.
+<br>
+<br>
+<b>4.2:</b> It gives us a possibility to express short circuiting in clear
+form. Some typical examples follow
+<br><br>
+<b>4.2.1</b> <code>if N &lt;&gt; 0  &amp;*  M / N &gt; 0 then ...</code>
+<br>
+<br><b>4.2.2</b> <code>if (I = 0) |* (J = 1 / I) then ...</code>
+<br>
+<br><b>4.2.3</b>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+IsPersonEligibleForThisJob: procedure
+parse arg Person
+if AGE(Person) &gt; 18 &amp;* IQTEST() &gt; 138
+  then do; ...; return 1; end
+  else do; ...; return 0; end
+</code>
+</pre>
+</div>
+Note: the <code>IQTEST</code> function is online interactive long-term
+computerized test.
+<br>
+<br><b>4.2.4</b>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+IsPersonEligibleForThisJob: procedure
+parse arg Person
+if RESULT_IQTEST(Person) &gt;> 138 |* IQTEST() &gt; 138
+  then do; ...; return 1; end
+  else do; ...; return 0; end
+</code>
+</pre>
+</div>
+Note: the <code>RESULT_IQTEST</code> function returns <code>""</code> or a number, 
+a number
+is result of the last IQ-test.
+<br><br>
+Generalization:
+<br>- More safe code.
+<br>- More simple code
+<br>- More readable code.
+</p>
+<h4>5. Good reasons for using of normal logical AND, OR</h4>
+<p>
+<b>5.0:</b> Of course, there are enormous amount of perfect working programs
+with "<code>&amp;</code>" and "<code>|</code>" around world.
+<br>
+<br><b>5.1:</b> Evaluation both operands can be useful in process debugging. 
+<br>
+<br><b>5.2:</b> There are situations when both operands have to be evaluated.
+I.e. case when second operand contains side effect. See the following
+segment of program. This copies part of file <code>Infile</code> behind the line
+with value <code>String</code> to file <code>Outfile</code>. It may be useful. 
+With "<code>|*</code>" operand
+it is only an ordinary never ending loop.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+...
+do until LINES(Infile) = 0 | LINEIN(Infile) = String
+end
+do while LINES(Infile) &lt;&gt; 0
+   call LINEOUT Outfile, LINEIN(Infile)
+end
+...
+</code>
+</pre>
+</div>
+</p>
+<h4>6. Conclusion</h4><p>
+
+I found in literature 4 ways of using the logical operators AND, OR in
+programming languages
+<br>
+<br><b>6.1</b> - only the normal logical AND, OR operators which always evaluate
+both arguments (Rexx, Pascal, Visual Basic, WEbScript)
+<br>
+<br><b>6.2</b> - only the short circuit logical AND, OR (JavaScript, C, C++,
+Lisp, Modula, Perl)
+<br>
+<br><b>6.3</b> - the logical AND, OR are either normal or short circuit. It is
+given by compiler directive (GNU Pascal).
+<br>
+<br><b>6.4</b> - the logical normal and the logical short circuit AND, OR
+operators are used (Ada, VAX Pascal, Java, MATVEC, Octave, VB.Net)
+<br><br>
+I think, from 4th and 5th chapters of this article is obvious that
+<b>6.4th</b> way could be fine for up-to-date languages rich with tradition
+as Rexx is.
+<br></p>
+<br><h4>7. Appendix</h4><p>
+<b>7.1</b> Thanks to Walter Pachl for inspiration.  
+<br>
+<br><b>7.2</b> The collection of articles "<i>Comparing and Assessing Programming
+Languages Ada, C and Pascal</i>" (editors A.R.Feuer, N.Gehani,
+Prentice-Hall, 1984) includes example 4.2.1, solution 3.1, the warning
+of "<code>J&lt;R &amp; A.J&lt;A.Jp1</code>"-type (error in my old <code>HEAPSORT</code>) all in a
+critique of missing short circuiting in Pascal.
+<br>
+<br><b>7.3</b> Martin Lafaix: <a href="http://lafaix.online.fr/netrexx/WD-miscproposals.html"   
+onClick=openWindow() target="windowname">"<i>Proposals for NetRexx [2000-07-04]</i>"</a>; chapter 5
+Short-circuit logical operators - brief suggestion of adding
+short-circuit logical operators "<code>&amp;&amp;&amp;</code>" and "<code>|||</code>" to NetRexx. It
+includes solution 3.3.3. BTW why I use "<code>&amp;*</code>" and "<code>|*</code>" 
+instead "<code>&amp;&amp;&amp;</code>" and
+"<code>|||</code>"? Because "<code>&amp;*</code>", "<code>|*</code>" are mignon ...
+<br>
+<br><b>7.4</b> There is very interesting opposite view by Tom Christiansen, 
+(i.e. arguments against normal logical OR to Perl where only
+short-circuit logical OR is used) 
+<br>
+
+
+<br><b>7.5</b> Following table shows symbols of logical operators in chosen
+programming languages:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+operation              MATVEC	Java	VB.Net	   Ada
+normal AND              .&&   	 &       And       and
+normal OR               .||  	 |       Or        or
+short circuit AND       &&      &&       AndAlso   and then
+short circuit OR        ||      ||       OrElse    or else
+</code>
+</pre>
+</div>
+<hr>
+<br>And there is Mike Cowlishaw's reply in comp.lang.rexx 25 September 2001:
+<br><cite>Nice analysis.  See also the short circuiting approach which I used in 
+NetRexx...</cite>
+
+<br>
+Mike Cowlishaw
+<br>
+<br>
+Let me introduce NetRexx's material here:
+
+
+<br>
+<br>
+
+<b>If and when
+enhancements</b>
+<br>
+The <code>if</code> clause in the <code>if</code> instruction 
+[NRL 80] and the <code>when</code> clause in the <code>select</code> instruction [NRL 108] 
+both have the same form and serve the same purpose, which is to test a value 
+either for being 1 or (for a <code>when</code> clause in a <code>select case</code> 
+construct) being equal to the <code>case</code> expression. 
+<br>In both <code>if</code> and <code>when</code> clauses multiple expressions may now be 
+specified, separated by commas. These are evaluated in turn from left to right, 
+and if the result of any evaluation is 1 (or equals the <code>case</code> expression) 
+then the test has succeeded and the instruction following the associated 
+<code>then</code> clause is executed. 
+<br>Note that once an expression evaluation has resulted in a successful test, no 
+further expressions in the clause are evaluated. So, for example, in: <br><code>  -- assume 'name' is a string
+  <br>if name=null, name='' then say 'Empty'
+</code>
+<br>then if <code>name</code> does not refer to an object it will compare equal to 
+null and the <code>say</code> instruction will be executed without evaluating the 
+second expression in the <code>if</code> clause. 
+</p>
+<br>
+
+
+
+<br><hr>
+
+<h2>1st July 2001</h2>
+<a name="accuracy">&nbsp;</a><br>
+<h3>P+<I>N</I> TRICK BY WALTER PACHL</h3> 
+<p>Walter Pachl sent me mail: <cite>... My versions of your algorithms 
+(<code>SIN</code>) that I did a couple of years ago applied the trick to compute 
+the function to a precision of 
+<code>P + 2</code> when a precision of <code>P</code> was asked for and rounded the 
+result to precision <code>P</code>.
+I did not do any error analysis --- the <code>+2</code>  was rather chosen 
+heuristically.</cite> 
+<br><br>
+The following program by Walter Pachl proofs that his technique is useful for the calculation of  
+<code>SIN</code> function (of course, also for <code>COS</code>, 
+<code>LN</code>, <code>SQRT</code>, etc.) 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do P = 30 to 35
+  call Test P
+end
+exit
+TEST: procedure
+parse arg P
+numeric digits P
+say 'Yours ' SIN(0.6, P)
+say 'should be ' (SIN(0.6, P + 2) + 0)
+say ' '
+return
+</code>
+</pre> 
+</div>
+<br>
+More, the program gives different results in different implementations. Hence it follows: First -  Pachl's trick is the intelligent technique for debugging and using numerical programs! Secondly - For the 
+<code>SIN</code> function (<code>COS</code>, <code>LN</code>, 
+<code>SQRT</code>, ...) the statements
+<code class="wrap">numeric digits P; say SIN(X, P + N) + 0</code>
+give the result with <code>P</code> significant digits for a "sufficient" large 
+<code>N</code>, where <code>0 &lt;= N</code>.
+<br>Examples:
+<br>for the <code>SIN</code> function and <code>P = 9</code>:
+<br>if <code>X = 0.6</code> then <code>N</code> has to be <code>2</code>
+<br>if <code>X = 355</code> then <code>N</code> has to be even <code>7</code>, 
+because:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN(355, 9) + 0 = -0.000029987
+SIN(355,10) + 0 = -0.0000301545
+SIN(355,11) + 0 = -0.0000301432200
+SIN(355,12) + 0 = -0.0000301443310
+SIN(355,13) + 0 = -0.0000301443963
+SIN(355,14) + 0 = -0.0000301443526
+SIN(355,15) + 0 = -0.0000301443532
+SIN(355,16) + 0 = -0.0000301443534
+...
+SIN(355,99) + 0 = -0.0000301443534
+</code>
+</pre> 
+</div>
+<hr>
+<a name="kavan">&nbsp;</a>
+<h2>4th March 2001</h2>
+<br>
+<h3>KAVAN'S INSPIRATION</h3><p>
+W. Kavan introduces in his <i>Mathematics Written in Sand</i> the following example:
+<br><br>
+<code>729**33.5 = 729**(67/2) = (243*3)**(67/2) = <br>= (3*3*3*3*3*3)**(67/2) = 
+3**(3*67) = 3**201</code>
+<br><br>
+But <cite>... recent hand-held Hewlett-Packard calculators that accept and deliver data to 
+10 sig. dec. produce two results, </cite><code>729**33.5 = 7.6841966E95</code> 
+<br><i>and</i> 
+<br><code>3**201 = 7.968419664E95</code>
+<br><br>
+ <code><a href="a_powe.html#repower">REPOWER</a>(729,33.5,10)</code> in version with 
+ row:
+ <br>
+<br><code>if P = "" then P = 9; numeric digits P</code>
+<br>
+<br>gives the result <code>7.96841935E+95</code>. W. Kahan writes: 
+<cite>... here too would have required that  intermediate calculations be carried to
+ more than the 13 sig. dec.</cite> 
+<br>Hence I changed the code of the <code>REPOWER</code> function:
+<br>
+<br><code>if P = "" then P = 9; numeric digits P</code>
+<br>
+<br>The following program 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do P = 3 to 10
+  numeric digits P
+  say P REPOWER(729, 33.5, P) + 0
+end
+</code>
+</pre> 
+</div>
+<br>displays results, which the following table describes:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+P	    result
+3	    7.97E+95
+4	    7.968E+95
+5	    7.9684E+95
+6	    7.96842E+95
+7	    7.968420E+95
+8	    7.9684197E+95
+9	    7.96841967E+95
+10	    7.968419666E+95
+</code>
+</pre> 
+</div>
+<hr>
+<a name="slowly">&nbsp;</a>
+<h2>30th January 2000</h2>
+<h3>REXX CODE TENDS TO RUN SLOWLY?</h3>
+<p>
+I read the algorithm of J. M. Borwein and P. B. Borwein for computation of <i>Pi</i>;
+ I wrote and debugged program <a href="a_pi.html#pi"><code>PI</code></a>
+ (about 20 minutes); I ran this program for computation of 
+the number <i>Pi</i> to thousand decimal places (about <code>90</code> seconds). 
+<br>"<i>Rexx code tends to run slowly.</i>", hm ... we say 
+<i>speed of computation</i> but we think <i>speed of finding of answer, 
+solution</i>.
+<br>
+<hr>
+<a name="pseudocode">&nbsp;</a>
+<h2>26th February 2000</h2>
+<h3>FROM PSEUDOCODE TO PROGRAM</h3>
+<p>
+<cite>It isn't a trivially job to translate algorithms from various  pseudocodes or 
+programming languages as Ada, ALGOL, BASIC, C, FORTRAN, Modula, Pascal, PL/1, into
+the useful code in the Rexx language.</cite>
+<br><br>I translated the Donald E. Knuth's code for 
+<a href="a_mmx.html#winograd_matrix_mult">Winograd's matrix multiplication</a> 
+(Chapter 4.6.4, <i>The Art of Computer Programming, Volume 2</i>)
+<br>
+<br><img src="winocode.gif" alt="Code of Winograd's matrix multiplication" width=436 height=225 align=center border=0>
+<br>
+<br>There is an old programmers rule: <cite>If some of the code does exactly the 
+same thing, extract it from within loops</cite>. Coding of Winograd's algorithm was 
+the hardest case of such extraction in my practice. This is the solution 
+(schematic record).
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Odd = N // 2
+do K = 1 to R; compute bk; end
+do I = 1 to M
+  compute A = ai
+  do K = 1 to R
+    zik = 0
+    if Odd then zik = ain * bnk
+    do J = 1 to N % 2
+      compute (xi,2j + y2j-1,k) * (xi,2j-1 + y2j,k)
+    end
+    zik = zik - A - bk
+  end K
+end I
+</code>
+</pre> 
+</div> 
+I persuade of corectness of my solution by counting of multiplication operations. Their number has to be 
+<br><br><code>FORMAT(N/2,,0)*M*R + (N%2)*(M+R)</code>.<br>
+<br></p>
+<hr>
+<a name="prob">&nbsp;</a>
+<h2>27th February 2000</h2>
+<h3>AWESOME PROBABILITY THEORY</h3>
+<p>
+Does the <code>RANDOM</code> built-in function give the real good pseudorandom 
+numbers? We can use the special tests as chi-square test or Kolmogorov-Smirnov test. 
+But there are many more amusing ways. <br>E. Cesaro's 
+theorem (1881) says: 
+If <code>A</code> and <code>B</code> are integers chosen at random, the probability 
+that <code>GCD(A,B)=1</code> is <code>6/PI()**2</code>.
+<br>Note 1: 
+<code>6/<a href="a_pi.html#pi">PI</a>()**2=0.607927099...</code>
+<br>Note 2: For detailed description see <code><a href="a_eucl.html#euclid">GCD</a>
+</code> and <code><a href="a_pi.html#pi">PI</a></code>
+<br>You can try the following program as a test your routine for generation of 
+pseudorandom numbers.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+parse arg N
+P = 0
+do i = 1 to N
+  A = RANDOM(0, 100000); B = RANDOM(0, 100000)
+  if NSD(A, B) = 1 then P = P + 1
+end
+say P / N
+exit
+...
+</code>
+</pre> 
+</div>
+Results are included in the table for <code>N=10, 100, 1000, 10000, 100000</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N                 approach to 0.607927099
+10**1	          0.6
+10**2	          0.62
+10**3	          0.615
+10**4	          0.6128
+10**5	          0.60887
+10**6	          0.607846
+</code>
+</pre>
+</div>
+<br>
+<br>And additional example. The average number of swaps for <code>
+<a href="a_modi.html#modifind">MODIFIND</a></code> is
+<br>
+<br>
+<code><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub><font size=-1>N</font></sub>
+ - (<i>N</i> - <i>K</i>)<i>H</i><sub><font size=-1>N - K + 1</font></sub>
+ - (<i>K</i> - 1)<i>H</i><sub><font size=-1>K</font></sub></i>)</b></font></code>
+<br>
+<br>Where <br>
+<br>
+<code><i>H</i><sub><font size=-1>N</font></sub> = 1 + 1/2 + ... + 1/<i>N</i></b></code>
+
+<br>
+
+
+<br>For <code>N = 1001; K = 500</code> and input array created by 
+<code>do J = 1 to N; A.J = RANDOM(1, 100000); end</code> 
+we will compute the average number of swaps after <code>NR</code> runs of the 
+program.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NR                 approach to 353.311
+10**1	           370.2
+10**2	           354.23
+10**3	           352.171
+10**4	           353.234
+</code>
+</pre>
+</div>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

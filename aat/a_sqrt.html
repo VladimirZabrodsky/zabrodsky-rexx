@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2001-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Square root of positive real numbers</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="The square root of a positive number N can be 
+	computed with Newton's formula" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_sqrt.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_sqrt.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Square root of positive real numbers</h1><hr>
+<h3>Algorithm</h3><p>
+The square root of a positive real number <code>N</code> can be computed with 
+Newton's formula: 
+<br>
+<br><code>New = 0.5 * (X + N / X)</code>
+<br><br>
+where <code>X</code> above starts with a "reasonable" guess, e.g. 
+<code>(1+N)/2</code>. It computes the square root until the absolute value of 
+difference of two adjacent guess values is less than the tolerance value. Newton's 
+iteration  algorithm  converges quadratically to the root.
+</p><br>
+<h3>Implementation</h3><p>
+Unit: 
+  internal function, external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Parameters: a positive real number <code>N &gt; 0</code>, 
+a positive integer <code>P</code> - number of significant digits of 
+<code>SQRT(N)</code>, default is <code>9</code>
+<br>&nbsp;
+<br>Returns: the first <code>P</code> significant digits of <code>SQRT(N)</code>
+
+
+<a name="sqrt">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SQRT: procedure
+parse arg N, P
+if P = "" then P = 9; numeric digits P
+parse value FORMAT(N,,,,0) with N "E" Exp
+if Exp = "" then Exp = 0
+if (Exp // 2) <> 0 then
+  if Exp &gt; 0
+    then do; N = N * 10; Exp = Exp - 1; end
+    else do; N = N / 10; Exp = Exp + 1; end
+X = 0.5 * (N + 1)
+do forever
+  NewX = 0.5 * (X + N / X)
+  if X = NewX then return X * 10 ** (Exp % 2)
+  X = NewX
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>Example</h4><p>
+The following program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+say SQRT(2)
+numeric digits 20
+say SQRT(2, 18)
+exit
+SQRT: procedure
+...
+</code>
+</pre>
+</div>
+displays on the screen 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+1.41421356
+1.41421356237309505
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<div class=t><a href="a_gamma.html">Euler's constant gamma</a>
+<br>
+<br><a href="a_e.html">Euler's number e</a>
+<br>
+<br><a href="a_pi.html">Number Pi</a>
+<br>
+<br><a href="a_ln.html">Natural logarithms</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trick by Walter Pachl</a> in <a href="reflexio.html">refle<span class="reflexio">XX</span>io</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

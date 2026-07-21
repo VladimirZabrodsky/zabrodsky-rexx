@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2001-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Sine and cosine functions</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computing the sine and cosine functions,
+	factorial, Pi number, P+n trick Walter Pachl." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_sin.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_sin.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>SIN(X) and COS(X)</h1>
+<hr>
+<h3>Algorithm</h3><p>
+<br>The <code>SIN(X)</code> function for any numeric 
+<code>X</code> (<i>in radians</i>) is computed by the formula:
+<br>
+<br><code>X - (X**3/FACT(3)) + (X**5/FACT(5)) - (X**7/FACT(7)) + ...</code>
+<br>
+<br>where <a href="a_fact.html#fact"><code>FACT</code></a> is the 
+<a href="a_fact.html">factorial</a> function. 
+ It computes the sine until the   last computed term is less than the tolerance value.
+ Likewise the <code>COS(X)</code> 
+ function  is computed by the formula:
+<br> 
+ <br><code>1 - (X**2/FACT(2)) + (X**4/FACT(4)) - X**6/FACT(6)) + ...</code>
+ <br>
+<br>We will use the following formulas for computing the sine or cosine function:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN(-X) = -SIN(X)	   SIN(2*Pi+X) = SIN(X)
+COS(-X) =  COS(X)	   COS(2*Pi+X) = COS(X)
+ 
+<span class="red">for X from (Pi, 2*Pi)      for X from (Pi/2, Pi)</span>
+SIN(Pi+X) = -SIN(X)	   SIN(X) =  SIN(Pi-X)
+COS(Pi+X) = -COS(X)	   COS(X) = -COS(Pi-X)
+</code>
+</pre>
+</div>
+</p><h3>Implementation</h3><p>
+Unit: internal function, external function without <code>procedure</code> statement
+
+<br>&nbsp;
+<br>Parameters: a number <code>X</code> (radians), a positive number <code>P</code> - number of significant digits of result,  default is <code>9</code>
+<br>&nbsp;
+<br>Interfaces: <code><a href="a_pi.html#piconst">PICONST</a></code> for 
+<code>P&lt;=200</code>, for <code>P&gt;200</code> we can use the 
+<code><a href="a_pi.html#pi">PI</a></code> function
+
+<br>&nbsp;
+<br>Returns: sine and cosine of <code>X</code>
+
+<a name="sin">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+Pi = PICONST(); Signum = 1
+if X &lt; 0 then do; Signum = -1; X = -X; end
+Pim2 = Pi * 2; X = X // Pim2; Pid2 = Pi / 2
+if X &gt; Pi
+  then do; X = X - Pi; Signum = -Signum; end
+if X &gt; Pid2 then X = Pi - X
+Term = X; Xsup2 = X * X; Sum = X; F = 1
+do J = 3 by 2
+  Term = -Term * Xsup2 / (J * (J - 1))
+  NewSum = Sum + Term
+  if NewSum = Sum then return Signum * Sum
+  Sum = NewSum
+end
+</code>
+</pre>
+</div>
+<a name="cos">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COS: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+Pi = PICONST(); Signum = 1; X = ABS(X)
+Pim2 = Pi * 2; X = X // Pim2; Pid2 = Pi / 2
+if X &gt; Pi
+  then do; X = X - Pi; Signum = -Signum; end
+if X &gt; Pid2
+  then do; X = Pi - X; Signum = -Signum; end
+Term = 1; Xsup2 = X * X; Sum = 1; F = 1
+do J = 2 by 2
+  Term = -Term * Xsup2 / (J * (J - 1))
+  NewSum = Sum + Term
+  if NewSum = Sum then return Signum * Sum
+  Sum = NewSum
+end
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_fact.html">Factorial</a>
+<br>
+<br><a href="a_pi.html">Number Pi</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trick</a> by Walter Pachl in <a href="reflexio.html">Reflexio</a>
+</p>
+<br>
+<h3>Literature</h3><p>
+Wirth N., <i>Systematisches Programmieren</i> - 2nd ed. B.G Teubner, 
+Stuttgart, 1975
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
