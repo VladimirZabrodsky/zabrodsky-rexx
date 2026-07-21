@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Aproximační algoritmus pro problém součtu podmnožin</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Aproximační algoritmus pro problém 
+	součtu podmnožin s polynomiální časovou složitostí">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_suba.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_suba.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Aproximační algoritmus pro problém součtu podmnožin<h1><hr>
+<h3>Problém</h3><p>
+Chceme najít podmnožinu množiny <code>A.1, ..., A.N</code> , jejíž součet je 
+největší možný, ale ne větší než <code>T</code> (<code>T</code> je tzv. 
+velikost batohu).
+</p><br>
+<h3>Algoritmus</h3><p>
+Je odvozen od  
+<a href="a_sube.html">Přesného řešení s exponenciální složitostí</a>. 
+Užijeme redukční parametr <code>Delta</code>, 
+<code>0 &lt; Delta &lt; 1</code>. Redukovat seznam <code>L.</code> pomocí 
+<code>Delta</code> znamená vyjmout určité prvky z <code>L.</code> tak, že 
+pro každý vyjmutý prvek <code>Y</code> existuje nějaký prvek 
+<code>Z &lt;= Y</code> v <code>L.</code> takový, že 
+<code>(Y-Z)/Y &lt;= Delta</code>. V redukovaném seznamu prvek <code>Z</code> 
+reprezentuje chybějicí prvek <code>Y</code>. Podle Cormena, Leisersona a 
+Rivesta jsou objeviteli funkce <code>APPROX_SUBSET_SUM</code> 
+O. H. Ibarra a Ch. E. Kim.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka:</code> vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné:</code> pole <code>A.1, ..., A.N</code> celých čísel, 
+pole <code>A.</code> se nezmění
+<br>&nbsp;
+<br>Parametry:</code> přirozená čísla <code>N</code> a <code>T</code>, 
+reálné číslo 
+<code>Epsilon</code>  (<code>0 &lt; Epsilon &lt; 1</code>)
+<br>&nbsp;
+<br>Vrací:</code> dobrou aproximaci největšího součtu <code>&lt;= T</code>, 
+označíme-li <code>GA</code> hodnotu aproximace, <code>O</code> hodnotu 
+optimálního řešení, pak pro každou instanci problému součtu podmnožin 
+platí <code>(O-GA)/O &lt;= Epsilon</code>
+
+
+
+<a name="approx_subset_sum">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+APPROX_SUBSET_SUM: procedure expose A.
+parse arg N, T, Epsilon
+L.1 = 0; P = 1; Sentinel = 1E+100
+do I = 1 to N while A.I &lt;= T
+  do J = 1 to P
+    LP.J = L.J + A.I
+    if LP.J &gt; T then leave J
+  end
+  R = J - 1; K = 1; L = 1
+  Pp1 = P + 1
+  L.Pp1 = Sentinel
+  LP.J = Sentinel
+  do M = 1 to P + R
+    if L.K &lt; LP.L
+      then do; M.M = L.K; K = K + 1; end
+      else do; M.M = LP.L; L = L + 1; end
+  end
+  do J = 1 to P + R; L.J = M.J; end
+  P = TRIM(P + R, Epsilon / N)
+end
+return L.P
+ 
+TRIM: procedure expose M. L.
+parse arg M, Delta
+L.1 = M.1; Last = M.1; P = 1
+do I = 2 to M
+  if Last &lt; (1 - Delta) * M.I
+    then do
+      P = P + 1; L.P = M.I; Last = M.I
+    end
+  end
+return P
+</code>
+</pre>
+</div>
+</p>
+<h3>Porovnání</h3><p>
+Pro <code>N = 100; T = 25557</code> a pole <code>A.</code> vytvořené příkazy:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Seed = RANDOM(1, 1, 481989)
+do J = 1 to N
+  A.J = RANDOM(1, 1000)
+end
+</code>
+</pre>
+</div>
+jsem porovnal algoritmy pro řešení problému součtu podmnožin a můj 
+algoritmus <code><a href="a_diop.html#diophant">DIOPHANT</a></code> pro řešení Diofantovy rovnice.
+<br><br>
+Poznámky:Provádění <code>
+<a href="a_sube.html#exact_subset_sum">EXACT_SUBSET_SUM</a></code> jsem 
+násilně ukončil po půl hodině.  Pro běh 
+<code><a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a></code> 
+jsem zvolil hodnotu <code>Epsilon = 0.5</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PROBLÉM SOUČTU PODMNOŽIN - POROVNÁNÍ ALGORITMŮ
+Algoritmus     Suma prvků              Sekund
+<a href="a_greed.html#gs">GS</a>                25554                  0.05 
+<a href="a_dyna.html#dps">DPS</a>               25557                240.24 
+<a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a> 25436                 12.31 
+<a href="a_diop.html#diophant">DIOPHANT</a>          25557                  0.82
+</code>
+</pre>
+</div>
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5.
+</p><br>
+<h3>Souvislosti</h3><p>
+PROBLÉM SOUČTU PODMNOŽIN
+<br><a href="a_sube.html">Přesné řešení s exponenciální složitostí</a>
+<br>
+<br><a href="a_diop.html">Diofantova lineární rovnice</a>
+<br>
+<br><a href="a_dyna.html">Dynamické programování</a>
+<br>
+<br><a href="a_greed.html">Řešení "na hrubo"</a>
+</p><br>
+<h3>Literatura</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

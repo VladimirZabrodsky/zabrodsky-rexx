@@ -1,0 +1,773 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>refleXXio</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<META name="DESCRIPTION" content="Úvahy o programování inspirované prací na Albu algoritmů a technik,
+	nalezení 10000-cího Fibonacciho čísla, Wendy Krieger, zkráceně vyhodnocované and, or v rexxu?, p+<i>n</i> trik waltera 
+	pachla, inspirace matematikou psanou do písku, W. Kavan, interperace kódu v REXXU trvá dlouho? od pseudokódu k programu,
+	zábavná teorie pravděpodobnosti" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html" class="active">refleXXio</a>
+    <a href="../aat/reflexio.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- start of page -->
+<p>
+<h1><span class="grey lowercase">refle</span><span class="reflexio">XX</span><span class="grey lowercase">io</span></h1><p>
+Z latinského <i>reflexio</i> pochází slovo reflexe - úvahy. V tomto případě 
+tedy úvahy o programování, inspirované prací na Albu algoritmů a technik.
+<br></p>
+<hr>
+<br>
+<h2>Obsah</h2><p>
+<span class="red">&psi;</span><a href="#fib10000">NALEZENÍ <i>K</i>-TÉHO FIBONACCIHO ČÍSLA, <i>K</i> = 10000</a>
+<br>
+<br><span class="red">&psi;</span><a href="#andor">ZKRÁCENĚ VYHODNOCOVANÉ AND, OR V REXXU?</a>
+<br>
+<br><span class="red">&psi;</span><a href="#accuracy">P+<I>N</I> TRIK WALTERA PACHLA</a>
+<br>
+<br><span class="red">&psi;</span><a href="#kavan">INSPIRACE MATEMATIKOU PSANOU DO PÍSKU</a>
+<br>
+<br><span class="red">&psi;</span><a href="#slowly">INTERPERACE KÓDU V REXXU TRVÁ DLOUHO?</a>
+<br>
+<br><span class="red">&psi;</span><a href="#pseudocode">OD PSEUDOKÓDU K PROGRAMU</a>
+<br>
+<br><span class="red">&psi;</span><a href="#prob">ZÁBAVNÁ TEORIE PRAVDĚPODOBNOSTI</a>
+</p>
+<br>
+<hr>
+<br>
+<h2>4. července 2021</h2><p>
+<a name="fib10000">&nbsp;</a>Praxe s <a href="a_memfis.html">funkcemi Wendy Krieger</a></p>
+<br><br>
+<H3>Nalezení <i>K</i>-tého Fibonacciho čísla, <i>K</i> = 10000</h3><p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* 10000th term of Fibonacci sequence
+33644764876431783266621612005107543310302148460680063906564769974680081442166662
+36815559551363373402558206533268083615937373479048386526826304089246305643188735
+45443695598274916066020998841839338646527313000888302692356736131351175792974378
+54413752130520504347701602264758318906527890855154366159582987279682987510631200
+57542878345321551510387081829896979161312785626503319548714021428753269818796204
+69360978799003509623022910263681314931952756302278376284415403605844025721143349
+61180023091208287046088923962328835461505776583271252546093591128203925285393434
+62090424524892940390170623388899108584106518317336043747073790855263176432573399
+37128719375877468974799263058370657428301616374089691784263786242128352581128205
+16370298089332099905707920064367426202389783111470054074998459250360633560933883
+83192338678305613643535189213327973290813373264265263398976392272340788292817795
+35805709936910491754708089318410561463223382174656373212482263830921032977016480
+54726243842374862411453093812206564914032751086643394517512161526545361333111314
+04243685480510676584349352383695965342807176877532834823434555736671973139274627
+36291082106792807847180353291311767789246590899386354593278945237776744061922403
+37638674004021330343297496902028328145933418826817683893072003634795623117103101
+29195316979460763273758925353077255237594378843450406771555577905645044301664011
+94625809722167297586150269684431469520346149322911059706762432685159928347098912
+84706740862008587135016260312071903172086094081298321581077282076353186624611278
+24553720853236530577595643007251774431505153960090516860322034916322264088524885
+24331580515348496224348482993809050704834824493274537326245677558790891871908036
+62058009594743150052402532709746995318770724376825907419939632265984147498193609
+28522394503970716544315642132815768890805878318340491743455627052022356484649519
+61124602683139709750693826487066132645076650746115126775227486215986425307112984
+41182622661057163515069260029861704945425047491378115154139941550671256271197133
+25276363193960690289565028826860836224108205056243070179497617112123306607331005
+9947366875
+*/
+call TIME("R")
+K = 10000 /* Kth term Fibonacci sequence, for K = 10000 */
+/* number of digits in the 10000th Fibonacci number using Binet’s Formula: */
+C = CEILING(K * LN((1 + SQRT5())/2)/LN10() - (LN(5)/2)/LN10())
+numeric digits C
+p = 10 ** C
+WF10000 = FIBONMOD(K, P)
+say TIME("R") "sec"
+/* my PC with Intel Pentium Gold 5400, 16GB RAM displays 0.033 sec - 0.040 sec */
+V = ""
+do i = 2
+  S = SOURCELINE(i)
+  if S = "*/" then leave
+  V = V || SOURCELINE(i)
+end
+if WF10000 == V then say "OK!"
+exit
+</code>
+</pre>
+</div>
+</p>
+<br>
+<br>
+<hr>
+<a name="andor">&nbsp;</a>
+<h2>14. září 2001</h2><p>
+13. září jsem publikoval v comp.lang.rexx první verzi následujícího článku:
+<br>
+<h3>Zkráceně vyhodnocované AND, OR v Rexxu?</h3>
+<h4>1. Důvod pro toto zamyšlení</h4><p>
+Walter Pachl z Vídně objevil chybu v implementaci algoritmu HEAPSORT
+v Albu algoritmů a technik:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+HEAPSORT: procedure expose A.
+parse arg N
+do I = N % 2 to 1 by -1
+  call SIFT I, N
+end
+do I = N to 2 by -1
+  W = A.1; A.1 = A.I; A.I = W
+  call SIFT 1, I - 1
+end
+return
+
+SIFT: procedure expose A.
+parse arg L, R
+I = L; W = A.I; J = 2 * I
+Jp1 = J + 1
+if J &lt; R & A.J &lt; A.Jp1 then J = Jp1
+do while J &lt;= R & W &lt; A.J
+  A.I = A.J; I = J; J = 2 * I
+  Jp1 = J + 1
+  if J &lt; R & A.J &lt; A.Jp1 then J = Jp1
+end
+A.I = W
+return
+</code>
+</pre>
+</div>
+Chybný je kód procedury <code>SIFT</code>. Za běhu dojde k výjimečnému stavu <code>NOVALUE</code> 
+použití neinicializované proměnné. 
+Uvažme případ vyhodnocení výrazu <code>J&lt;R &amp; A.J&lt;A.Jp1</code> pro
+ <code>R = N</code> a <code>J = N</code>. Proměnná <code>A.Jp1</code>, kde <code>Jp1 = N + 1</code>,  bude pro
+vstupní pole <code>A.1,...,A.N</code>  neinicializovaná.
+Nahlédl jsem znovu do knihy 
+Niklause Wirtha <i>Algorithms and data structure</i>, Prentice Hall, 1986. Ale nenašel jsem žádný podstatný
+ rozdíl v kódu  - příčina chyby je totiž ve způsobu vyhodnocování logických operací AND a OR. V Rexxu pro
+  <code>A &amp; B</code>, <code>A |
+B</code> se vždy vyhodnotí oba operandy. V dalším budu takovou operaci označovat jako <i>normální 
+logické 
+AND nebo OR</i>. V Module však, je-li v případě <code>A | B</code> první operand pravdivý, je výsledek celé operace prohlášen za pravdivý. Tuto operaci budu v dalším 
+označovat jako <i>zkráceně vyhodnocované AND nebo OR</i>. Používá se i termín podmíněné AND nebo OR. 
+České termíny jsou ekvivalentní v angličtině běžně užívaným "short-circuiting logical operations"  a  
+"conditional logical operations". 
+</p>
+<h4>2. Normální logické AND, OR a zkráceně vyhodnocované AND, OR
+</h4><p>
+<b>2.1:</b> V souladu s ANSI X3J18-199X 7.4.8 je výraz 
+<code>lhs &amp; rhs</code>, kde "<code>&amp;</code>" je operátorem normální 
+logické operace AND, vyhodnocen takto:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+if rhs \== '0' then
+  if rhs \== '1' then call #Syntax_error
+Value='0'
+if lhs == '1' then
+  if rhs == '1' then Value='1'
+</code>
+</pre>
+</div>
+<b>2.2:</b> Podobně výraz <code>lhs | rhs</code> ("<code>|</code>" je 
+operátor normální logické operace OR, je vyhodnocen takto:
+evaluated
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+if rhs \== '0' then
+  if rhs \== '1' then call #Syntax_error
+Value='1'
+if lhs == '0' then
+  if rhs == '0' then Value='0'
+</code>
+</pre>
+</div>
+Pro vyhodnocení AND nebo OR můžeme využít efektivnější algoritmus. 
+Operátory zkráceně vyhodnocovaných operací označím po řadě 
+"<code>&amp;*</code>" and "<code>|*</code>". Hvězdička je tu použita ve
+významu: "nula nebo jeden operand bude ještě vyhodnocen".
+<br><br>
+<b>2.3:</b> Pak výraz <code>lhs &amp;* rhs</code> je vyhodnocen 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+Value=lhs
+if Value then do
+  if rhs \== '0' then
+    if rhs \== '1' then call #Syntax_error
+  Value=rhs
+end
+</code>
+</pre>
+</div>
+<b>2.4:</b> A podobně i výraz  <code>lhs |* rhs</code> je vyhodnocen
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+if lhs \== '0' then
+  if lhs \== '1' then call #Syntax_error
+Value=lhs
+if \lhs then do
+  if rhs \== '0' then
+    if rhs \== '1' then call #Syntax_error
+  Value=rhs
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>3. Zkráceně vyhodnocované AND, OR v současném Rexxu </h4><p>
+Nechť  <code>{S}</code> je  (dlouhá) sekvence příkazů, pak ekvivalentní kód 
+ke kódu s operátory 
+ "<code>&amp;*</code>" and "<code>|*</code>" je (příkazy jsou psány vždy na 
+ jediném řádku):
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+3.1: if A &amp;* B then {S} <span class="green">(is equivalent to)</span>
+           if A then if B then {S}
+
+3.2: do while A &amp;* B; {S}; end <span class="green">(is equivalent to)</span>
+           do while A; if B then {S}; end
+
+3.3: if A |* B then {S} <span class="green">(is equivalent to)</span>
+3.3.1:       do 1; if \A then if \B then leave; {S}; end
+or 3.3.2:     do 1; if \A then if \B then iterate; {S}; end
+or 3.3.3:     if A then {S}; else if B then {S}
+or 3.3.4:     if A then call SUB; else if B then call SUB
+                          <span class="green">where the SUB subroutine is</span>
+                          SUB: {S}; return
+
+3.4: do while A |* B; {S}; end <span class="green">(is equivalent to)</span>
+     do forever; if \A then if \B then leave; {S}; end
+</code>
+</pre>
+</div>
+<br></p>
+<p class="green">KRITICKÉ POZNÁMKY</p><br>
+<p>
+3.1 a 3.2 jsou srozumitelné. Pro opravu <code>HEAPSORT</code> jsem použil 3.1 řešení. 
+Možná je čitelné i 3.4. Skutečným problémem je případ 3.3, protože  3.3.1 a 3.3.2, které vlastně převádí 
+3.3 na jakž takž čitelné 3.4, jsou téměř nepochopitelné. 3.3.3 by mohlo být zdrojem chyb, pokud bychom 
+dělali v <code>{S}</code> častější změny. A 3.3.4? – jedna procedura (zbytečně) navíc, hm, to 
+není příliš elegantní ... </p>
+<br>
+<h4>4. Dobré příklady použití zkráceně vyhodnocovaných operací AND, OR</h4><p>
+<b>4.1:</b>  S operátory <code>"&amp;*", "|*"</code> je snadné překládat z Moduly.
+V případě <code>HEAPSORT</code>
+může být výsledek efektivnější, protože rychlejší, kód, díky vynechání vyhodnocování
+ <code>A.J &lt; A.Jp1</code> when <code>J &gt;= R</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+...
+SIFT: procedure expose A.
+...
+if J &lt; R &amp;* A.J &lt; A.Jp1 then J = Jp1
+do while J &lt;= R &amp;* W &lt; A.J
+  ...
+  if J &lt; R &amp;* A.J &lt; A.Jp1 then J = Jp1
+end
+...
+</code>
+</pre>
+</div></p>
+<h4>Zobecnění:</h4><p>
+- Usnadnění překladu zkráceně vyhodnocovaných operací AND a OR z jazyků Ada, 
+C, C++,
+GNU Pascal, Java, JavaScript, Lisp, Modula, Perl, VAX Pascal, VB.Net
+do Rexxu a ovšem i naopak.  
+<br>- Efektivnější kód.
+<br>
+<br>
+<b>4.2:</b> Nyní můžeme vyjádřit zkráceně vyhodnocované operace explicitně a 
+jasně bez potřeby „opisů“ z kapitoly
+třetí. Typické příklady: 
+<br><br>
+<b>4.2.1</b> <code>if N &lt;&gt; 0  &amp;*  M / N &gt; 0 then ...</code>
+<br>
+<br><b>4.2.2</b> <code>if (I = 0) |* (J = 1 / I) then ...</code>
+<br>
+<br><b>4.2.3</b>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+JeOsobaVhodnaProTutoPraci: procedure
+parse arg Person
+if Vek(Osoba) &gt; 18 &amp;* IQTEST() &gt; 138
+  then do; ...; return 1; end
+  else do; ...; return 0; end
+</code>
+</pre>
+</div>
+Poznámka: <code>IQTEST</code> funkce je počítačem řízený, dlouhodobý, interaktivně probíhající test uživatele 
+<br>
+<br><b>4.2.4</b>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+JeOsobaVhodnaProTutoPraci: procedure
+parse arg Person
+if RESULT_IQTEST(Person) &gt;> 138 |* IQTEST() &gt; 138
+  then do; ...; return 1; end
+  else do; ...; return 0; end
+</code>
+</pre>
+</div>
+Poznámka: <code>RESULT_IQTEST</code> unkce vrací <code>""</code> nebo číslo, 
+číslo je výsledek posledního IQ testu.
+<br><br>
+Zobecnění:
+<br>Kód bez "opisů" ze 3. kapitoly, které by mohly zanést chyby, by mohl 
+být 
+<br>- bezpečnější; 
+<br>- jednodušší; 
+<br>- čitelnější. 
+</p>
+<h4>5. Dobré důvody pro používání normálních operací AND, OR </h4><p>
+<b>5.0:</b> Samozřejmě obrovský počet perfektně chodících programů s 
+ "<code>&amp;</code>" a "<code>|</code>" v celém světě.
+<br>
+<br><b>5.1:</b>  Vyhodnocení druhého operandu může být výhodné v procesu ladění. Tedy pro odhalení chyby, která se neprojeví, není-li druhý operand vyhodnocován. 
+<br>
+<br><b>5.2:</b> Jsou situace, kdy musí být vyhodnoceny oba operandy. To je
+ případ, kdy vyhodnocením druhého
+operandu dojde ke  změnám  v hodnotách proměnných, v nějakém nastavení a 
+pododně. V tomto případě mluvíme 
+o tzv. postranním efektu (<i>side effect</i>). Podívejte se na následující 
+ukázku. Je tu uveden 
+fragment programu, který zkopíruje celý zbytek souboru <code>Infile</code>
+ za větou, která 
+má zadanou hodnotu <code>String</code>, do souboru <code>Outfile</code>. 
+Takový program by mohl být v praxi užitečný. S operandem "<code>|*</code>" 
+by to byl jen 
+obyčejný, nikdy nekončící cyklus
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+...
+do until LINES(Infile) = 0 | LINEIN(Infile) = String
+end
+do while LINES(Infile) &lt;&gt; 0
+   call LINEOUT Outfile, LINEIN(Infile)
+end
+...
+</code>
+</pre>
+</div>
+</p>
+<h4>6. Závěr</h4><p>
+Našel jsem v literatuře o programovacích jazycích  4 přístupy k zařazení logických operací AND and OR do
+ jazyka.
+<br>
+<br><b>6.1</b> - jen normální logické operace AND, OR, oba operandy se vyhodnocují (Rexx, Pascal, Visual Basic,
+ WEbScript)
+<br>
+<br><b>6.2</b> - jen zkráceně vyhodnocované operace AND, OR (JavaScript, C, C++,
+Lisp, Modula, Perl)
+<br>
+<br><b>6.3</b> - zda logické operace budou chápány jako normální nebo zkráceně vyhodnocované určuje direktiva 
+kompilátoru (GNU Pascal).
+<br>
+<br><b>6.4</b> - oužívají se i normální i zkráceně vyhodnocované operace AND, OR (Ada, VAX Pascal, Java, MATVEC,
+ Octave, VB.Net)
+<br><br>
+Doufám, že z kapitoly 4 a 5 je zřejmé, že přístup 6.4 by mohl být docela vhodný pro současné jazyky
+ s dlouhou tradicí, jakým je třeba Rexx. 
+<br></p>
+<br><h4>7. Appendix</h4><p>
+<b>7.1</b> Díky Walteru Pachlovi za motivaci k úvahám.    
+<br>
+<br><b>7.2</b> Sbírka článků "<i>Comparing and Assessing Programming
+Languages Ada, C and Pascal</i>" (editoři A.R.Feuer, N.Gehani,
+Prentice-Hall, 1984) zahrnuje příklad 4.2.1, řešení 3.1, upozornění typu 
+ "<code>J&lt;R &amp; A.J&lt;A.Jp1</code>"- (moje chyba ve staré verzi 
+<code>HEAPSORT</code>) to vše v rámci kritiky absence zkráceně 
+vyhodnocovaných operací 
+v jazyce Pascal.
+<br>
+<br><b>7.3</b> Martin Lafaix: <a href="http://lafaix.online.fr/netrexx/WD-miscproposals.html"   
+onClick=openWindow() target="windowname">"<i>Proposals for NetRexx [2000-07-04]</i>"</a>; chapter 5
+Short-circuit logical operators - je stručným dooporučením pro zavedení zkráceně vyhodnocovaných operací s 
+operátory  "<code>&amp;&amp;&amp;</code>" a "<code>|||</code>" do jazyka NetRexx. Zahrnuje řešení 3.3.3. 
+Mimochodem, proč používám  "<code>&amp;*</code>" a "<code>|*</code>" místo "<code>&amp;&amp;&amp;</code>" a
+"<code>|||</code>"? Protože co je malé, je hezké.
+<br>
+<br><b>7.4</b> Zajímavý je pohled z druhé strany od Toma Christiansena  (je to argument proti normální
+ logické operaci OR v Perlu, kde zkráceně vyhodnocená operace existuje). 
+<br>
+
+
+<br><b>7.5</b> Následující tabulka shrnuje symboly logických operátorů používaných v některých 
+vybraných programovacích jazycích: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+operation              MATVEC	Java	VB.Net	   Ada
+normal AND              .&&   	 &       And       and
+normal OR               .||  	 |       Or        or
+short circuit AND       &&      &&       AndAlso   and then
+short circuit OR        ||      ||       OrElse    or else
+</code>
+</pre>
+</div>
+<hr>
+<br>A tady je reakce Mika Cowlishawa v comp.lang.rexx 25. září 2001:
+<br><cite>Pěkná analýza.  Podívejte se také na řešení zkráceného výpočtu 
+AND, které jsem použil v jazyce NetRexx...</cite>
+
+<br>
+Mike Cowlishaw
+<br>
+<br>
+Dovolte mi, ocitovat zde NetRexx manuál:
+
+
+<br>
+<br>
+
+<b>If and when 
+enhancements</b>
+<br>
+The <code>if</code> clause in the <code>if</code> instruction 
+[NRL 80] and the <code>when</code> clause in the <code>select</code> instruction [NRL 108] 
+both have the same form and serve the same purpose, which is to test a value 
+either for being 1 or (for a <code>when</code> clause in a <code>select case</code> 
+construct) being equal to the <code>case</code> expression. 
+<br>In both <code>if</code> and <code>when</code> clauses multiple expressions may now be 
+specified, separated by commas. These are evaluated in turn from left to right, 
+and if the result of any evaluation is 1 (or equals the <code>case</code> expression) 
+then the test has succeeded and the instruction following the associated 
+<code>then</code> clause is executed. 
+<br>Note that once an expression evaluation has resulted in a successful test, no 
+further expressions in the clause are evaluated. So, for example, in: <br><code>  -- assume 'name' is a string
+  <br>if name=null, name='' then say 'Empty'
+</code>
+<br>then if <code>name</code> does not refer to an object it will compare equal to 
+null and the <code>say</code> instruction will be executed without evaluating the 
+second expression in the <code>if</code> clause. 
+</p>
+<br>
+
+
+
+<br><hr>
+
+<h2>1. července 2001</h2>
+<a name="accuracy">&nbsp;</a><br>
+<h3>P+<I>N</I> TRIK WALTERA PACHLA</h3>
+<p>Walter Pachl mi napsal: <cite>Před léty jsem v případě tvého 
+algoritmu  (<code>SIN</code>) použil následující trik: abych získal výsledek 
+s přesností na <code>P</code> 
+destinných míst, vypočetl jsem ho nejprve na <code>P + 2</code> desetinných 
+míst a pak zaokrouhlil. 
+Neprováděl jsem žádnou anylýzu chyb - hodnota <code>P+2</code> byla vybrána 
+spíše heuristicky.</cite> 
+<br><br>
+Následující program, jehož 
+ autorem je Walter Pachl, dokazuje, že tato technika je užitečná i v případě mé funkce 
+<code>SIN</code> a samozřejmě i dalších funkcí z alba 
+(<code>COS</code>, <code>LN</code>, <code>SQRT</code>, etc.) 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do P = 30 to 35
+  call Test P
+end
+exit
+TEST: procedure
+parse arg P
+numeric digits P
+say 'Yours ' SIN(0.6, P)
+say 'should be ' (SIN(0.6, P + 2) + 0)
+say ' '
+return
+</code>
+</pre> 
+</div>
+<br>
+A co víc, program dává různé výdledky v různých implementacích! Takže, jaké 
+je poučení? 
+Za první: Pachlův trik je inteligentní technika pro ladění a používání 
+programů numerické matematiky! 
+Za druhé: Pro funkci 
+<code>SIN</code> (<code>COS</code>, <code>LN</code>, <code>SQRT</code>, ...)
+ příkazy: <code class="wrap">numeric digits P; say SIN(X, P + N) + 0</code>
+dají výsledek s přesností  <code>P</code> platných číslic pro "dostatečně" 
+velké  <code>N</code>, 
+kde <code>0 &lt;= N</code>.
+<br>Příklady:
+<br>pro funkci <code>SIN</code> a <code>P = 9</code>:
+<br>je-li <code>X = 0.6</code> pak <code>N</code> musí být <code>2</code>
+<br>je-li <code>X = 355</code> pak <code>N</code> musí být dokonce 
+<code>7</code>, protože:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN(355, 9) + 0 = -0.000029987
+SIN(355,10) + 0 = -0.0000301545
+SIN(355,11) + 0 = -0.0000301432200
+SIN(355,12) + 0 = -0.0000301443310
+SIN(355,13) + 0 = -0.0000301443963
+SIN(355,14) + 0 = -0.0000301443526
+SIN(355,15) + 0 = -0.0000301443532
+SIN(355,16) + 0 = -0.0000301443534
+...
+SIN(355,99) + 0 = -0.0000301443534
+</code>
+</pre> 
+</div>
+</p>
+<hr>
+<a name="kavan">&nbsp;</a>
+<h2>4. března 2001</h2>
+<br>
+<h3>INSPIRACE MATEMATIKOU PSANOU DO PÍSKU</h3><p>
+W. Kavan uvádí ve svém eseji <i>Matematika psaná do písku</i> následující 
+příklad:
+<br><br>
+<code>729**33.5 = 729**(67/2) = (243*3)**(67/2) = 
+<br>= (3*3*3*3*3*3)**(67/2) = 3**(3*67) = 3**201</code>
+<br><br>
+Ale <cite>... kapesní kalkulačka Hewlett-Packard, která počítá s přesností na 10 platných číslic dává výsledky 
+two results, </cite><code>729**33.5 = 7.6841966E95</code> 
+<br><i>a</i> 
+<br><code>3**201 = 7.968419664E95</code>
+<br><br>
+ <code><a href="a_powe.html#repower">REPOWER</a>(729,33.5,10)</code> ve verzi s řádkem:
+ <br>
+<br><code>if P = "" then P = 9; numeric digits P</code>
+<br>
+<br>však vypočte výsledek <code>7.96841935E+95</code>.  W. Kahan píše: 
+<cite>... v tomto případě musíme při výpočtu použít více než 13 platných 
+číslic.</cite> 
+<br>Proto jsem změnil 
+kód funkce  <code>REPOWER</code> na:
+<br>
+<br><code>if P = "" then P = 9; numeric digits P</code>
+<br>
+<br>Po této úpravě program 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do P = 3 to 10
+  numeric digits P
+  say P REPOWER(729, 33.5, P) + 0
+end
+</code>
+</pre> 
+</div>
+<br>zobrazí výsledek, který přehledně popisuje následující tabulka:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+P	    výsledek
+3	    7.97E+95
+4	    7.968E+95
+5	    7.9684E+95
+6	    7.96842E+95
+7	    7.968420E+95
+8	    7.9684197E+95
+9	    7.96841967E+95
+10	    7.968419666E+95
+</code>
+</pre> 
+</div>
+<hr>
+<a name="slowly">&nbsp;</a>
+<h2>30. ledna 2000</h2>
+<h3>INTERPERACE KÓDU V REXXU TRVÁ DLOUHO?</h3>
+<p>
+Přečetl jsem si algoritmus J. M. Borweina a P. B. Borweina na výpočet čísla <i>Pi</i>; 
+napsal a odladil jsem program  <a href="a_pi.html#pi"><code>PI</code></a>
+(trvalo to asi 20 minut); spustil jsem jej a vypočetl číslo <i>Pi</i> s přesností na tisíc platných míst 
+(tak tohle trvalo asi 90 sekund). <cite>"Programy, napsané v jazyce Rexx, jsou obvykle 
+interpretovány a proto může jejich provedení trvat dlouho."</cite>
+<br>Hm ... říkáme <span class="red">rychlost výpočtu</span>, 
+ale nejde nám spíš o <span class="red">rychlost s jakou dosáhneme řešení?</span>
+<br><br>
+<hr>
+<a name="pseudocode">&nbsp;</a>
+<h2>26. února 2000</h2>
+<h3>OD PSEUDOKÓDU K PROGRAMU</h3>
+<p>
+<cite>Není to jednoduchá úloha překládat do jazyka Rexx programy napsané 
+původně v 
+různých pseudokódech nebo programovacích jazycích jako jsou Ada, ALGOL, 
+BASIC, C, FORTRAN, Modula, Pascal, 
+PL/1.</cite>
+<br><br>Překládal jsem popis algoritmu pro <a href="a_mmx.html#winograd_matrix_mult">
+Winogradovo efektivní násobení matic</a> 
+(Kapitola 4.6.4, <i>The Art of Computer Programming, Volume 2</i>). V originále to vypadá takhle:
+<br>
+<br><img src="winocode.gif" alt="Code of Winograd's matrix multiplication" width=436 height=225 
+align=center border=0>
+<br>
+<br>Existuje jedno staré programátorské pravidlo: <cite>Neopakujte výpočet výrazu,
+ jehož hodnota se během provádění cyklu nemění</cite>. Kódování Winogradova algoritmu bylo v tomto 
+ smyslu to nejtěžší s čím jsem se dosud ve své praxi setkal. Uvádím schématický zápis řešení
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Odd = N // 2
+do K = 1 to R; compute bk; end
+do I = 1 to M
+  compute A = ai
+  do K = 1 to R
+    zik = 0
+    if Odd then zik = ain * bnk
+    do J = 1 to N % 2
+      compute (xi,2j + y2j-1,k) * (xi,2j-1 + y2j,k)
+    end
+    zik = zik - A - bk
+  end K
+end I
+</code>
+</pre> 
+</div>
+Řešení jsem našel postupně tak, že jsem si porovnával počet operací násobení 
+po 
+úpravách programu až dosáhl teorií definované hodnoty 
+<br><br><code>FORMAT(N/2,,0)*M*R + (N%2)*(M+R)</code>.<br>
+<br></p>
+<hr>
+<a name="prob"&nbsp;</a>
+<h2>27. února 2000</h2>
+<h3>ZÁBAVNÁ TEORIE PRAVDĚPODOBNOSTI</h3>
+<p>
+Dává vestavěná funkce  <code>RANDOM</code> skutečně "dobrá náhodná" čísla? 
+Můžeme 
+se o tom přesvědčit speciálními testy jako je chi-kvadrát test nebo test 
+Kolmogorova a Smirnova. Ale 
+je tu mnohem zábavnější cesta. Tak například věta Ernesta Cesara (1881) 
+říká: Jestliže <br>
+<code>A</code> a <code>B</code> jsou náhodně vybraná celá čísla, 
+pak pravděpodobnost, že    <code>nsd(A,B)=1</code> je <code>6/PI()**2</code>.
+<br>Poznámka 1.: <code>6/<a href="a_pi.html#pi">PI</a>()**2=0.607927099...</code>
+<br>Poznámka 2.: Pro podrobnější popis se podívejte na stránky <code><a href="a_eucl.html#euclid">NSD
+</a></code> a <code><a href="a_pi.html#pi">PI</a></code>
+<br>Následující program můžeme použít jako test generátoru pseudonáhodných čísel. 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+parse arg N
+P = 0
+do i = 1 to N
+  A = RANDOM(0, 100000); B = RANDOM(0, 100000)
+  if NSD(A, B) = 1 then P = P + 1
+end
+say P / N
+exit
+...
+</code>
+</pre> 
+</div>
+Výsledky pro <code>N=10, 100, 1000, 10000, 100000</code> shrnuje tato tabulka.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N                 blíží se k 0.607927099
+10**1	          0.6
+10**2	          0.62
+10**3	          0.615
+10**4	          0.6128
+10**5	          0.60887
+10**6	          0.607846
+</code>
+</pre>
+</div>
+<br>
+<br>A ještě jeden příklad tohoto druhu. Průměrný počet výměn pro  <code>
+<a href="a_modi.html#modifind">MODIFIND</a></code> je roven
+
+<br>
+
+<br>
+<code><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub><font size=-1>N</font></sub>
+ - (<i>N</i> - <i>K</i>)<i>H</i><sub><font size=-1>N - K + 1</font></sub>
+ - (<i>K</i> - 1)<i>H</i><sub><font size=-1>K</font></sub></i>)</b></font></code>
+ <br>
+
+<br>kde <br>
+
+<br>
+
+<code><i>H</i><sub><font size=-1>N</font></sub> = 1 + 1/2 + ... + 1/<i>N</i></b></code>
+
+<br>
+
+
+<br>Pro <code>N = 1001; K = 500</code> a vstupní pole vytvořené příkazy 
+<code>do J = 1 to N; A.J = RANDOM(1, 100000); end</code> 
+ vypočteme průměrný počet výměn po  <code>NR</code> bězích programu.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NR                 blíží se k 353.311
+10**1	           370.2
+10**2	           354.23
+10**3	           352.171
+10**4	           353.234
+</code>
+</pre>
+</div>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

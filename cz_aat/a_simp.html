@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Porovnani skutecnych retezcu</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Nejrychlejší řešení pro porovnání 
+	skutečných řetězců" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_simp.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_simp.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>POROVNÁNÍ SKUTEČNÝCH ŘETĚZCŮ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Text je pole <code>T.1, T.2,..., T.N</code> a vzorek je pole 
+<code>P.1, P.2, ..., P.M</code>. Prvky <code>P.</code> a <code>T.</code> 
+jsou znaky konečné abecedy <code>Sigma.</code>, <code>Sigma.</code> je 
+pole <code>R</code> prvků. Řekneme, že vzorek <code>P.</code> se nachází 
+v textu <code>T.</code> s posunutím <code>S</code>, jestliže 
+<code>0 &lt;= S &lt;= N - M</code> a <code>T.SpJ=P.J</code>, kde 
+<code>SpJ</code> označuje <code>S + J</code>, pro <code>J = 1, ..., M</code>.
+ Problém porovnání řetězců spočívá v nalezení všech těchto posunutí. 
+
+</p><br><h3>Algoritmus</h3><p>
+Jsou-li text  i vzorek skutečné řetězce znaků (symboly abecedy jsou skutečné
+ znaky jako <code>'a'</code> nebo <code>X'0E'</code>), pak nejefektivnější 
+ řešení spočívá v použití vestavěné funkce <code>POS</code> jazyka Rexx.
+
+</p><br><h3>Praxe</h3><p>
+V řetězci <code>Text</code>, kterým je prvních 320kB souboru 
+<code>REGINA.DOC</code>, najde <code>REAL_STRING_MATCHER</code> všechny 
+výskyty vzorku <code>Regina</code> za 0.1 sekundy (testovací prostředí: Windows 2000 Professional,  
+132MB RAM, procesor x86Family 6 Mode 6 Stepping 5). 
+<code><a href="a_kmp.html#kmp_matcher">KMP_MATCHER</a></code> 
+dokáže totéž za 406 sekund a  
+<code><a href="a_boye.html#boyer_moore_matcher">BOYER_MOORE_MATCHER</a></code>
+ za 89 sekund.
+
+</p><br><h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Parametry: řetězec <code>Text</code>, řetězec 
+<code>Pattern</code>
+<br>&nbsp;
+<br>Výstup: Pro všechna nalezená posunutí zobrazí 
+<code>Vzorek se nachází s posunutím</code> <i>S</i>
+
+<a name="real_string_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+REAL_STRING_MATCHER: parse arg Text, Pattern
+do F = 0 until F = 0
+  F = POS(Pattern, Text, F + 1)
+  if F &gt; 0 then
+    say "Vzorek se nachází s posunutím" F - 1
+end
+return
+</code>
+</pre>
+</div>
+
+</p>
+<h3>Souvislosti</h3><p>
+POROVNÁNÍ ŘETĚZCŮ
+<br><a href="a_naiv.html">Naivní algoritmus porovnání</a>
+<br>
+<br><a href="a_boye.html">Algoritmus Boyera-Moora</a>
+<br>
+<br><a href="a_kmp.html">Algoritmus Knutha-Morrise-Pratta</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

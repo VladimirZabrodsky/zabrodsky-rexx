@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Topologické třídění</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Cílem topologického třídění je seřadit 
+	částečně uspořádané objekty do lineární posloupnosti." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_topo.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_topo.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TOPOLOGICKÉ TŘÍDĚNÍ</h1><hr>
+<h3>Problém</h3><p></p>
+Budeme předpokládat, že objekty, které mají být utříděny, jsou očíslovány 
+čísly of <code>1</code> do <code>N</code>. Vstupem algoritmu je graf bez 
+cyklů, který může být reprezentován množinou  číselných dvojic. 
+Dvojice <code>J K</code> značí, že objekt <code>J</code> předchází objektu 
+<code>K</code> v částečném uspořádání. Pak <code>J</code> je předchůdce 
+<code>K</code> a <code>K</code> je následník <code>J</code>. Příkladem 
+vstupu mohou být dvojice, pro <code>N = 9</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+9 2  3 7  7 5  5 8  8 6
+4 6  1 3  7 4  9 5  2 8
+</code>
+</pre>
+</div>
+Algoritmus musí objekty uspořádat do lineárního seznamu tak, aby předchůdci 
+předcházely svým následovníkům. Řešením výše uvedeného zadání může být 
+např.:
+<br>
+<br><code>1 9 3 2 7 5 4 8 6</code>
+</p><br>
+<h3>Algoritmus</h3><p>
+Prvními na výstupu budou objekty bez předchůdců. Vyjmeme-li je z množiny 
+vstupních objektů, bude výsledná množina opět částečně uspořádaná, a proces 
+může pokračovat. Algoritmus si nejprve pro každý objekt poznamená počet jeho 
+předchůdců a seznam následovníků. Výše uvedený graf s devíti uzly lze 
+reprezentovat tabulkou:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+REPREZENTACE GRAFU
+Objekt	    Počet            Seznam
+          předchůdců       následovníků
+1             0                 3
+2             1                 8
+3             1                 7
+4             1                 6
+5             2                 8
+6             2                 -	 
+7             1                5 4
+8             2                 6
+9             0                2 5
+</code>
+</pre>
+</div>
+Algoritmus pak vybere objekty, pro něž je Počet předchůdců roven 0, zapíše je 
+na výstup a sníží počet předchůdců všech následovníků tohoto objektu o jedna.
+ Pro zapamatování si pořadí, v jakém byly nalezeny objekty s nulovou 
+ hodnotou položky Počet předchůdců, využívá algoritmus datové struktury 
+ fronta.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: program
+<br>&nbsp;
+<br>Vstupní data: Číslo <code>N</code> a posloupnost dvojic: předchůdce 
+následovník.
+<br>&nbsp;
+<br>Výsledek: Program vypisuje lineární posloupnost objektů, ve které každý 
+předchůdce předchází svým následovníkům
+
+<a name="topological_sorting">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/*
+9 2 3 7 7 5 5 8 8 6
+4 6 1 3 7 4 9 5 2 8
+*/
+Pocet. = 0; N = 9; Nasleduje. = ""
+do I = 2 while SOURCELINE(I) &lt;&gt; "*/"
+  Veta = SOURCELINE(I)
+  do while Veta &lt;&gt; ""
+    parse var Veta J K Veta
+    Pocet.K = Pocet.K + 1
+    Nasleduje.J = Nasleduje.J K
+  end
+end
+do I = 1 to N; if Pocet.I = 0 then queue I; end
+do while QUEUED() &lt;&gt; 0
+  pull K; say K; N = N - 1
+  Nasledovnici = Nasleduje.K
+  do while Nasledovnici &lt;&gt; ""
+    parse var Nasledovnici S Nasledovnici
+    Pocet.S = Pocet.S - 1
+    if Pocet.S = 0 then queue S
+  end
+end
+if N <> 0 then
+  say "TOPOLOGICAL_SORT: Chyba",
+    "- cyklus v grafu"
+</code>
+</pre>
+</div>
+</p><br>
+<h3>Literatura</h3><p>
+Bentley J. <i>More Programming Pearls - Confession of a Coder</i>
+Addison-Wesley, 1990
+<br>
+<br>Knuth D. E. <i>Fundamental Algorithms, vol. 1 of The 
+Art of Computer Programming, second edition</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

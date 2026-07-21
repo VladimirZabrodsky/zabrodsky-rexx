@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Testovací prostředí</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="jednoduche testovaci prostredi, Walter Pachl">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_tenv.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_tenv.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: TESTOVACÍ PROSTŘEDÍ</h1><hr>
+<br>
+<p>Walter Pachl z Vídně mi poslal program dokazující chyby v jednom z mých 
+podprogramů. Jeho kód vytváří geniálně jednoduché testovací prostředí, 
+které nyní používám a které se mi velice osvědčilo.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+signal on HALT
+signal on NOVALUE
+signal on SYNTAX
+...
+code of debugging program
+...
+NOVALUE:
+  say 'Novalue raised in line' Sigl
+  say SOURCELINE(Sigl)
+  say 'Variable' CONDITION('D')
+  signal LOOKAROUND
+ 
+SYNTAX:
+  say 'Syntax raised in line' Sigl
+  say SOURCELINE(Sigl)
+  say 'rc='rc '('ERRORTEXT(rc)')'
+ 
+HALT:
+LOOKAROUND:
+  do
+    say 'You can look around now.'
+    trace ?R
+    nop
+  end
+exit 12
+</code>
+</pre>
+</div>
+</p>
+<h3>Spoluautor</h3><p>
+Walter Pachl - autor testovacího prostředí
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

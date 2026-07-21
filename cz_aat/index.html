@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--vytvoril Vladimir Zabrodsky 2001-->
+<HTML lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><title>Album algoritmů a technik</title>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<META name="DESCRIPTION" content="Sbirka algoritmu a technik pro 
+	standardni Rexx. Album je sestaveno jako referenční příručka algoritmů. 
+	Kód algoritmu stačí zvýraznit v prohlížeči a zkopírovat do editoru" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+ <div class="topnav" id="myTopnav">
+    <a href="../cz_index.html">REXX</a>
+    <a href="index.html"     class="active">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+    <a href="../aat/index.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<img src="bfly.gif" alt="Idea, algoritmus, technika - to je také slavná česká krajka 
+z Vamberku" style="max-width:100%;height:auto;">
+<h1 class="red">Album algoritmů a <br>technik
+<br><span class="lowercase">pro standardní</span> R<span class="lowercase">exx</span></h1>
+<p class="right">
+<i>Idea, algoritmus, technika - to je také
+<br>slavná česká krajka z </i><a href="https://www.vkrajka.cz">Vamberku</a></p>
+
+<hr>
+<br><br>
+<p>
+Album má dvoudimenzionální strukturu, která umožňuje procházet shromážděný materiál různými cestami. 
+<a href="a_contents.html">Obsah</a> sdružuje do skupin algoritmy, které mají něco společného - 
+nejčastěji řešený problém. Speciální skupinou jsou techniky - obecné, užitečné návody k dosažení určitého 
+cíle: jak eliminovat rekurzi; jak napsat univerzální programovou jednotku; jak konstruovat testovací 
+množiny ... <a href="a_recdex.html">Index</a> je seznam algoritmů abecedně utříděný podle názvů 
+programových jednotek (nejčastěji funkcí nebo podprogramů). Navíc, popis každého algoritmu je v části 
+nazvané 'souvislosti' doplněn odkazy na související algoritmy nebo techniky. 
+Album rozšiřují úvahy o programování, ty naleznete v části 
+<a href="reflexio.html">refle<span class="reflexio">XX</span>io</a>
+<br><br>
+
+Červený špendlík &nbsp;<img src="new.gif" width=11 height=19 border=0 align=top 
+alt="symbol pro novinku">&nbsp;v Obsahu nebo Rejstříku nás upozorňuje na nové algoritmy. Zelený 
+špendlík&nbsp;<img src="change.gif" width=11 height=19 border=0 align=top alt="symbol pro změněné"> 
+označuje změnu.
+<br><br></p>
+<hr>
+<h3 class="right"><a id="preface">úvod</a></h3><p>
+Programy, napsané v jazyce Rexx, jsou obvykle interpretovány a proto může jejich provedení trvat dlouho. 
+Klíčem k rychlým skriptům je používání efektivních algoritmů. Za ta léta, co se o algoritmy zajímám, jsem 
+si vytvořil celé malé album takových algoritmů. Věřte mi, není to jednoduchá úloha překládat do jazyka 
+Rexx programy napsané původně v různých pseudokódech nebo programovacích jazycích jako jsou Ada, 
+ALGOL, BASIC, C, FORTRAN, Modula, Pascal, PL/1. 
+<br><br><br>
+<cite>Nevýhodou je tu buď to, že neznáme  včechny jazyky, nebo to, že nemáme jeden 
+univerzální jazyk.</cite><br>
+<span class="right"><b>Jules Verne</b> <i>Dvacet tisíc mil pod mořem</i></span>
+<br><br>
+Album je sestaveno jako referenční příručka algoritmů. Kód algoritmu stačí zvýraznit v prohlížeči a
+zkopírovat do editoru, přímo do konkrétního programu (podrobněji o tom hovořím v článku
+ <a href="a_univ.html">Technika: Univerzální programová jednotka</a>). 
+ <br><br>
+
+
+Album může být užitečné při výuce algoritmů nebo jazyka Rexx. V jednom směru je velkým experimentem: 
+používá jazyk Rexx nejen pro zápis programů, ale i pro popis a vysvětlení algoritmů. Proto se v něm dočtete,
+ že "časová složitost je <code>FORMAT(3*N/2-2,,0)</code> porovnání" nebo "vzorek <code>P.</code> se
+  vyskytuje s posunutím <code>S</code> v textu <code>T.</code>, když 
+<code>0 &lt;= S &lt;= N - M</code> a <code>T.SpJ = P.J</code>, kde <code>SpJ</code> označuje 
+<code>S + J</code>, 
+pro
+ <code>J = 1, ..., M</code>". Výsledek ukazuje, že jazyk Rexx je vhodný nástroj k představení užitečných 
+ algoritmů, převzatých z různých pramenů, v jasné, stručné a jednotné formě. 
+<p align=justify>Poznámka: V celém dalším textu rezervujeme symbol <code>lgN</code> pro označení 
+dvojkového logaritmu čísla <code>N</code>.
+<br><br></p>
+<hr>
+<h3 class="right"><a id="news">novinky</a></h3><p>
+21. července 2021<br><a href="a_b2d.html">Převody z jedné číslené soustavy do druhé</a>
+<br>
+<br>4. července 2021<br>Praxe s <a href="a_memfis.html">funkcemi Wendy Krieger</a>, <a href="reflexio.html#fib10000"><i>10000</i>-té Fibonacciho číslo</a> 
+(v refle<span class="reflexio">XX</span>io)
+<br>
+<br>23. červen 2021<br><a href="a_memfis.html"><i>K</i>-tý člen slavné celočíselné posloupnosti</a> přidala Wendy Krieger
+<br><br>
+</p>
+<hr>
+<h3 class="right"><a id="coauthors">spoluautoři</a></h3><p>
+Wendy Krieger <span class="wrap">[wykrieger(AT)bigpond(DOT)com]</span>, Brisbane, Austrálie
+<br><code><a href="a_memfis.html"><i>K</i>-tý člen slavné celočíselné posloupnosti</a></code>
+<br><br>
+<br>
+Roderic A. Davis <span class="wrap">[dav4is(AT)bigfoot(DOT)com]</span>, New York, USA
+<br>funkce <code><a href="a_r2d.html#d2r">D2R</a></code>
+<br><br>
+Tobias Herp <span class="wrap">[mail(AT)tobias-herp(DOT)de]</span>, Bad Homburg, Německo
+<br>přidal další řešení <a href="a_univ.html#3_1">3_1</a> do kapitoly <a href="a_univ.html">Technika: Univerzální jednotka</a>  
+<br><br>
+<br>Walter Pachl <span class="wrap">[pachl(AT)chello(DOT)at]</span>, Vídeň, Rakousko
+<br><a href="a_tenv.html">Testovací prostředí</a> a jeho <a href="reflexio.html#accuracy">P+<i>n</i> trik</a> v refle<span class="reflexio">XX</span>io
+<br>
+<br>
+<br>Doug Rickman <span class="wrap">[doug(AT)hotrocks(DOT)msfc(DOT)nasa(DOT)gov]</span>, Global Hydrology and Climate Center, MSFC, NASA, USA
+<br>funkce <code><a href="a_spli.html#spline">SPLINE</a></code>, <code><a href="a_spli.html#splint">SPLINT</a></code>
+<br><br>
+<br>Gerard Schildberger <span class="wrap">[GerardS(AT)rrt(DOT)net]</span>, Hankinson, Severní Dakota, USA
+<br>funkce <code><a href="a_floo.html#floor">CEILING, FLOOR</a></code>
+<br><br>
+<br>James Barbetti <span class="wrap">[james_barbetti(AT)yahoo(DOT)com]</span>
+<br>mi poslal modifikaci podprogramu HEAPSORT. Viz <code><a href="a_heap.html#heapsortradix3">HEAPSORT_RADIX3</a></code>
+<br><br></p>
+<hr>
+<h3 class="right"><a id="acknow">poděkování</a></h3><p>
+<br>Michael Adams <span class="wrap">[Michael(DOT)Adams(AT)devk(DOT)de]</span>, Kolín, Německo
+<br>opravil podprogram 
+<code><a href="a_prim.html#first_m_primes">PRIMES</a></code> a upozornil na chybu ve funkci <code><a href="a_prim.html#primality_test">PRIMALITY_TEST</a></code>
+<br><br>
+<br>Walter Pachl <span class="wrap">[pachl(AT)chello(DOT)at]</span>, Vídeň, Rakousko
+<br>našel chyby v kódu funkce <code><a href="a_log.html#ln2">LN2</a></code> a <code><a href="a_pi.html#piconst">PICONST</a></code>. Prostudoval postupně celé album - 78 stránek! -, ověřil funkčnost programů v prostředí OS/2. Našel chybu v podprogramu <code><a href="a_heap.html#heapsort">HEAPSORT</a></code>; zpřesnil obecnou definici problému nalezení k-tého nejmenšího prvku; opravil některé další chyby. Waltrovy maily mě přivedli na myšlenku projít si a přepsat kompletně celé album (červen - srpen 2001).  
+<br><br>
+<br>George W. Perry <span class="wrap">[info(AT)perrymtn(DOT)com]</span>, Flintstone, Georgia, USA
+<br>upozornil na chybu v <code><a href="a_inte.html#interpolation_search">INTERPOLATION_SEARCH
+</a></code>
+<br><br>
+<br>Gerard Schildberger <span class="wrap">[GerardS(AT)rrt(DOT)net]</span>, Hankinson, Severní Dakota, USA
+<br>zjednodušil funkce <code><a href="a_pi.html#pi">PI</a></code> a <code><a href="a_sqrt.html#sqrt">SQRT</a></code> a upozornil na chybu ve funkci <code><a href="a_log.html#ln10">LN10</a></code>. Chtěl bych poděkovat Gerardovi za to, že opravil řadu chyb ve více než 50ti(!) stránkách alba.  
+
+<br><br>
+<br>Danny De Wilde <span class="wrap">[Danny_DeWilde(AT)stpaulre(DOT)com]</span>, Belgie
+<br>inspiroval mě k vytvoření funkce <code><a href="a_powe.html#repower">REPOWER</a></code>
+<br>
+<br></p>
+<hr>
+<h3 class="right"><a id="literature">kompletní seznam literatury</a></h3><p>
+<br>Baudoin C., Meyer B., <i>Méthodes de programmation</i> Edition Eyrolles 61, Bd Saint-Germain Paris 1978
+<br>
+<br>Bentley J., <i>Programming Pearls</i> CACM, December 1986, Vol. 29, No. 12, p. 1161
+<br>
+<br>Bentley J., <i>Programming Pearls - A Sample of Brilliance</i> CACM September 1987  No. 9, p. 754-757
+<br>
+<br>Bentley J., <i>More Programming Pearls - Confession of a Coder</i>  Addison-Wesley, 1990
+<br>
+<br>Bird R. S., <i>Notes on Recursion Elimination</i>CACM, June 1977, vol. 20, No. 6, pp. 434-439.
+<br>
+<br>Brent R. P., <i>Ramanujan and Euler's Constant</i>  Computer Sciences Laboratory, Australian 
+National University, August 1993
+<br>
+<br>Cormen T. H., Leiserson Ch. E., Rivest R. L., <i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+<br>
+<br>Cormen T. H., Leiserson Ch. E., Rivest R. L., Stein C., <i>Introduction to Algorithms, Third Edition</i>The MIT Press, Cambridge, 2009
+<br>
+<br>Dasgupta S., Papadimitriou C. H., Vazirani U. V., <i>Algorithms</i>.  2006. <a href="http://algorithmics.lsi.upc.edu/docs/Dasgupta-Papadimitriou-Vazirani.pdf">
+http://algorithmics.lsi.upc.edu/docs/Dasgupta-Papadimitriou-Vazirani.pdf</a>
+<br>
+<br>Durstenfeld R., <i>Random Permutation</i> CACM July 1964  No. 7, p. 420
+<br>
+<br>Faddejev A.K., Sominskij J.S. <i>Sbornik zadač po vyššej algebre</i> Nauka, Moskva 1964
+<br>
+<br> Feuer A.R., Gehani N. (ed.) <i>Comparing and Assessing Programming Languages Ada, C and Pascal</i> Prentice-Hall, Inc. Englewood Cliffs, New Jersey 1984
+<br>
+<br>Fiala E.R., Greene D.H., <i>Data Compression with Finite Windows</i> CACM, April 1989, Vol. 32, No. 4, pp. 490-505
+<br>
+<br>Floyd R. W., Rivest R. L., <i>Algorithm 489 The Algorithm SELECT - for Finding the </i>i<i>th Smallest of </i>n<i> Elements [M1]</i> CACM, March 1975, Vol. 18, No. 3, p. 173
+<br>
+<br>Floyd R. W., Rivest R. L., <i>Expected Time Bounds for Selection</i> CACM, March 1975, Vol. 18, No. 3, pp. 165-172
+<br>
+<br>Gehani N., <i>Ada - An Advanced Introduction</i> Prentice-Hall, Inc. Englewood Cliffs, New Jersey 1983
+<br>
+<br>Jarník V., <i>Diferenciální počet I</i>  - Nakladatelství České Akademie Věd, Praha, 1963
+<br>
+<br>Kahan W., <i>Mathematics Written in Sand</i> Version of 22 Nov. 1983. <a href="http://www.cs.berkeley.edu/~wkahan/MathSand.pdf">http://www.cs.berkeley.edu/~wkahan/MathSand.pdf</a>
+<br>
+<br>Knuth D. E., <i>Fundamental Algorithms, vol. 1 of The Art of Computer Programming</i> - 2nd ed. Addison-Wesley, 1973
+<br>
+<br>Knuth D. E., <i>Seminumerical Algorithms, vol. 2 of The Art of Computer Programming</i> Addison-Wesley, 1973
+<br>
+<br>Knuth D. E., <i>Sorting and Searching, vol. 3 of The Art of Computer Programming</i> Addison-Wesley, 1973
+<br>
+<br>Kruse R. L., <i>Data Structures and Program Design</i> Prentice Hall International Editions, ISBN 0-13-196049-0
+<br>
+<br>Lipski W., <i>Kombinatoryka dla Programistow</i> Wydawnictwa Naukowo-techniczne, Warszawa, 1982
+<br>
+<br>Martello S., Toth P., <i>Knapsack Problems: Algorithms nad Computer Implementations</i> Chichester, John Wiley &amp; sons 1990
+<br>
+<br>OEIS Foundation Inc. (2021), <i>The On-Line Encyclopedia of Integer Sequences</i>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000045">http://oeis.org/A000045</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000032">http://oeis.org/A000032</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000129">http://oeis.org/A000129</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A003500">http://oeis.org/A003500</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A001333">http://oeis.org/A001333</a>
+<br>
+<br>McMillan M. <i>Data Structures and Algorithms
+with JavaScript</i>. First Version. O'Reilly Media inc., Sebastopol 2014.
+<br>
+<br>Park S. K., Miller K. W., <i>Random Number Generators: Good ones are hard to find</i> CACM October 1988 Vol. 31 No. 10, pp. 1192-1201
+<br>
+<br>Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P., <i>Numerical Recipes in C : the art of scientific computing</i>  - 2nd ed. University Press, Cambridge, 1992
+<br>
+<br>Rich R. P., <i>Internal Sorting Methods Illustrated with PL/1 Programs</i> Prentice Hall, Inc., Engelwood Cliffs, 1972
+<br>
+<br>Rosen Kenneth H.[et al.], <i>Handbook of discrete and combinatorial mathematics</i>. CRC Press 2000. 
+Boca Raton London New York Washington, D.C. ISBN 0-8493-0149-1
+<br>
+<br>Sedgewick R., <i>Algorithms</i> Addison-Wesley, Reading, Massachusetts, 1984
+<br>
+<br>Wilf H. S., <i>Algorithms and Complexity</i> Internet Edition, Summer, 1994. <a href="https://www2.math.upenn.edu/~wilf/AlgoComp.pdf">https://www2.math.upenn.edu/~wilf/AlgoComp.pdf</a>
+<br>
+<br>Wirth N., <i>Systematisches Programmieren</i>  - 2nd ed. B.G Teubner, Stuttgart, 1975
+<br>
+<br>Wirth N., <i>Algorithms and data structure</i> New Jersey, Prentice Hall, Inc., Engelwood Cliffs, 1986
+<br>
+<br>Zábrodský V., <i>Variace na klasické téma</i> Elektronika, c. 6, 1992, 33-34
+<br>
+<br>Zábrodský V., <i>Problém dvou loupežníků</i> BAJT, říjen 1993 (36), 134-136
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Testovací data</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Generování testovacích dat">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_test.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_test.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: TESTOVACÍ DATA</h1><hr>
+<br>
+<p>
+Všechny testy mají podobnou strukturu: nejprve se vytvoří vstupní data, pak
+ se vyvolá testovaná programová jednotka a nakonec se vyhodnotí výsledky. 
+ Cílem může být ladění, ověření složitosti algoritmu nebo vzájemné porovnání
+ časové složitosti algoritmů.  Uveďme si jako příklad testovací data pro
+ funkci <code><a href="a_modi.html#modifind">MODIFIND</a></code>  - 
+ nalezení <code>K</code>-tého nejmenšího prvku. 
+
+</p><br> 
+<h4>KONSTANTNÍ POLE</h4>
+<code>
+A. = 1
+</code>
+<br><br>
+<h4>UTŘÍDĚNÉ POLE</h4>
+<code>
+do J = 1 to N; A.J = J; end
+</code>
+ <br><br>
+<h4>POLE NAVZÁJEM RŮZNÝCH PRVKŮ</h4><P>
+Využijeme podprogram <code><a href="a_shuf.html#shuffle">SHUFFLE</a></code>: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do J = 1 to N; A.J = J; end
+call SHUFFLE N
+</code>
+</pre>
+</div>   
+</p>
+<h4>PRVKY Z INTERVALU</h4><P>
+Máme-li vytvořit pole s prvky z intervalu 
+[<code>0</code>, <code>100000</code>], použijeme vestavěnou funkci 
+ <code>RANDOM</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do J = 1 to N; A.J = RANDOM(0, 100000); end
+</code>
+</pre>
+</div>
+
+Pro generaci prvků s hodnotami od <code>1</code> až do 
+<code>2147483646</code> je tu funkce 
+<code><a href="a_lehm.html#lcg">LCG</a></code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 171956486 /* "random" number */
+do J = 1 to N; X = LCG(X); A.J = X; end
+</code>
+</pre>
+</div> 
+</p>
+<h4>UTŘÍDĚNÉ NÁHODNÉ POLE I</h4><P>
+Využíváme efektivní metodu třídění 
+<a href="a_quic.html#quicksort">QUICKSORT</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do J = 1 to N
+  A.J = RANDOM(1,1000)
+end
+call QUICKSORT N
+</code>
+</pre>
+</div> 
+</p>
+<h4>UTŘÍDĚNÉ NÁHODNÉ POLE II</h4><P>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+A.0 = 0
+do J = 1 to N
+  Jm1 = J - 1
+  A.J = A.Jm1 + RANDOM(1, 1000)
+end
+</code>
+</pre>
+</div> 
+ 
+<h4>VŠECHNY PERMUTACE</h4><P> 
+Důkladný test prozkoumá všech  
+<code><a href="a_fact.html#fact">FACT</a>(N)</code> permutací vstupních dat
+ pro <code>N</code> z intervalu [1, <i>smallint</i>], kde 
+<i>smallint</i> je rovno, řekněme, pěti. Viz 
+<a href="a_perm.html">Generování všech permutací</a>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N=5; Median = 3
+C. = 1; Pr. = 1
+do J = 1 to N; P.J = J; end
+C.N = 0
+do I = 1 to N; A.I = P.I; end
+call MODIFIND N, Median
+J = 1
+do while J &lt; N
+  X = 0
+ do J = 1 while C.J = N - J + 1
+  Pr.J = \Pr.J; C.J = 1
+  if Pr.J then X = X + 1
+  end
+  if J &lt; N
+    then do
+      if Pr.J then K = C.J + X
+        else K = N - J + 1 - C.J + X
+      Kp1 = K + 1; W = P.K
+      P.K = P.Kp1; P.Kp1 = W
+      do I = 1 to N; A.I = P.I; end
+      call MODIFIND N, Median
+      C.J = C.J + 1
+    end
+end
+return
+</code>
+</pre>
+</div> 
+</p>
+
+
+<a name="shuffling_perm">&nbsp;</a>
+<h4>ZAMÍCHÁNÍ POLE URČUJE DANÁ PERMUTACE</h4><P>  
+Zamíchání pole <code>A.</code> v místě je určeno permutací <code>P.</code> 
+množiny &#123;<code>1, ..., N</code>&#125;:
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do K = 1 to N
+  L = P.K
+  do while L &lt; K; L = P.L; end
+  W = A.K; A.K = A.L; A.L = W
+end
+</code>
+</pre>
+</div> 
+
+Rychlejší kód potřebuje pomocné pole
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do K = 1 to N
+  L = P.K; B.K = A.L
+end
+do K = 1 to N
+  A.K = B.K
+end
+</code>
+</pre>
+</div> 
+Typický příklad testovacího programu, pro zjištění doby běhu programu
+ a shody ve výsledku, představuje 
+ <code><a href="a_univ.html#test">PROGRAM1</a></code> v 
+ <a href="a_univ.html">Technika: Univerzální programová jednotka</a>.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

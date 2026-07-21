@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Funkce sinus a cos</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Vypocet funkce sinus a cosinus. Faktoriál.
+	Číslo PI. P+n trik Walter Pachl" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_sin.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_sin.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>SIN(X) a COS(X)</h1>
+<hr>
+<h3>Algoritmus</h3><p>
+<code>SIN(X)</code> pro reálnou hodnotu <code>X</code> (<i>v radiánech</i>) 
+určíme jako součet řady 
+<br>
+<br><code>X - (X**3/FACT(3)) + (X**5/FACT(5)) - (X**7/FACT(7)) + ...</code>
+<br>
+<br><code><a href="a_fact.html#fact">FACT</a></code> je funkce pro 
+výpočet <a href="a_fact.html">faktoriálu</a>.  Podobně <code>COS(X)</code> 
+určíme jako součet řady 
+<br> 
+ <br><code>1 - (X**2/FACT(2)) + (X**4/FACT(4)) - X**6/FACT(6)) + ...</code>
+ <br>
+<br>Při výpočtu můžeme s výhodou užít následující vzorce pro urychlení 
+konvergence řady:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN(-X) = -SIN(X)	   SIN(2*Pi+X) = SIN(X)
+COS(-X) =  COS(X)	   COS(2*Pi+X) = COS(X)
+ 
+<span class="red">pro X z (Pi, 2*Pi)         pro X z (Pi/2, Pi)</span>
+SIN(Pi+X) = -SIN(X)	   SIN(X) =  SIN(Pi-X)
+COS(Pi+X) = -COS(X)	   COS(X) = -COS(Pi-X)
+</code>
+</pre>
+</div>
+</p><h3>Implementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější funkce, ale pak bez příkazu <code>procedure</code>
+<br>&nbsp;
+<br>Vazba: <code><a href="a_pi.html#piconst">PICONST</a></code> pro <code>P&lt;=200</code>, pro <code>P&gt;200</code> můžeme použít funkci 
+<code><a href="a_pi.html#pi">PI</a></code>
+<br>&nbsp;
+<br>Parametry: číslo <code>X</code> (radiány), přirozené číslo <code>P</code> - počet platných číslic výsledku,  implicitně <code>9</code>
+
+<br>&nbsp;
+<br>Vrací: hodnotu <code>SIN(X)</code> nebo <code>COS(X)</code>
+
+
+<a name="sin">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SIN: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+Pi = PICONST(); Signum = 1
+if X &lt; 0 then do; Signum = -1; X = -X; end
+Pim2 = Pi * 2; X = X // Pim2; Pid2 = Pi / 2
+if X &gt; Pi
+  then do; X = X - Pi; Signum = -Signum; end
+if X &gt; Pid2 then X = Pi - X
+Term = X; Xsup2 = X * X; Sum = X; F = 1
+do J = 3 by 2
+  Term = -Term * Xsup2 / (J * (J - 1))
+  NewSum = Sum + Term
+  if NewSum = Sum then return Signum * Sum
+  Sum = NewSum
+end
+</code>
+</pre>
+</div>
+<a name="cos">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COS: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+Pi = PICONST(); Signum = 1; X = ABS(X)
+Pim2 = Pi * 2; X = X // Pim2; Pid2 = Pi / 2
+if X &gt; Pi
+  then do; X = X - Pi; Signum = -Signum; end
+if X &gt; Pid2
+  then do; X = Pi - X; Signum = -Signum; end
+Term = 1; Xsup2 = X * X; Sum = 1; F = 1
+do J = 2 by 2
+  Term = -Term * Xsup2 / (J * (J - 1))
+  NewSum = Sum + Term
+  if NewSum = Sum then return Signum * Sum
+  Sum = NewSum
+end
+</code>
+</pre>
+</div>
+</p>
+<br>
+<h3>Souvislosti</h3><p>
+<a href="a_pi.html">Číslo Pi</a>
+<br>
+<br><a href="a_fact.html">Faktoriál</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trik Waltera Pachla</a> v refle<span class="reflexio">XX</span>io
+</p>
+<br>
+<h3>Literatura</h3><p>
+Wirth N., <i>Systematisches Programmieren</i> - 2nd ed. B.G Teubner, 
+Stuttgart, 1975
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Interpolace kubickými spliny</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Interpolace funkce zadané N vstupními 
+	body pomocí kubických splinů">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_spli.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_spli.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>INTERPOLACE KUBICKÝMI SPLINY</h1><hr>
+<h3>Problém</h3><p>
+Jsou dány hodnoty funkce v bodech 
+<code>A.1 &lt; A.2& lt; ... &lt; A.N</code>. Odhadněte hodnotu funkce v 
+bodě <code>V</code> z intervalu <code>[A.1, A.N]</code>. 
+</p><br><h3>Definice</h3><p>
+<div class=t>
+Funkce <code>S</code> se nazývá kubický spline na intervalu 
+<code>[A.1, A.N]</code> jestliže 
+<ul>
+<li><code>S</code> je na <code>[A.1, A.N]</code> definována; 
+<li><code>S</code>, první derivace <code>S</code>, druhá derivace 
+<code>S</code> jsou spojité funkce na <code>[A.1, A.N]</code>; 
+<li>pro body <code>A.</code> funkce <code>S</code> platí 
+  <code>A.1 &lt; A.2 &lt; ... &lt; A.N</code> a <code>S</code> je polynom 
+  stupně <code>&lt;= 3</code> na každém intervalu <code>[A.J, A.Jp1]</code>, 
+  kde <code>Jp1 = J + 1</code>.
+</ul>
+</p><br>
+<h3>Algoritmus</h3><p>
+Je dáno pole <code>A.1, ..., A.N</code> a 
+<code>B.1, ..., B.N</code>. Pole <code>B.</code> obsahuje hodnoty funkce 
+ v bodech <code>A.</code>, platí <code>A.1 &lt; A.2 &lt; ...&lt; A.N</code>.
+ Jsou dány hodnoty první derivace funkce v bodech <code>A.1</code> a 
+ <code>A.N</code>, které označíme <code>B1A1</code> a <code>B1AN</code>. 
+ Podprogram <code>SPLINE</code> vypočte hodnoty pole <code>B2.</code> - 
+ druhé derivace interpolované funkce v zadaných bodech <code>A.</code>; 
+ funkce <code>SPLINE</code> je volána jen jednou. Hodnotu funkce v bodě 
+ <code>V</code> určí interpolační funkce <code>SPLINT</code>.
+
+
+</p><br><h3>Implementace spline</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: vstupní rostoucí posloupnost 
+<code>A.1, ..., A.N</code>, vstupní pole  <code>B.</code> a výstupní pole 
+<code>B2.</code>, které obsahuje vypočítané hodnoty druhé derivace 
+interpolované funkce v zadaných bodech.
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code>, hodnoty 
+<code>B1A1</code> a <code>B1AN</code> prvních derivací interpolované funkce 
+v bodech <code>A.1</code> and <code>A.N</code>
+
+<a name="spline">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SPLINE: procedure expose A. B. B2.
+N = ARG(1); B1A1 = ARG(2); B1AN = ARG(3)
+if B1A1 > 0.99E+99 then do; B2.1=0; U.1=0; end
+  else do
+    B2.1 = -0.5
+    U.1=(3 / (A.2 - A.1)) *,
+      ((B.2 - B.1) / (A.2 - A.1) - B1A1)
+  end
+do J = 2 to N - 1
+  Jm1 = J - 1; Jp1 = J + 1
+  Sig = (A.J - A.Jm1) / (A.Jp1 - A.Jm1)
+  P = Sig * B2.Jm1 + 2
+  B2.J = (Sig - 1) / P
+  U.J = (B.Jp1 - B.J) / (A.Jp1 - A.J) -,
+    (B.J - B.Jm1) / (A.J - A.Jm1)
+  U.J = (6 * U.J / (A.Jp1 - A.Jm1) - Sig * U.Jm1) / P
+end
+Nm1 = N - 1
+if B1AN > 0.99E+99 then do; Qn = 0; Un = 0; end
+  else do
+    Qn = 0.5;
+    Un = (3 / (A.N - A.Nm1)) *,
+      (B1AN - (B.N - B.Nm1) / (A.N - A.Nm1))
+  end
+B2.N = (Un - Qn * U.Nm1) / (Qn * B2.Nm1 + 1)
+do J = N - 1 to 1 by -1
+  Jp1 = J + 1
+  B2.J = B2.J * B2.Jp1 + U.J
+end
+return
+</code>
+</pre>
+</div>
+
+</p><h3>Implementace spline</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: vstupní pole: rostoucí posloupnost <code>A.</code>, 
+pole <code>B.</code> a pole <code>B2.</code> vypočítané podprogramem 
+<code>SPLINE</code>
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code>, hodnota <code>V</code>
+<br>&nbsp;
+<br>Vrací: odhad hodnoty <code>B.V</code>
+
+
+<a name="splint">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SPLINT: procedure expose A. B. B2.
+N = ARG(1); V = ARG(2)
+L = 1; H = N
+do while (H - L) > 1
+  K = (H + L) % 2
+  if A.K > V then H = K
+    else L = K
+end
+Q = A.H - A.L
+if Q = 0 then
+  call ERROR "SPLINT: Vstupní posloupnost musí být rostoucí"
+X = (A.H - V) / Q; Y = (V - A.L) / Q
+BV = (X**3 - X) * B2.L + (Y**3 - Y) * B2.H
+BV = X * B.L + Y * B.H + BV * (Q**2) / 6
+return BV
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>
+Následující program zobrazí <code>2.52386364<br>2.71270431</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do J = 1 to 6; A.J = J; end
+B.1 = 1.1; B.2 = 2.5; B.3 = 2.6
+B.4 = 3.0; B.5 = 5.0; B.6 = 4.0
+call SPLINE 6, 0, 0
+say SPLINT(6, 3.5); say SPLINT(6, 3.8)
+exit
+SPLINE: procedure expose A. B. B2.
+...
+SPLINT: procedure expose A. B. B2.
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_piae.html">Interpolace a extrapolace polynomy</a>
+<br>
+<br><a href="a_rfie.html">Interpolace a extrapolace racionální funkcí</a>
+</div>
+</p><br>
+<h3>Spoluautor</h3><p>
+Doug Rickman - funkce <code>SPLINE</code>, <code>SPLINT</code> a příklad
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

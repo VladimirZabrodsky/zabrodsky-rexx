@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Druhá odmocnina kladného reálného čísla</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Newtonova iterační metoda pro výpočet 
+	druhé odmocniny kladného reálného čísla" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_sqrt.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_sqrt.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DRUHÁ ODMOCNINA KLADNÉHO REÁLNÉHO ČÍSLA</h1><hr>
+<h3>Algoritmus</h3><p>
+Druhou odmocninu kladného reálného čísla <code>N</code> lze určit pomocí 
+Newtonova algoritmu ze vztahu:
+<br>
+<br><code>New = 0.5 * (X + N / X)</code>
+<br><br>
+s počáteční hodnotou <code>X</code> rovnou například 
+<code>(1+N)/2</code>. Hodnota <code>NewX</code> se v další iteraci dosadí 
+za 
+<code>X</code> atd.  
+
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka:  vnitřní funkce nebo vnější funkce, ale pak bez 
+<code>procedure</code> příkazu
+<br>&nbsp;
+<br>Parametry: kladné reálné číslo <code>N &gt; 0</code>, přirozené číslo
+ <code>P</code> - počet platných číslic ve vypočtené hodnotě 
+ <code>SQRT(N)</code>, implicitně <code>P=9</code>
+<br>&nbsp;
+<br>Vrací: prvních <code>P</code> platných číslic <code>SQRT(N)</code>
+
+<a name="sqrt">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SQRT: procedure
+parse arg N, P
+if P = "" then P = 9; numeric digits P
+parse value FORMAT(N,,,,0) with N "E" Exp
+if Exp = "" then Exp = 0
+if (Exp // 2) <> 0 then
+  if Exp &gt; 0
+    then do; N = N * 10; Exp = Exp - 1; end
+    else do; N = N / 10; Exp = Exp + 1; end
+X = 0.5 * (N + 1)
+do forever
+  NewX = 0.5 * (X + N / X)
+  if X = NewX then return X * 10 ** (Exp % 2)
+  X = NewX
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>
+Následující program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+say SQRT(2)
+numeric digits 20
+say SQRT(2, 18)
+exit
+SQRT: procedure
+...
+</code>
+</pre>
+</div>
+zobrazí 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+1.41421356
+1.41421356237309505
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<div class=t><a href="a_gamma.html">Eulerova konstanta gamma</a>
+<br>
+<br><a href="a_e.html">Eulerovo číslo e</a>
+<br>
+<br><a href="a_pi.html">Číslo Pi</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trik Waltera Pachla</a> v refle<span class="reflexio">XX</span>io
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

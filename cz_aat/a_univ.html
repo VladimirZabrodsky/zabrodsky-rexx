@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 2001-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Univerzální programová jednotka</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Předání parametrů, využití funkce 
+	z alba s globálním parametrem - polem, příkaz interpret, funkce value, 
+	kopírování pole, předání pole v řetězci, externí datová fronta" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_univ.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_univ.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: UNIVERZÁLNÍ PROGRAMOVÁ JEDNOTKA</h1><hr><br>
+<p>
+Předpokládejme, že máme řešit úlohu najít medián pole 
+<code>B.</code> rozměru <code>N = 10001</code>. Nemůžeme využít přímo funkci 
+<code><a href="a_modi.html#modifind">MODIFIND</a></code> z tohoto alba, 
+protože ta pracuje s polem <code>A.</code>.
+<br><span class="green">Poznámka k testovacímu prostředí</span>:  Windows 2000 Professional, 
+132MB RAM, procesorem typu x86Family 6 Mode 6 Stepping 5. 
+</p>
+<h2>První řešení</h2><p>
+Přepíšeme kód funkce <code>MODIFIND</code> tak, aby pracovala s polem 
+<code>B.</code>; program <code>PROGRAM1</code> zobrazí jako výsledek 
+<code>0.698 sec</code> a hodnoty mediánů. Pro praktické využití tohoto 
+obratu, bychom si mohli napsat program, který by automaticky měnil jméno 
+pole v programovém kódu.
+
+<a name="test">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM1 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  S = S MODIFIND1(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND1: procedure expose B.
+parse arg N, K
+L = 1; R = N
+do while L &lt; R
+  X = B.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while B.I &lt; X; I = I + 1; end
+    do while X &lt; B.J; J = J - 1; end
+    W = B.I; B.I = B.J; B.J = W
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return B.K
+</code>
+</pre>
+</div>
+</p>
+<h2>Druhé řešení</h2><p>
+Nejprve vždy zkopírujeme pole <code>B.</code> do <code>A.</code> a pak 
+vyvoláme původní funkci <code><a href="a_modi.html#modifind">MODIFIND</a>
+</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM2 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  do J = 1 to N; A.J = B.J; end
+  S = S MODIFIND(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND: procedure expose A.
+...
+</code>
+</pre>
+</div>
+<code>PROGRAM2</code> zobrazí <code>0.912 sec</code>. Musíme však pole 
+<code>A.</code> rezervovat pro předání parametrů.
+
+</p>
+<h2>Třetí řešení</h2><p>
+V proměnné <code>Stemv</code> se předá funkci jméno pole. V tomto případě 
+rezervujeme jen jméno jediné proměné <code>Stemv</code>. 
+<code>PROGRAM3_1</code> zobrazí <code>0.793 sec</code>. 
+<code>PROGRAM3_2</code> zobrazí <code>0.962 sec</code>.
+Výsledný programový kód není snadno pochopitelný ani v jednom případě.
+
+
+<a name="3_1">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM3_1 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+StemV = 'B.'
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+S = S MODIFIND3_1(N, K)
+Total = Total + TIME("R")
+end
+say Total / 10 "seconds"; say S
+exit
+MODIFIND3_1: procedure expose (StemV)
+parse arg N, K
+L = 1; R = N
+interpret,
+'do while L &lt; R ;',
+  'X = 'StemV'K; I = L; J = R ;',
+  'do until J &lt; K | K &lt; I ;',
+    'do while 'StemV'I &lt; X; I = I + 1; end ;',
+    'do while X &lt; 'StemV'J; J = J - 1; end;',
+    'W = 'StemV'I; 'StemV'I = 'StemV'J;',
+    StemV'J = W;',
+    'I = I + 1; J = J - 1;',
+  'end;',
+  'if J &lt; K then L = I;',
+  'if K &lt; I then R = J;',
+'end;',
+'return 'StemV'K'
+
+
+/* PROGRAM3_2 */
+N = 10001; K = 5001; Stemv = "B."
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  S = S MODIFIND3_2(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "seconds"; say S
+exit
+MODIFIND3_2: procedure expose Stemv (Stemv)
+parse arg N, K
+L = 1; R = N
+do while L &lt; R
+  X = VALUE(Stemv || K); I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while VALUE(Stemv || I) &lt; X
+      I = I + 1
+    end
+    do while X &lt; VALUE(Stemv || J)
+      J = J - 1
+    end
+    W = VALUE(Stemv || I, VALUE(Stemv || J))
+    T = VALUE(Stemv || J, W)
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return VALUE(Stemv || K)
+</code>
+</pre>
+</div>
+</p>
+<h2>Čtvrté řešení</h2><p>
+To je první skutečně obecné řešení, které může být použito i pro 
+<u>vnější</u> funkce a podprogramy. Pro předání parametrů využijeme externí 
+datovou frontu. <code>PROGRAM4</code> zobrazí <code>3.449 sec</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM4 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  do J = 1 to N; queue B.J; end
+  S = S MODIFIND4(N, K)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND4: procedure
+parse arg N, K
+do J = 1 to N; pull A.J; end
+L = 1; R = N
+do while L &lt; R
+  X = A.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while A.I &lt; X; I = I + 1; end
+    do while X &lt; A.J; J = J - 1; end
+    W = A.I; A.I = A.J; A.J = W
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return A.K
+</code>
+</pre>
+</div>
+</p>
+<h2>Páté řešení</h2><p>
+
+
+
+Předpokládejme, že prvky pole <code>B.</code> jsou slova. Pak pole 
+<code>B.</code> může být předáno jako řetězec znaků, ve kterém jednotlivé 
+prvky oddělují mezery. Tento postup je použitelný i pro předání parametrů 
+vnější funkci. V obecném případě může být lexikální alnalýza, potřebná pro 
+převzetí hodnot jednotlivých prvků, mnohem složitější. 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* PROGRAM5 */
+N = 10001; K = 5001
+Seed = RANDOM(1, 1, 481989)
+Total = 0; S = ""
+do 10
+  do J = 1 to N
+    B.J = RANDOM(1, 100000)
+  end
+  call TIME "R"
+  String = ""
+  do J = 1 to N
+    String = String B.J
+  end
+  S = S MODIFIND5(N, K, String)
+  Total = Total + TIME("R")
+end
+say Total / 10 "sec"; say S
+exit
+MODIFIND5: procedure
+parse arg N, K, String
+do J = 1 to N
+  parse var String A.J String
+end
+L = 1; R = N
+do while L &lt; R
+  X = A.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while A.I &lt; X; I = I + 1; end
+    do while X &lt; A.J; J = J - 1; end
+    W = A.I; A.I = A.J; A.J = W
+    I = I + 1; J = J - 1
+end
+if J &lt; K then L = I
+if K &lt; I then R = J
+end
+return A.K
+</code>
+</pre>
+</div>
+Tento program vypíše <code>12.825 sec</code>; v případě verze s vnější
+ funkcí <code>12.885 sec</code>.
+</p><br>
+<h3>Shrnutí</h3><p>
+POZNÁMKA: Tento test běžel v prostředí Windows 2000 Professional na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POROVNÁNÍ METOD
+
+Metoda   Externí?   Prostředek předání      Čas výpočtu   Nevýhoda
+1          ne	    žádný                   0.698         pro každé pole jiná rutina
+2          ne	    pole A.                 0.912         kopírování do A.
+3.1        ne	    proměnná + INTERPRET    0.793         nečitelný programový kód
+3.2        ne	    proměnná + VALUE	    0.962         nečitelný programový kód
+4          ano	    externí datová fronta   3.328         pomalejší
+5          ano	    řetězec                12.825         pomalejší, lexikální analýza
+</code>
+</pre>
+</div>
+</p>
+<h3>Spoluautor</h3><p>
+Tobias Herp - řešení <code>PROGRAM3_1</code>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
