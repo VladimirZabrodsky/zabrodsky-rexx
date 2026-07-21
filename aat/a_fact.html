@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Factorial</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computing the factorial and its approximation by Stirling formula">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_fact.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_fact.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>FACTORIAL</h1><hr>
+<h3>Implementation</h3><p>
+Unit: internal function, external function without <code>procedure</code>
+ statement
+<br>&nbsp;
+<br>Parameters: a integer  <code>N &gt;= 0</code> 
+<br>&nbsp;
+<br>Returns: <code>FACT(N) = 1 * 2 * ... * N</code>
+<a name="fact">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FACT: procedure
+parse arg N
+F = 1
+do J = 2 to N; F = F * J; end
+return F
+</code>
+</pre>
+</div>
+An excellent approximation of <code>FACT(N)</code> was obtained by James Stirling in 
+the 18 century. We use it in the following <code>STIRLING</code> program for 
+computing of the approximation of the factorial by the <i>Stirling's formula</i>.
+<a name="stirling">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+STIRLING: procedure
+parse arg N, P
+Pi = PI(P); E = E(P)
+Sqrt2pin = SQRT(2 * Pi * N, P)
+return,
+   Sqrt2pin * (N / E)**N * (1 + 1 / (12 * N))
+</code>
+</pre>
+</div>   
+Used functions: <code> 
+<br><a href="a_pi.html#pi">PI</a>  
+<br> 
+<br><a href="a_e.html#e">E</a>  
+<br>
+<br><a href="a_sqrt.html#sqrt">SQRT</a></code>
+</p><br>  
+<h3>Example</h3><p>
+The <code>FACT(10)</code> computes the value <code> 3628800</code> and 
+<code>STIRLING(10)</code> computes the value <code>3628684.7</code>
+<br>&nbsp;
+<br>As <code>N</code> increases, the approximation to the factorial becomes 
+more and
+ more accurate.
+<br>&nbsp;
+<br><code>FACT(108001)</code> returns (in <code>numeric digits 32</code> 
+settings)
+
+<br><code>8.1428599075279953478037134061743E+496713</code> 
+
+after 1.56 sec
+<br>&nbsp;<br><code>STIRLING(108001,32)</code> returns 
+
+<br><code>8.14285990752<span class="red">55713876213611726275</span>E+496713</code> 
+
+after 0.02 sec (Windows 2000 Professional, 132MB RAM, processor x86Family 6 Mode 6 Stepping 5).
+</p><br>
+<h3>Connections</h3><p>
+<a href="a_e.html">Euler's number e</a>
+<br>
+<br><a href="a_pi.html">Number Pi</a>
+<br>
+<br><a href="a_ncom.html">Number of combinations</a>
+<br>
+<br><a href="a_sqrt.html">Square root of positive real number</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

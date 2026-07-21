@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>The Number of Combinations</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computing the number of combinations">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_ncom.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_ncom.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>THE NUMBER OF COMBINATIONS</h1><hr>
+<br><p>
+The combinations of <code>N</code> objects taken <code>K</code> at a time are the 
+possible choices of <code>K</code> different elements from a set of <code>N</code>
+ objects. The number of combinations, which we denote by <code>NCOMB(N,K)</code> is: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NCOMB(N, K) = (N*(N-1)* ... *(N-K+1))/<a href="a_fact.html">FACT(K)</a>
+NCOMB(N, K) = 0 for N &lt; K
+NCOMB(N, K) = 0 for K &lt;= 0
+</code>
+</pre>
+</div>
+the following formula holds for all integers <code>K</code>
+<br>
+<br><code>NCOMB(N, K) = NCOMB(N, N-K)</code>
+<br>
+</p><br>
+<h3>Implementation</h3><p>
+Unit: internal function, external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Parameters: integers <code>N &gt;= 0, K</code>
+<br>&nbsp;
+<br>Interface:
+the <code><a href="a_fact.html">FACT</a></code> function
+<br>&nbsp;
+<br>Returns: the number of combinations <code>NCOMB(N,K)</code>
+
+
+<a name="ncomb">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NCOMB: procedure
+parse arg N, K
+if K &lt; 0 | N &lt; K then return 0
+if K = N then return 1
+if K &gt; N - K then K = N - K
+Nom = 1
+do J = N - K + 1 to N; Nom = Nom * J; end
+return Nom / FACT(K)
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_fact.html">Factorial</a>
+<br>
+<br><a href="a_gknl.html">Generation of all subsets with K elements
+<br>
+<br><a href="a_perm.html">Generation of permutation sequences</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

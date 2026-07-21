@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Number Pi</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Let's compute the number Pi to  thousand 
+	decimal places, Algorithm of J. M. Borwein and P. B. Borwein" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_pi.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_pi.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>NUMBER <span class="serif lowercase">&pi;</span></h1><hr>
+<h3>Problem</h3><p>
+Compute the number <i>&pi;</i> to thousand decimal places.
+</p><br>
+<h3>Algorithm</h3><p>
+<div class=t>Algorithm of J. M. Borwein and P. B. Borwein for computation of 
+<i>&pi;</i> number starts with the initializations 
+<code>X = SQRT(2); Pi = 2 + X; Y = SQRT(X)</code>
+and then repeats the iteration
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 0.5 * (SQRT(X) + 1 / SQRT(X)
+Pi = Pi * (X + 1) / (Y + 1)
+Y = Y * (SQRT(X) + 1 / SQRT(X)) / (Y + 1)
+</code>
+</pre>
+</div>
+</p>
+<h3>Implementation</h3><p>
+Unit:     internal function, external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Interface: <code><a href="a_sqrt.html#sqrt">SQRT</a></code> function
+<br>&nbsp;
+<br>Parameter: a positive integer <code>P</code> - number of digits of 
+&pi;, implicit <code>P = 9</code>
+<br>&nbsp;
+<br>Returns: the first <code>P</code> significant decimal digits of 
+&pi;, default is <code>9</code>
+
+<a name="pi">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PI: procedure
+parse arg P
+if P = "" then P = 9; numeric digits P
+X = SQRT(2, P); Pi = 2 + X
+Y = SQRT(X, P); X = Y
+do forever
+  X = 0.5 * (X + 1 / X)
+  NewPi = Pi * (X + 1) / (Y + 1)
+  if Pi = NewPi then return Pi
+  Pi = NewPi
+  X = SQRT(X, P)
+  Y = (Y * X + 1 / X) / (Y + 1)
+end
+</code>
+</pre>
+</div>
+There is an another way to obtain the value of the number &pi;: 
+we can compute the number &pi; only once and save its value into the text
+ of the function. The following <code>PICONST</code> function can be used to 
+ computing of the first <code>P</code> decimal digits of &pi;, for 
+ <code>P = 1, ..., 200</code>. It was created automatically by the program, see 
+ <a href="a_bcco.html">Technique: Beforehand computed constants</a>.
+
+<a name="piconst">&nbsp;</a>
+<a name="pi">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PICONST: procedure; V = ''
+V = V || 3.14159265358979323846264338327950288419
+V = V || 7169399375105820974944592307816406286208
+V = V || 9986280348253421170679821480865132823066
+V = V || 4709384460955058223172535940812848111745
+V = V || 028410270193852110555964462294895493038196
+return V
+</code>
+</pre>
+</div>
+The statement <code>Number_Pi = PI(1000)</code> computes 10 times loop in 
+<code>PI</code> function and requires <code>79</code> seconds 
+(Windows 2000 Professional environment on the computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5).
+
+</p></br>
+<h3>Connections</h3><p>
+<a href="a_sqrt.html">Square root of positive number</a>
+<br>
+<br><a href="a_bcco.html">Technique: Beforehand computed constants</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trick by Walter Pachl</a> in <a href="reflexio.html">refle<span class="reflexio">XX</span>io</a>
+</p><br>
+<h3>Literature</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

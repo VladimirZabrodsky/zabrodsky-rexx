@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Interpolation search</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="On average interpolation search will take 
+	about lglgN comparisons" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_inte.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_inte.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Interpolation search</h1><hr>
+<h3>Problem</h3><p>
+Given an ascending sequence of values <code>A.1, ..., A.N</code> and target value 
+<code>V</code>. Search routine should return an index of <code>V</code> in 
+<code>A.</code> if <code>V</code> is present in the array, and <code>N + 1</code> 
+otherwise. 
+</p><br>
+<h3>Algorithm</h3><p>
+We assume that the keys are numerical and they are in the array uniformly distributed.
+ On average interpolation search will take about <code>lglgN</code> comparisons.
+</p><br>
+<h3>Implementation</h3><p>
+Unit: internal function
+<br>&nbsp;
+<br>Global variables:  ascending sequence of numerical values 
+<code>A.1, ..., A.N</code>
+<br>&nbsp;
+<br>Parameters: positive integer <code>N</code>, numerical value 
+<code>V</code>
+<br>&nbsp;
+<br>Returns: the index of <code>V</code> in <code>A.</code> if <code>V</code> 
+is present in the array, and <code>N + 1</code> otherwise 
+
+
+<a name="interpolation_search">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+INTERPOLATION_SEARCH: procedure expose A.
+parse arg N, V
+L = 1; R = N
+do while (A.R &gt;= V) &amp; (V &gt; A.L)
+  M = L + TRUNC((V-A.L)/(A.R-A.L)*(R-L))
+  if V &gt; A.M then L = M + 1
+    else if V &lt; A.M then R = M - 1
+                    else L = M
+end
+if A.L = V then return L; else return N + 1
+</code>
+</pre>
+</div>
+
+</p><br>
+<h3>Connections</h3><p>
+
+<a href="a_seqs.html">Sequential search</a>
+<br>
+<br><a href="a_sent.html#sequential_search_without_sentinel">Sequential search without sentinel</a>
+<br>
+<br><a href="a_bins.html">Binary search</a>
+<br>
+<br><a href="a_asoc.html">Search in associative arrays</a>
+<br>
+<br><a href="a_absc.html">Search an array of abscissas</a>
+</p><br>
+<h3>Literature</h3><p>
+Sedgewick R. <i>Algorithms</i> Addison-Wesley, Reading, Massachusetts, 1984
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

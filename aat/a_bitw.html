@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technique: Bitwise operations</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Bitwise operation in the Rexx language,
+	AND, OR, XOR, shift right left, practice,
+	Vernam's method, Gray code, decompress subroutine" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_bitw.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_bitw.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIQUE: BITWISE OPERATIONS</h1><hr><br>
+<p>
+After interpretation of the statement <code>V="A"</code> we can see the 
+contents of the <code>V</code> variable by the simple statement 
+<code>say V</code>. It displays <code>A</code> on the screen. The value 
+<code>"A"</code> is saved in one byte as a sequence bits. We display this 
+sequence by the Rexx <code>say X2B(C2X(V))</code> statement. The statement 
+<code>say C2X(V)</code> will show the hexadecimal representation. And the 
+<code>C2D(V)</code> function returns the value of <code>V</code> interpreted 
+as a decimal number, for our example and ASCII it is <code>65</code> 
+(<code>16*4+1</code>).
+</p> <br>
+<h2>List of implementations of bitwise operations</h2><p>
+<span class="green">AND</span> - 
+The <code>BITAND</code> function is bitwise AND operation, it returns its 
+operators ANDed together bit by bit. 
+<br>
+<br><span class="green">OR</span> -
+The <code>BITOR</code> function is bitwise OR operation, it returns its 
+operators ORed together bit by bit. 
+<br>
+<br><span class="green">XOR</span> - The <code>BITXOR</code> function is bitwise 
+eXclusive OR (XOR) operation, it returns its operators XORed together bit by 
+bit.
+<br>
+<br><span class="green">RIGHT SHIFTT</span> - Bitwise left shift by 
+<code>B</code> bits for <code>N</code> is equal 
+<code>D2C(C2D(N)*(2**B))</code>, where <code>B</code> must be nonnegative.
+<br>
+<br><span class="green">RIGHT SHIFT</span> - 
+Bitwise rigth shift by <code>B</code> bits for <code>N</code> is equal 
+<code>D2C(C2D(N)%(2**B))</code>, where <code>B</code> must be nonnegative.
+</p>
+<br>
+<h3>Example 1 - Vernam's method </h3><p>
+The <code>BITXOR</code> function is as well the famous Vernam's encryption 
+and decryption method. To encrypt a message <code>Text</code>, using 
+Vernam's method, proceed as follows. First, create random string of bits 
+<code>Key</code>, where <code>LENGTH(Text)=LENGTH(Key)</code>.  Then encrypt 
+the <code>Text</code> by 
+<code>Ciphertext=BITXOR(Text,Key)</code>
+To decrypt the ciphertext  perform 
+ <code>Plaintext=BITXOR(Ciphertext,Key)</code>.
+Then <code>Text==Plaintext</code>. You can try the following program.
+
+<a name="vernam">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* VERNAM */
+parse arg Text
+L = LENGTH(Text) * 8; Key = ""
+do J = 1 to L
+  Key = Key || RANDOM(0, 1)
+end
+Key = X2C(B2X(Key))
+Ciphertext = BITXOR(Text, Key)
+Plaintext  = BITXOR(Ciphertext, Key)
+if Plaintext == Text
+  then say "Vernam's method works"
+  else say "Eh?"
+</code>
+</pre>
+</div>
+</p>
+<h3>Example 2 - Gray code</h3><p>Gray code is a function <code>G</code> of 
+the integers <code>I</code>, that for each integer <code>N&gt;=0</code> is 
+one-to-one for <code>0&lt;=I&lt;=2**(N-1)</code> and that 
+has the following property: The binary representation of <code>G(I)</code> 
+and <code>G(Ip1)</code>, for <code>Ip1=I+1</code>, differ in exactly one bit. 
+<br>The algorithm for generating this code is simply to form the bitwise 
+exclusive-or (<code>BITXOR</code>) of <code>I</code> and <code>I%2</code>, 
+where <code>I%2</code> is bitwise right shift by 1 bit.
+<br>The following program  <code>GRAY</code> displays on the screen, for the 
+argument equals <code>15</code><br>
+<br><code>00000000 00000001 00000011 00000010 00000110 00000111 00000101 00000100 00001100 
+00001101 00001111 00001110 00001010 00001011 00001001 00001000</code>
+<br><br>We need to know the number of bits necessary to represent  the codes 
+plus the padding to align to nearest byte boundary.  The number of bits 
+of the <code>N</code>-th code is 
+<code>LENGTH(X2B(D2X(N)))</code> The <code>BYTES</code> 
+function returns the necessary number of bytes for a given number of bits.
+
+
+<a name="gray_code">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* GRAY_CODE */
+parse arg N
+S = BYTES(LENGTH(X2B(D2X(N))))
+Gray_code = ""
+do I = 0 to N
+  Ibrs1 = I % 2
+  A = D2C(I, S); B = D2C(Ibrs1, S)
+  C = BITXOR(A, B)
+  Gray_code = Gray_code X2B(C2X(C))
+end
+say Gray_code
+exit
+ 
+BYTES: procedure
+parse arg B
+R = B // 8
+if R &lt;&gt; 0 then B = B + 8 - R
+return B % 8
+</code>
+</pre>
+</div>
+</p>
+<h3>Example 3 - Decompression routine</h3><p>
+
+The input for this routine is a compressed text <code>C</code>. It contains 
+two types codewords - <code>LITERAL X</code> and <code>COPY X, -Y</code>.
+</p>
+<h4>LITERAL X</h4><p> means pass the next 
+<code>X</code> characters directly into the uncompressed output 
+<code>D</code>.
+</p>
+<h4>COPY X,-Y</h4><p> means go back <code>Y</code> 
+characters in the uncompressed output and copy <code>X</code> characters 
+forward to the current position.
+We will use <code>8</code> bits for coding a 
+<code>LITERAL</code> codeword and <code>16</code> bits for coding a 
+<code>COPY</code> codeword. If the first <code>4</code> bits are 
+<code>0</code>, then the codeword is a literal; the next 
+<code>4</code> bits encode the length <code>X</code> in the range 
+<code>1</code> to <code>16</code> (<code>0</code> to <code>15</code> 
+in code) and the following <code>X</code> characters are literal. 
+Otherwise, the codeword is a copy; the first <code>4</code> bits encode a 
+length <code>X</code> in range <code>3</code> to <code>17</code> 
+(<code>1</code> to <code>16</code> in code) and the next <code>12</code> 
+bits are a displacement <code>Y</code> in the range <code>1</code> to 
+<code>4096</code> (<code>0</code> to <code>4095</code> in code). 
+The input string <code>AAAAAABBBBCCCAABBBBC</code> with <code>20</code> 
+characters can be compressed into the string
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+'00'X || "A" ||,     /* literal */
+'3000'X || ,         /* copy    */
+'00'X || "B" || ,    /* literal */
+'1000'X || ,         /* copy    */
+'02'X || "CCC" || ,  /* literal */
+'5008'X
+</code>
+</pre>
+</div>
+with <code>14</code> characters.
+
+<a name="decompress">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DECOMPRESS: procedure
+parse arg C
+D = ""; LengthC = LENGTH(C); Pc = 1; Pd = 1
+do while Pc &lt; LengthC
+  Byte = SUBSTR(C, Pc, 1)
+  if BITOR(Byte, '0F'X) = '0F'X
+  then call LITERAL Byte
+  else call COPY Byte
+end
+return D
+
+LITERAL: procedure expose C D Pc Pd
+parse arg L
+L = C2D(L) + 1
+D = D || SUBSTR(C, Pc + 1, L)
+Pc = Pc + L + 1
+Pd = Pd + L
+return
+ 
+COPY: procedure expose C D Pc Pd
+parse arg L
+L1 = C2D(L) % 16 + 2; L = L1
+X = C2D(BITAND('0FFF'X, SUBSTR(C, Pc, 2))) + 1
+Y = Pd - X
+do while L &gt; X
+  D = D || SUBSTR(D, Y, X)
+  L = L - X
+  X = 2 * X
+end
+if L &gt; 0 then D = D || SUBSTR(D, Y, L)
+Pc = Pc + 2; Pd = Pd + L1
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Literature</h3>
+<p>Fiala E.R., Greene D.H., <i>Data Compression with Finite Windows</i>
+CACM, April 1989, Vol. 32, No. 4, pp. 490-505
+<br>
+<br>Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P., 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+

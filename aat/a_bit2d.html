@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technique: Bit array encoded as decimal number</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Function returns decimal representation of bit array and the other way round subroutine creates bit array representation of decimal number">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_bit2d.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_bit2d.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIQUE: BIT ARRAY ENCODED AS DECIMAL NUMBER</h1><hr>
+<br>
+<p>Assume the bit array 
+<code>A.1 = 0; A.2 = 1; A.3 = 0; A.4 = 1; A.5 = 0
+<br>A.6 = 1; A.7 = 1; A.8 = 0; A.9 = 0; A.10 = 1</code>
+This array can be encoded as bit string <code>0101011001</code> or as 
+decimal number:
+<br><br><code>1*2**1 + 1*2**3  + 1*2**5 + 1*2**6  + 1*2**9 = 618</code>
+<br><br>And vice versa: the number <code>618</code> can be decoded 
+as the bit string or array:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+618 // 2 = <span class="red">0</span>; 618 % 2 = 309
+309 // 2 = <span class="red">1</span>; 309 % 2 = 154
+154 // 2 = <span class="red">0</span>; 154 % 2 = 77
+ 77 // 2 = <span class="red">1</span>;  77 % 2 = 38
+ 38 // 2 = <span class="red">0</span>;  38 % 2 = 19
+ 19 // 2 = <span class="red">1</span>;  19 % 2 = ;9
+  9 // 2 = <span class="red">1</span>;   9 % 2 = 4
+  4 // 2 = <span class="red">0</span>;   4 % 2 = 2
+  2 // 2 = <span class="red">0</span>;   2 % 2 = 1
+  1 // 2 = <span class="red">1</span>;   1 % 2 = 0
+</code>
+</pre>
+</div>
+And there is the <code>BITARRAY2D</code> function, it returns a 
+decimal representation of bit array <code>A.</code>:
+<a name="bitarray2d">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+BITARRAY2D: procedure expose A.
+parse arg N
+/* for N &lt;= 10000 */
+numeric digits 3011; Nd = 2 ** N - 1
+numeric digits LENGTH(Nd)
+D = 0; B = 1
+do J = 1 to N
+  if A.J then D = D + B
+  B = 2 * B
+end
+return D
+</code>
+</pre>
+</div>
+And the <code>D2BITARRAY</code> subroutine creates a bit 
+array representation of decimal number:
+<a name="d2bitarray">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+D2BITARRAY: procedure expose A.
+parse arg D, N
+/* for N &lt;= 10000 */
+numeric digits 3011; Nd = 2 ** N - 1
+numeric digits LENGTH(Nd)
+do J = 1 while D &gt; 0
+  A.J = D // 2
+  D = D % 2
+end
+do J = J to N; A.J = 0; end
+return
+</code>
+</pre>
+</div>
+</p>
+<h4>Note:</h4><p>
+This was the example of using of technique. The 
+<code>BITARRAY2D</code> isn't the most effective algorithm. The 
+following <code>BITARRAY2D_B</code> function is  more quick for 
+<code>N=10000</code> than <code>BITARRAY2D</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+BITARRAY2D_B: procedure expose A.
+parse arg N
+/* for N &lt;= 10000 */
+numeric digits 3011; Nd = 2 ** N - 1
+numeric digits LENGTH(Nd)
+String = ""
+do J = N to 1 by -1
+  String = String || A.J
+end
+return X2D(B2X(String))
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_b2d.html">How to convert from any base to any base</a>
+<br>
+<br><a href="a_powe.html">Power</a>
+<br>
+<br><a href="a_dyna.html">Subset-sum problem - Dynamic programming</a>
+</p><br>
+<h3>Literature</h3>
+<p>
+Martello S., Toth P., <i>Knapsack Problems: Algorithms nad Computer 
+Implementations</i> Chichester, John Wiley &amp; sons 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

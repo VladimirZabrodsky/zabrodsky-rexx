@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Boyer-Moore matcher</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="String-Matching Problem. The most efficient string-matching algorithm,
+	Robert S. Boyer and J. Strother Moore">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_boye.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_boye.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>BOYER-MOORE ALGORITHM</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+The text is an array <code>T.1, T.2,..., T.N</code> and the pattern is an array 
+<code>P.1, P.2, ..., P.M</code>. The elements of <code>P.</code> and <code>T.</code>
+ are characters drawn from a finite alphabet <code>Sigma.</code>, <code>Sigma.</code>
+ is an array of <code>R</code> elements. We say that pattern <code>P.</code> occurs 
+ with shift <code>S</code> in text <code>T.</code> if 
+ <code>0 &lt;= S &lt;= N - M</code> and if  <code>T.SpJ=P.J</code>, where 
+ <code>SpJ</code> indicates <code>S + J</code>, for <code>J = 1, ..., M</code>. 
+ String-matching problem is  the problem of finding all valid shifts with which a 
+ given pattern occurs in a given text. 
+
+</p><br>
+<h3>Algorithm</h3><p>
+The <code>BOYER_MOORE_MATCHER</code> algorithm was invented by Robert S. Boyer and J. 
+Strother Moore. Its worst-case running time is <i>O</i><code>((N-M+1) * M + R)</code>. 
+ 
+</p><br>
+<h3>Practice</h3><p>
+When a text and a pattern are real strings then the fastest solution is by 
+<code><a href="a_simp.html#real_string_matcher">REAL_STRING_MATCHER</a></code>. 
+In general case there is not an unambiguous winner. You have to test subroutines
+(Windows 2000 Professional 
+environment on the computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5): 
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+RUNNING TIME IN SECONDS FOR N=100000
+
+Algorithm      M=10,R=1999,S=50     M=10,R=4,S=10000     M=100,R=4,S=10000
+Naive                16                    25                    150 
+KMP                  21                    22                     23 
+Boyer-Moore           4                    15                    138 
+</code>
+</pre>
+</div>
+Where:
+<br><a href="a_naiv.html#naive_string_matcher">Naive algorithm</a>
+<br><a href="a_kmp.html#kmp_matcher">KMP algorithm</a>
+</p><br>
+<h3>Implementation</h3><p>
+
+Unit:
+internal subroutine
+<br>&nbsp;
+<br>Global variables:</code> array <code>T.1, ..., T.N</code> of strings, array 
+<code>P.1, ..., P.M</code> of strings, array <code>Sigma.1, ..., Sigma.R</code> of strings
+<br>&nbsp;
+<br>Parameters:
+ positive integer <code>N</code> - number of elements in <code>T.</code>, positive integer 
+ <code>M</code> - number of elements in <code>P.</code>, positive integer <code>R</code> - 
+ number of elements in <code>Sigma.</code>
+<br>&nbsp;
+<br>Output:
+ displays on the screen <code>Pattern occurs with shift</code> <code>S</code> for
+ all valid shift <code>S</code>
+
+
+<a name="boyer_moore_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+BOYER_MOORE_MATCHER:
+procedure expose T. P. Sigma.
+parse arg M, N, R
+call COMPUTE_LAST_OCCURENCE_FUNCTION M, R
+call COMPUTE_GOOD_SUFFIX_FUNCTION M
+S = 0
+do while S &lt;= N - M
+  do J = M to 1 by -1
+    SpJ = S + J
+    if P.J &lt;&gt; T.SpJ then leave
+  end
+  if J = 0
+    then do
+      say "Vzorek se nachází s posunutím" S
+      S = S + Gama.0
+    end
+    else do
+      SpJ = S + J; TSpJ = T.SpJ
+      S = S + MAX(Gama.J, J - Lambda.TSpJ)
+    end
+end
+return
+ 
+COMPUTE_LAST_OCCURENCE_FUNCTION:
+procedure expose P. Lambda. Sigma.
+parse arg M, R
+do I = 1 to R
+  SigmaI = Sigma.I; Lambda.SigmaI = 0
+end
+do J = 1 to M
+  PJ = P.J; Lambda.PJ = J
+end
+return
+ 
+COMPUTE_GOOD_SUFFIX_FUNCTION:
+procedure expose Gama. P.
+parse arg M
+call COMPUTE_PREFIX_FUNCTION M
+do I = 1 to M
+  PuvPi.I = Pi.I; PuvP.I = P.I
+end
+do I = M to 1 by -1
+  MmIp1 = M - I + 1; P.I = PuvP.MmIp1
+end
+call COMPUTE_PREFIX_FUNCTION M
+do I = 1 to M; P.I = PuvP.I; end
+do J = 0 to M
+  Gama.J = M - PuvPi.M
+end
+do L = 1 to M
+  J = M - Pi.L
+  if Gama.J &gt; L - Pi.L
+    then Gama.J = L - Pi.L
+end
+return
+ 
+COMPUTE_PREFIX_FUNCTION:
+procedure expose Pi. P.
+parse arg M
+Pi.1 = 0; K = 0
+do Q = 2 to M
+  Kp1 = K + 1
+  do while K &gt; 0 &amp; P.Kp1 &lt;&gt; P.Q
+    K = Pi.K; Kp1 = K + 1
+  end
+  Kp1 = K + 1
+  if P.Kp1 = P.Q then K = K + 1
+  Pi.Q = K
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+STRING-MATCHING PROBLEM
+<br><a href="a_simp.html">Matcher for real string</a>
+<br>
+<br><a href="a_naiv.html">Naive string matcher</a>
+<br>
+<br><a href="a_kmp.html">Knuth-Morris-Pratt matcher</a>
+</p><br>
+<h3>Literature</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. <i>Introduction to Algorithms</i>
+ The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Integer functions FLOOR, CEILING, MOD</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Functions, integer functions FLOOR, 
+	CEILING, MOD, definition, algorithms, example." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_floo.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_floo.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>CEILING, FLOOR, MOD</h1>
+<hr>
+<h3>FLOOR, CEILING - definitions and  functions</h3><p>
+If <code>X</code> is any real number, we  write 
+<img src="lbrack.gif" width=3 height=17 border=0><code>X</code><img src="rbrack.gif" width=3 height=17 border=0> or <code>FLOOR(X)</code> = 
+the greatest integer less than or equal to <code>X</code>;
+<br><img src="lubrack.gif" width=3 height=17 border=0><code>X</code><img src="rubrack.gif" width=3 height=17 border=0> or <code>CEILING(X)</code> = 
+the least integer greater than or equal to <code>X</code>.
+
+
+<a name="floor">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FLOOR: procedure
+parse arg F
+return TRUNC(F) - (F &lt; 0) * (F &lt;> TRUNC(F))
+ 
+CEILING: procedure
+parse arg C
+return TRUNC(C) + (C &gt; 0) * (C &lt;&gt; TRUNC(C))
+</code>
+</pre>
+</div>
+</p>
+<h4>Example</h4><p>
+
+The program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+say FLOOR(4) CEILING(4)
+say FLOOR(-4.1) CEILING(-4)
+say FLOOR(4.1) CEILING(4.1)
+say FLOOR(4.9) CEILING(4.9)
+exit
+</code>
+</pre>
+</div>
+displays on the screen
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+4 4
+-5 -4
+4 5
+4 5
+</code>
+</pre>
+</div>
+</p>
+<h3>MOD - definition and function</h3><p>
+If <code>X</code> and <code>Y</code> are any real numbers, we define the following  
+operation:
+<code>MOD(X,Y) = X - Y * FLOOR(X/Y)</code> if <code>Y &lt;&gt; 0</code>;
+<br><code>MOD(X,0) = X</code>
+
+<a name="mod">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MOD: procedure
+parse arg X, Y
+if Y = 0 then return X
+return X - Y * FLOOR(X/Y)
+</code>
+</pre>
+</div>
+There are the results of Knuth's excercises  8, 9, 10 in the chapter 1.2.4:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+say MOD(100,3) MOD(100,7) MOD(-100,7) MOD(-100,0)
+
+          displays 1 2 5 -100
+
+
+say MOD(5,-3) MOD(18,-3) MOD(-2,-3)
+
+
+          displays -1 0 -2
+
+
+say MOD(1.1,1) MOD(0.11,0.1) MOD(0.11,-0.1)
+
+
+          displays 0.1 0.01 -0.09
+</code>
+</pre>
+</div>
+</p>
+<h4>Notes</h4><p>
+<ul>
+<li><code>FLOOR(X)==TRUNC(X)</code>, if  <code>X&gt;=0</code>  
+<li>In the <a href="a_bins.html#binary_search"><code>BINARY_SEARCH</code></a> 
+algorithm 
+we use the expression <code>(L+R)%2</code> instead of <code>FLOOR((L+R)/2)</code>
+<li>The time complexity of the <a href="a_minm.html#minimax"><code>MINIMAX</code></a>
+ algorithm is <code>CEILING(3*N/2)-2</code> comparisons, it is equal 
+<code>FORMAT(3*N/2-2,,0)</code> for <code>N&gt;=2</code>. The expression 
+<code>FORMAT(N,,0)</code> rounds <code>N</code> to the nearest integer 
+<li>For real numbers <code>X&gt;=0, Y&gt;0</code> is <code>X//Y=MOD(X,Y)</code>, 
+see <a href="a_eucl.html">Euclid's GCD (and LCM) algorithms</a>
+</ul>
+</p>
+<br>
+<h3>Co-author</h3><p>
+Gerard Schildberger - the <code>CEILING</code> and 
+<code>FLOOR</code> function
+</p>
+<br>
+<h3>Literature</h3><p>
+Knuth D. E., 
+<i>Fundamental Algorithms, vol. 1 of The Art of Computer Programming</i>
+ - 2nd ed. Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

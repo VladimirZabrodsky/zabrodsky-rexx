@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Greedy Algorithm for the Subset-sum Problem</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Simple greedy algorithm for the Subset-sum 
+	problem. It is fast but with worst-case performance ratio 1/2">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_greed.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_greed.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Subset-Sum Problem<br>Greedy algorithm</h1><hr>
+<h3>Problem</h3><p>
+In the subset-sum problem we wish to find a subset of <code>A.1, ..., A.N</code>
+ whose sum is as large as possible but not larger than <code>T</code> 
+ (capacity of the knapsack).
+</p><br>
+<h3>Algorithm</h3><p>
+Greedy algorithm is an approximate algorithm, which consists in examining the items
+ and inserting each new item into the knapsack if it fits. Better average results 
+ can be obtained by sorting items according to decreasing weights. The time 
+ complexity is <i>O</i><code>(N*lg N)</code> but <i>the worst-case performance
+ ratio</i> is 1/2. Martello and Toth define this concept: Let <code>A.</code> be an 
+ approximate algorithm for a given maximization problem. For any instance
+ <code>I</code> of the problem, let <code>OPT.I</code> be the optimal solution value
+ and <code>A.I</code> the value found by <code>A.</code>; then, the 
+ <i>worst-case performance ratio</i> of <code>A.</code> is defined as the largest
+ real number <code>R.A</code> such that <code>(A.I/OPT.I) &gt;= R.A</code> for all 
+ instances <code>I</code> 
+</p><br>
+<h3>Implementation</h3><p>
+
+Unit: internal subroutine
+<br>&nbsp;
+<br>Global variables: array  <code>A.1, ..., A.N</code> of 
+positive integers, output array <code>X.</code>
+<br>&nbsp;
+<br>Parameters: a positive integer <code>N</code>, a positive integer <code>T</code>
+<br>&nbsp;
+<br>Interface: <code>D_QUICKSORT</code> - 
+<a href="a_quic.html#d_quicksort">sorting in descending order</a>
+<br>&nbsp;
+<br>Result:
+ output array <code>X.</code>, where <code>X.J = 1</code> if item <code>A.J</code>
+ is 
+ selected; or <code>X.J = 0</code> otherwise (for <code>J = 1, ..., N</code>)
+<a name="gs">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GS: procedure expose A. X.
+parse arg N, T
+call D_QUICKSORT N
+X. = 1
+do J = 1 to N
+  if A.J &gt; T then X.J = 0; else T = T - A.J
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Comparison</h3><p>
+For <code>N = 100; T = 25557</code> and the array <code>A.</code> created by statements:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Seed = RANDOM(1, 1, 481989)
+do J = 1 to N
+  A.J = RANDOM(1, 1000)
+end
+</code>
+</pre>
+</div>
+I compared the algorithms for solution of the Subset-sum problem and my algorithm
+ <a href="a_diop.html#diophant"><code>DIOPHANT</code></a> for solution of the 
+ diophantine equations.
+<br><br>
+Notes: I halted the <code>EXACT_SUBSET_SUM</code> after 30 minutes of computations.
+For <code><a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a></code> I 
+used the value <code>Epsilon = 0.5</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SUBSET-SUM PROBLEM - COMPARISON OF ALGORITHMS
+Algorithm           Subset sum              Seconds
+<a href="a_greed.html#gs">GS</a>                25554                  0.05 
+<a href="a_dyna.html#dps">DPS</a>               25557                240.24 
+<a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a> 25436                 12.31 
+<a href="a_diop.html#diophant">DIOPHANT</a>          25557                  0.82
+</code>
+</pre>
+</div>
+<span class="green">NOTE</span>: This test ran in the Windows 2000 Professional environment on the 
+computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5. 
+</p><br>
+<h3>Connections</h3><p>
+SUBSET-SUM PROBLEM
+<br><a href="a_sube.html">Exponential-time exact algorithm</a>
+<br>
+<br><a href="a_dyna.html">Exact algorithm - dynamic programming</a>
+<br>
+<br><a href="a_suba.html">Polynomial-time approximation algorithm</a>
+<br>
+<br><a href="a_diop.html">Diophantine linear equation</a>
+</p><br>
+<h3>Literature</h3><p>
+Martello S., Toth P. <i>Knapsack Problems: Algorithms and Computer 
+Implementations</i> Chichester, John Wiley &amp; sons 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

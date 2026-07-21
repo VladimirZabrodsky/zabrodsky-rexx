@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Power</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algorithm to compute the power, integer exponent,
+	real exponent" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_powe.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_powe.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Power</h1><hr>
+<h2>Chapter I - integer exponent</h2>
+<h3>Problem</h3><p>
+A frequently occuring operation in number-theoretic computations is raising a number
+ to a power another number, also known as exponentiation. We would like an efficient
+ way to compute <code>X**Z</code> (<code>X</code> to the <code>Z</code> power), where
+ <code>X</code> is a real number and <code>Z</code> is a nonnegative integer. Usually
+ we use the <code>**</code> operator for calculation of the power function, 
+raising a real number to a integer exponent. Another way to this calculation is
+the following algorithm <code>POWER</code> stated by al-Kashi about 1414 C.E.
+
+</p><br><h3>Imlementation</h3><p>
+Unit:</code> internal function, external function without <code>procedure</code> 
+statement
+<br>&nbsp;
+<br>Parameters: real <code>X</code>, nonnegative integer 
+<code>Z</code>
+<br>&nbsp;
+<br>Returns: <code>X**Z</code>
+
+<a name="power">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POWER: procedure
+parse arg X, Z; Pwr = 1
+do forever
+  if Z // 2 then Pwr = Pwr * X
+  Z = Z % 2
+  if Z = 0 then return Pwr
+  X = X * X
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>Example</h4><p>
+[Regina] The following program ends with <code>Error 26 ... line 3: Invalid whole 
+number</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* BERNOULLI computes e */
+numeric digits 20; Z = 1E+9
+X = 1 + 1 / Z
+say "e =" FORMAT(X**Z,,8)
+</code>
+</pre>
+</div>
+But program 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* BERNOULLI computes e */
+numeric digits 20; Z = 1E+9
+X = 1 + 1 / Z
+say "e =" FORMAT(POWER(X,Z),,8)
+exit
+POWER: procedure
+...
+</code>
+</pre>
+</div>
+displays <code>e = 2.71828183</code>
+</p><br>
+<h2>Chapter II - real exponent</h2><br><p>
+<p>The following function <code>REPOWER</code> computes the result by raising the
+ real number <code>X</code> to the given real exponent <code>Z</code>. 
+
+
+</p><br><h3>Imlementation</h3><p>
+Unit: internal function
+
+<br>&nbsp;
+<br>Parameters: real numbers <code>X</code> and <code>Z</code>, a positive integer 
+<code>P</code> - number of significant digits of result, default is <code>9</code>
+
+<br>&nbsp;
+<br>Interface:  the functions <code><a href="a_exp.html#exp">EXP</a></code> and 
+<code><a href="a_ln.html#ln">LN</a></code>
+
+<br>&nbsp;
+<br>Returns: <code>X**Z</code> or writes error message 
+<code>REPOWER: Result is undefined</code>
+
+<a name="repower">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+REPOWER: procedure
+parse arg X, Z, P
+if P = "" then P = 9; P = P + 4; numeric digits P
+if DATATYPE(Z, "Whole_number")
+  then
+    if X = 0 & Z &lt;= 0
+      then call ERROR "REPOWER: Result is undefined"
+      else return X ** Z
+  else
+    select
+      when X &gt; 0 then return EXP(Z * LN(X, P), P)
+      when X = 0 &amp; Z &gt; 0 then return 0
+      otherwise
+        call ERROR "REPOWER: Result is undefined"
+    end
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_exp.html">Exponential function</a>
+<br>
+<br><a href="a_ln.html">Natural logarithms</a>
+<br>
+<br><a href="a_bit2d.html">Technique: Bit array encoded as decimal number</a>
+</p><br>
+<h3>Literature</h3><p>
+Knuth D. E. <i>Seminumerical Algorithms, vol. 2 of 
+The Art of Computer Programming</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

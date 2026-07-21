@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Logarithms with other bases than e</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computing the logarithms with other bases than 
+	e, Euler's number" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_log.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_log.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Logarithms with other bases than e</h1><hr>
+<h3>Definition</h3><p>
+Logarithms are defined in terms of a real number <code>A &gt; 1</code>, which is called
+ the base of the logarithms. For any number <code>X &gt; 0</code> we define 
+ <code>LOGA(X) = Y</code> where <code>Y</code> is the real number such that 
+ <code>A**Y = X</code>. 
+</p><br>
+<h3>Algorithm</h3><p>
+For given <code>A</code> and <code>X</code> is <code>LOGA(X)=LN(X)/LN(A)</code> 
+where the <code><a href="a_ln.html#ln">LN</a></code> function is 
+<a href="a_ln.html">natural logarithm</a>. The most useful numbers for us in this 
+connection are <code>LN(2)</code> and <code>LN(10)</code>.  There are two simple 
+function returning first <code>200</code> decimal digits of these constants. For 
+their computation I used an algorithm from <a href="a_ln.html">Natural logarithm</a>, 
+see the <code><a href="a_ln.html#ln2p">LN2P</a></code> function. And the program for 
+automatic creating a function from value of constant, see 
+<a href="a_bcco.html">Technique: Beforehand computed constants</a>. 
+
+<a name="ln2">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LN2: procedure; V = ''
+V = V || 0.69314718055994530941723212145817656807
+V = V || 5500134360255254120680009493393621969694
+V = V || 7156058633269964186875420014810205706857
+V = V || 3368552023575813055703267075163507596193
+V = V || 0727570828371435190307038623891673471123350
+return V
+
+<a name="ln10">&nbsp;</a>
+LN10: procedure; V = ''
+V = V || 2.30258509299404568401799145468436420760
+V = V || 1101488628772976033327900967572609677352
+V = V || 4802359972050895982983419677840422862486
+V = V || 3340952546508280675666628736909878168948
+V = V || 2907208325554680843799894826233198528393505
+return V
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_e.html">Euler's number e</a>
+<br>
+<br><a href="a_ln.html">Natural logarithms</a>
+<br>
+<br><a href="a_bcco.html">Technique: Beforehand computed constants</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

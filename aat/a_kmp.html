@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Knuth-Morris-Pratt matcher</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="String-Matching Problem. The Knuth-Morris-Pratt algorithm runs in time 
+	O(M+N)">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_kmp.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_kmp.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Knuth-Morris-Pratt matcher</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+The text is an array <code>T.1, T.2,..., T.N</code> and the pattern is an array 
+<code>P.1, P.2,..., P.M</code>. The elements of <code>P.</code> and <code>T.</code> 
+are 
+characters drawn from a finite alphabet <code>Sigma.</code>, <code>Sigma.</code> is 
+an array 
+of <code>R</code> elements. We say that pattern <code>P.</code> occurs with shift 
+<code>S</code> in text <code>T.</code> if <code>0 &lt;= S &lt; =N - M</code> and if  
+<code>T.SpJ=P.J</code>, where <code>SpJ</code> indicates <code>S + J</code>, for 
+<code>J=1, ..., M</code>. String-matching problem is  the problem of finding all 
+valid shifts 
+with which a given pattern occurs in a given text.  
+
+</p><br>
+<h3>Algorithm</h3><p>
+The Knuth-Morris-Pratt algorithm runs in time <i>O</i><code>(M + N)</code>, as well 
+as in the worst case. It was invented independently by D. E. Knuth and V. R. Pratt 
+and by J. H. Morris.
+</p><br>
+<h3>Practice</h3><p>
+When a text and a pattern are real strings then the fastest solution is by 
+<code><a href="a_simp.html">REAL_STRING_MATCHER</a></code>. In general case there is 
+not an unambiguous winner. You have to test subroutines (Windows 2000 Professional 
+environment on the computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5): 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+RUNNING TIME IN SECONDS FOR N=100000
+
+Algorithm      M=10,R=1999,S=50     M=10,R=4,S=10000     M=100,R=4,S=10000
+Naive                16                    25                    150 
+KMP                  21                    22                     23 
+Boyer-Moore           4                    15                    138 
+</code>
+</pre>
+</div>
+Where:
+<br><a href="a_naiv.html#naive_string_matcher">Naive algorithm</a>
+<br><a href="a_boye.html#boyer_moore_matcher">Boyer-Moore algorithm</a>
+</p><br>
+<h3>Implementation</h3><p>
+Unit: internal subroutine
+<br>&nbsp;
+<br>Global variables: array <code>T.1, ..., T.N</code> of strings, array 
+<code>P.1, ..., P.M</code> of strings
+<br>&nbsp;
+<br>Parameters: a positive integer <code>N</code> - number of elements in 
+<code>T.</code>, a positive integer <code>M</code> - number of elements in 
+<code>P.</code>
+<br>&nbsp;
+<br>Output: displays on the screen <code>Pattern occurs with shift</code> 
+<i>S</i> for all valid shift <i>S</i>
+
+
+<a name="kmp_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+KMP_MATCHER: procedure expose T. P.
+parse arg M, N
+call COMPUTE_PREFIX_FUNCTION M
+Q = 0
+do I = 1 to N
+  Qp1=Q + 1
+  do while Q &gt; 0 &amp; P.Qp1 <> T.I
+    Q = Pi.Q; Qp1 = Q + 1
+  end
+  if P.Qp1 = T.I then Q = Q + 1
+  if Q = M
+    then do
+      say "Pattern occurs with shift" I - M
+      Q = Pi.Q
+    end
+end
+return
+ 
+COMPUTE_PREFIX_FUNCTION:
+procedure expose Pi. P.
+parse arg M
+Pi.1 = 0; K = 0
+do Q = 2 to M
+  Kp1 = K + 1
+  do while K &gt; 0 &amp; P.Kp1 <> P.Q
+    K = Pi.K; Kp1 = K + 1
+  end
+  if P.Kp1 = P.Q then K = K + 1
+  Pi.Q = K
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+STRING-MATCHING PROBLEM
+<br><a href="a_simp.html">Matcher for real string</a>
+<br>
+<br><a href="a_naiv.html">Naive string matcher</a>
+<br>
+<br><a href="a_boye.html">Boyer-Moore algorithm</a>
+</p><br>
+<h3>Literature</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+

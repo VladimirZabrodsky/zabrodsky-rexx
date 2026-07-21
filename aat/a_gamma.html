@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimír Zábrodský 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Euler's constant gamma</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+<META name="DESCRIPTION" content="Compute the Euler's constant gamma to sixty decimal places">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_gamma.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_gamma.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>EULER'S CONSTANT <span class="serif lowercase">&#947;</span></h1><hr><br><p>
+This number is defined: 
+<code>&#947; = H.N - <a href="a_ln.html#ln">LN</a>(N)</code> 
+where <code>N</code> goes to infinity and the <code>N</code>-th 
+harmonic number is defined to be the sum
+<br>
+<br><code>H.N = 1 + (1/2) + (1/3) + ... + (1/N)</code>
+
+</p><br>
+
+<h3>Algorithm</h3><p>
+We use the formula
+<br>
+<br><code><a href="a_ln.html#ln">LN</a>(N) + &#947; + chyba = 
+X/FACT(1) - X**2/(2*FACT(2)) + X**3/(3*FACT(3)) ...</code>
+<br><br>
+
+where <code><a href="a_fact.html#fact">FACT</a></code> is the 
+<a href="a_fact.html">factorial</a> function and L. Euler proved 
+that 
+<code>error = <i>O</i>(<a href="a_exp.html#exp">EXP</a>(-X)/X)</code>.
+</p><br>
+<h3>Implementation</h3><p>
+Unit: program
+<br>&nbsp;
+<br>Interface: the <code><a href="a_ln.html#ln">LN</a></code> 
+function
+<br>&nbsp;
+<br>Result: program displays on the screen first 60 significant 
+decimal digits of the <code>&#947;</code> constant
+
+
+<a name="compute_gamma">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 130; W=500; P = 130
+numeric digits P
+N = X; F = 1; D = 1; S = X
+do K = 2 to W
+  N = - N * X; F = F * K; D = F * K
+  S = S + N / D
+end
+say S - LN(X, P)
+</code>
+</pre>
+</div>
+This program requires about one minute of processing time. There is an
+ another way to obtain the value of the <code>&#947;</code> constant: 
+ we can compute the <code>&#947;</code> number only once and save its 
+ value into the text of the function. The following 
+ <code>GAMMA_CONST</code> function can be used to compute the first 
+ <code>P</code> decimal digits of <code>&#947;</code>, for 
+ <code>P = 1, ..., 60</code>.
+<a name="gamma_const">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GAMMA_CONST: return,
+"0.5772156649015328606065120900" ||,
+"824024310421593359399235988058"
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_e.html">Euler's number e</a>
+<br>
+<br><a href="a_fact.html">Factorial</a>
+<br>
+<br><a href="a_ln.html">Natural logarithm</a>
+<br>
+<br><a href="a_exp.html">Exponential function</a>
+<br>
+<br><a href="a_bcco.html">Technique: Beforehand computed constants</a>
+</p><br>
+<h3>Literature</h3><p>
+Brent R. P. <i>Ramanujan and Euler's Constant</i> 
+Computer Sciences Laboratory, Australian 
+National University, August 1993
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Quicksort</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Sorting, algorithm whose worst-case running time 
+	is O(N ** 2) and its expected running time is O(N*lg N), C. A. R. Hoare,
+	nonrecursive internal subroutine" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_quic.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_quic.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>QUICKSORT</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+Given an array <code>A.</code> of <code>N</code> elements the result of 
+sorting the array in place is to arrange elements of 
+<code>A.</code> so that 
+<code>A.1 &lt;= A.2 &lt;= ... &lt;= A.N</code>
+</p><br>
+<h3>Algorithm</h3><p>
+Quicksort by C. A. R. Hoare is a sorting algorithm in place. It has a 
+worst-case running time that is <i>O</i><code>(N**2)</code>; its 
+expected running time is <i>O</i><code>(N*lgN)</code>. 
+</p><br>
+<h3>Practice</h3><p>
+It is often the best practical choice for sorting because it is remarkably 
+efficient on the average.  The following table compares four sorting 
+algorithms. The <code>A.</code> array includes the integers in the range 
+<code>1</code> to <code>Max=10,100,1000,40000</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Running time in seconds for N=10000
+
+Algoritmus      Max=100     Max=1000    Max=40000   Max=99999
+QUICKSORT         4.66        4.53        4.89        4.59 
+HEAPSORT         10.26       10.67       11.58       11.18 
+SHELLSORT         7.45        8.89       10.58       10.13 
+COUNTING_SORT     1.88        1.95        7.93       31.85 
+</code>
+</pre>
+</div>
+<span class="green">NOTE</span>: This test ran in the Windows 2000 Professional environment on the 
+computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5. 
+</p><br>
+<h3>Implementation</h3><p>
+Unit: nonrecursive internal subroutine
+<br>&nbsp;
+<br>Global variables: array <code>A.</code> of arbitrary elements
+<br>&nbsp;
+<br>Parameter: a positive integer <code>N</code> - number of elements in
+ <code>A.</code>
+<br>&nbsp;
+<br>Result: Reordering of input array such that
+ <code>A.1 &lt;= A.2 &lt;= ... &lt;= A.N</code>
+<a name="quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+QUICKSORT: procedure expose A.
+parse arg N
+S = 1; StackL.1 = 1; StackR.1 = N
+do until S = 0
+  L = StackL.S; R = StackR.S; S = S - 1
+  do until L >= R
+    I = L; J = R; P = (L + R) % 2
+    if A.L &gt; A.P
+      then do; W = A.L; A.L = A.P; A.P = W; end
+    if A.L &gt; A.R
+      then do; W = A.L; A.L = A.R; A.R = W; end
+    if A.P &gt; A.R
+      then do; W = A.P; A.P = A.R; A.R = W; end
+    X = A.P
+    do until I &gt; J
+      <span class="red">do I = I while A.I &lt; X; end
+      do J = J by -1 while X &lt; A.J; end</span>
+      if I &lt;= J
+        then do
+          W = A.I; A.I = A.J; A.J = W
+          I = I + 1; J = J - 1
+        end
+    end
+    if J - L &lt; R - I
+      then do
+        if I &lt; R
+          then do
+            S = S + 1; StackL.S = I; StackR.S = R
+          end
+        R = J
+      end
+      else do
+        if L &lt; J
+          then do
+            S = S + 1; StackL.S = L; StackR.S = J
+          end
+        L = I
+      end
+  end /* until L &gt;= R */
+end /* until S = 0 */
+return
+</code>
+</pre>
+</div>
+<a name="d_quicksort">&nbsp;</a>For sorting in descending order, you need only change the red coloured 
+statements
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+      <span class="red">do I = I while A.I &lt; X; end
+      do J = J by -1 while X &lt; A.J; end</span>
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+SORTING PROBLEM
+<br><a href="a_coun.html">Counting sort</a>
+<br>
+<br><a href="a_heap.html">Heapsort</a>
+<br>
+<br><a href="a_recu.html#nonrecursive_quicksort">iterative Quicksort</a>
+<br>
+<br><a href="a_recu.html#recursive_quicksort">recursive Quicksort</a>
+<br>
+<br><a href="a_shel.html">Shellsort</a>
+<br>
+<br><a href="a_sent.html#merging">Merging</a>
+</p><br>
+<h3>Literature</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+<br>
+<br>Sedgewick R. <i>Algorithms</i> Addison-Wesley, Reading, Massachusetts, 
+1984
+<br>
+<br>Wirth N. <i>Algorithms and data structure</i> New Jersey, 
+Prentice Hall, Inc., Engelwood Cliffs, 1986
+</p><br>
+<h3>Acknowledgement</h3>
+<p>I changed the test from <code>Max=10 ... 40000</code> to 
+<code>Max=100 ... 99999</code>. Thanks for idea go to Walter Pachl. 
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

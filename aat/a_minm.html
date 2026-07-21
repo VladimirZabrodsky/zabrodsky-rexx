@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Smallest and largest simultaneously</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="minimum and maximum simultaneously Time 
+	complexity simple algorithm is about 2*N, time complexity 
+	sophisticated algorithm is about 3*N/2">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_minm.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_minm.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Smallest and largest simultaneously</h1><hr>
+<h3>Problem</h3><p>
+Find smallest and largest elements of the numeric array in the same time. 
+</p><br>
+<h3>Algorithm</h3><p>
+Simple algorithm <code>MINANDMAX</code> uses for finding of minimum and maximum 
+ simultaneously about <code>2*N</code> comparisons.
+</p><br>
+<h3>Implementation</h3><p>
+
+Unit: nonrecursive internal function
+<br>&nbsp;
+<br>Global variables: an array <code>A.</code> of numeric elements
+<br>&nbsp;
+<br>Parameter: a positive integer <code>N</code> - size of <code>A.</code>
+<br>&nbsp;
+<br>Returns: Values of the minimum and maximum separated by blank
+<a name="minandmax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MINANDMAX: procedure expose A.
+parse arg N
+Min = A.1; Max = A.1
+do J = 2 to N
+  if A.J &lt; Min then Min = A.J
+    else if A.J &gt; Max then Max = A.J
+end
+return Min Max
+ </code>
+</pre>
+</div> 
+Textbooks say that the following algorithm <code>MINIMAX</code> is more 
+efficient.
+ Its time complexity is <code>FORMAT(3*N/2 - 2,,0)</code> comparisons. 
+ Attention: 
+ the function has to be called by statement <code>say MINIMAX(1,N)</code> 
+ with two 
+ parameters.
+<a name="minimax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MINIMAX: procedure expose A.
+parse arg J, N
+if N = J then return A.J A.J
+if N = J + 1
+  then if A.J &lt; A.N
+         then return A.J A.N
+         else return A.N A.J
+  else do
+    parse value MINIMAX(J, J + 1) with Min1 Max1
+    parse value MINIMAX(J + 2, N) with Min2 Max2
+    return MIN(Min1, Min2) MAX(Max1, Max2)
+  end
+ </code>
+</pre>
+</div> 
+But there is a implementation limit on the nesting of subroutine levels.
+ <br><br>
+Thomas H. Cormen ... [et al.] describe the best program for practice:
+<br><br><cite>
+We compare pairs of elements from the input first
+with each other, and then we compare the smaller with the current minimum and
+the larger to the current maximum, at a cost of 3 comparisons for every 2 elements.
+How we set up initial values for the current minimum and maximum depends
+on whether N is odd or even. If N is odd, we set both the minimum and maximum
+to the value of the first element, and then we process the rest of the elements in
+pairs. If N is even, we perform 1 comparison on the first 2 elements to determine
+the initial values of the minimum and maximum, and then process the rest of the
+elements in pairs as in the case for odd N.
+<br>Total
+number of comparisons is at most <code>FORMAT(3*N/2,,0)</code>.
+</cite>
+
+Implementation in Rexx follows:
+<a name="non_recursive_minimax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NON_RECURSIVE_MINIMAX: procedure expose A. 
+parse arg N
+if (n // 2 = 0) then do
+  if (A.1 &gt; A.2)    
+    then do
+      Maximum = A.1
+      Minimum = A.2
+    end
+    else do
+      Minimum = A.1
+      Maximum = A.2
+    end
+    i = 3
+  end   
+  else do
+	Minimum = A.1
+	Maximum = A.1
+    i = 2
+  end
+do while (i &lt; n)
+  Ip1 = I + 1
+  if (A.I &gt; A.Ip1) then do 
+       if(A.I &gt; Maximum)  then Maximum = A.I
+       if(A.Ip1 &lt; Minimum) then Minimum = A.Ip1    
+  end
+  else do    
+    if (A.Ip1 &gt; Maximum) then Maximum = A.Ip1
+    if (A.I &lt; Minimum) then Minimum = A.I   
+  end
+  i = i + 2
+end        
+return Minimum Maximum
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_recu.html">Technique: Recursion Elimination</a>
+<br>
+<br>SELECTION PROBLEM
+<br><a href="a_find.html">Find</a>
+<br>
+<br><a href="a_modi.html">Modifind</a>
+<br>
+<br><a href="a_sele.html">Select</a>
+</p><br>
+<h3>Literature</h3><p>
+Baudoin C., Meyer B. <i>Méthodes de programmation</i> 
+Edition Eyrolles 61, Bd Saint-Germain Paris 1978
+<br><br>
+Cormen Thomas H., Leiserson Charles E., Rivest Ronald L., Stein Clifford <i>Introduction to Algorithms
+Third Edition</i> The MIT Press
+Cambridge, Massachusetts London, England, 2009, ISBN 978-0-262-03384-8
+
+
+
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

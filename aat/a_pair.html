@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<meta charset="utf-8" />
+<TITLE>All pairs of numbers A.I, A.J with A.I+A.J=X</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Knuth's algorithm for finding all pairs of 
+	numbers A.I, A.J with A.I + A.J = X, where X is given">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_pair.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_pair.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>All pairs of numbers A.I, A.J with A.I + A.J = X</h1><hr>
+<h3>Problem</h3><p>
+Given an array of distinct numbers <code>A.1, A.2, ..., A.N</code> and a number 
+<code>X</code>. Determine all pairs of numbers <code>A.I, A.J</code> with 
+<code>A.I + A.J = X</code>.
+</p><br>
+<h3>Implementation</h3><p>
+Unit: fragment of a program
+<br>&nbsp;
+<br>Interface: <code><a href="a_quic.html#quicksort">QUICKSORT</a></code>
+<br>&nbsp;
+<br>Result:</code> Program displays all pairs <code>A.I, A.J</code> with 
+<code>A.I + A.J = X</code>
+
+
+<a name="all_pairs">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+...
+call QUICKSORT N
+S = ""; do I = 1 to N; S = S A.I; end; say S "|" X
+I = 1; J = N
+do until J &lt;= I
+  select
+  when A.I + A.J &lt; X then I = I + 1
+  when A.I + A.J &gt; X then J = J - 1
+  otherwise
+    say "("A.I"," A.J") and ("A.J"," A.I")"
+    I = I + 1; J = J - 1
+  end
+end
+if J = I & 2 * A.I = X then say "("A.I"," A.I")"
+exit
+...
+</code>
+</pre>
+</div>
+</p>
+<h3>Literature</h3><p>
+Knuth D. E. <i>Sorting and Searching, vol. 3 of The Art 
+of Computer Programming</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

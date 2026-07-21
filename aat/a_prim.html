@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Primes</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="The first M primes, primality test, the first 
+	24 Mersenne primes">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_prim.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_prim.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>PRIMES</h1><hr>
+<br><p>
+A prime number is an integer greater than unity having no proper divisors.
+</p>
+<h2>The first K primes</h2><p>
+Prepare an array <code>P.</code> of <code>K</code> primes.
+
+</p><br><h3>Imlementation</h3><p>
+Unit: internal function
+<br>&nbsp;
+<br>Global variables: the array <code>P.</code>
+<br>&nbsp;
+<br>Parameter: <code>K</code> - number of primes to find
+<br>&nbsp;
+<br>Result: The first <code>K</code> primes are saved into the <code>P.</code> array
+
+<a name="first_m_primes">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PRIMES: procedure expose P.
+parse arg K
+P.1 = 2; N = 3
+do J = 2 to K
+  P.J = N
+  do forever
+    N = N + 2
+    do L = 2 until R = 0
+      Q = N % P.L; R = N // P.L
+      if Q &lt;= P.L &amp; R &lt;&gt; 0 then iterate J
+    end
+  end
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h2>Primality test</h2><p>
+In exercise 3, Chapter 4.5.4, D. E. Knuth says: If <code>1000 &lt;= K &lt;= 
+1000000</code>, then <code>K</code> is prime if and only if 
+<code><a href="a_eucl.html#euclid">GCD</a>(K,N) = 1</code>; <code>N</code> is the 
+product of the first <code>168</code> primes. We can create a simple test function. 
+It returns <code>1</code> or <code>0</code> depending on whether or not the 
+<code>K</code>, <code>1000 &lt;= K &lt;= 1000000</code>,  is prime.
+<a name="primality_test">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PRIMALITY_TEST: procedure
+parse arg K
+call PRIMES(168)
+numeric digits 416
+N = 1
+do J = 1 to 168; N = N * P.J; end
+if GCD(K, N) = 1 then return 1
+return 0
+</code>
+</pre>
+</div>
+
+Link: <a href="a_eucl.html#euclid"><code>GCD</code></a>
+</p>
+<h2>The first 24 Mersenne primes</h2><p>
+Numbers of the form <code>2**P-1</code>, where <code>P</code> is prime, are known as
+ Mersenne numbers (according Marin Mersenne). The first 24 Mersenne primes are 
+ obtained for <code>P</code> equal to 
+<code>2, 3, 5, 7, ... , 19937</code>. 
+ The following program only displays the number of digits in the Mersenne prime.
+<a name="first_24_mersenne">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* The first 24 Mersenne primes
+2 3 5 7 13 17 19 31 61 89 107
+127 521 607 1279 2203 2281 3217
+4253 4423 9689 9941 11213 19937
+*/
+numeric digits 6002
+do I = 2 while SOURCELINE(I) <> "*/"
+  Row = SOURCELINE(I)
+  do while Row <> ""
+    parse var Row Num Row
+    P = 2 ** Num - 1; say "P =" LENGTH(P)
+  end
+end
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<a href="a_eucl.html">Euklid's GCD (and LCM) algorithm</a>
+<br>
+<br><a href="a_memfis.html#mertest">Test primality for Mersenne number</a>
+</p><br>
+<h3>Literature</h3><p>
+Knuth D. E. <i>Seminumerical Algorithms, vol. 2 of 
+The Art of Computer Programming</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

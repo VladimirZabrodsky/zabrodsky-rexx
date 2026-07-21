@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Polynomial Addition</TITLE>
+    <link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<META name="DESCRIPTION" content="POLYNOMIAL ADDITION. For processing sparse polynomials with many zero coefficients, we can have 
+	array nodes represent only the nonzero terms." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_apol.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_apol.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>POLYNOMIAL ADDITION</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+We wish to perform calculations such as (2 + 3*X + 6*X**2) + (2 - X**2) = (4 + 3*X + 5*X**2)
+<br>When polynomials are represented by the arrays, then following procedure is a straightforward implementation of polynomial addition:
+</p><br><h3>Implementation</h3><p>
+Unit:
+ nonrecursive internal subroutine
+<br>&nbsp;
+<br>Global variables:
+ an array <code>A.</code> of <code>N+1</code> coefficients, an array <code>B.</code> of <code>N+1</code> coefficients.
+<br>&nbsp;
+<br>Parameter: a positive integer <code>N</code> - a degree of  the <code>A.</code> and <code>B.</code> polynomials.
+<br>&nbsp;
+<br>Result:</code>
+ The <code>A.</code> array includes coefficients of polynomial addition.
+<a name="polyadd">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POLYADD: procedure expose A. B.
+parse arg N
+do J = 0 to N; A.J = A.J + B.J; end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Example</h3><p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+(12*X**54 + 65*X**80 + 3*X*10000) +
+(3*X**12 - 13*X**54 + 13*X**98 + 7*X**10000) =
+3*X**12 - X**54 + 65*X*80 + 13*X*98 + 10*X**10000
+</code>
+</pre>
+</div>
+Program:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 10000
+A. = 0; A.54 = 12; A.80 = 65; A.10000 = 3
+B. = 0; B.12 = 3; B.54 = -13
+B.98 = 13; B.10000 = 7
+call POLYADD N
+do I = 1 to N
+  if A.I &lt;&gt; 0 then say I A.I
+end
+exit
+POLYADD: procedure expose A. B.
+...
+</code>
+</pre>
+</div>
+<div class=t>displays on the screen</div>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+12 3
+54 -1
+80 65
+98 13
+10000 10
+</code>
+</pre>
+</div>
+</p>
+<a name="sparse_poly">&nbsp;</a>
+<h2>SPARSE POLYNOMIALS</h2><p>
+For processing "sparse" polynomials with many zero coefficients, we can 
+have array nodes represent only the nonzero terms. A sparse polynomial 
+<code>A.N*X**N+...+A.J*X**J+...+A.1*X+A.0</code> can be represented by 
+an ascending sequence  of pairs <code>J A.J</code> 
+only for nonzero coefficients <code>A.J</code>. 
+</p><br><h3>Implementation</h3><p>
+Unit: nonrecursive internal subroutine
+<br>&nbsp;
+<br>Global variables: an ascending sequence <code>A.</code> of <code>M</code> 
+couples
+<code>coefficient power</code>, an  ascending sequence <code>B.</code> of <code>N</code> couples <code>coefficient power</code>, and an output array <code>C.</code> as result of polynomial addition
+<br>&nbsp;
+<br>Parameters:</code>
+ positive integers <code>M, N</code> - size of the <code>A.</code> and <code>B.</code> arrays.
+<br>&nbsp;
+<br>Result:</code>
+ Returns size of the <code>C.</code> array. 
+The <code>C.</code> array includes couples represent of polynomial addition.
+<a name="sparse_polyadd">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SPARSE_POLYADD: procedure expose A. B. C.
+parse arg M, N
+K = 1; L = 1; J = 0
+do while K &lt;= M &amp; L &lt;= N
+  parse var A.K Apower Acoef
+  parse var B.L Bpower Bcoef
+  select
+    when Apower &lt; Bpower
+      then do; J = J + 1; C.J = A.K; K = K + 1; end
+    when Apower &gt; Bpower
+      then do; J = J + 1; C.J = B.L; L = L + 1; end
+    otherwise
+      Sum = Acoef + Bcoef
+      if Sum &lt;&gt; 0
+        then do; J = J + 1; C.J = Apower Sum; end
+      K = K + 1; L = L + 1
+  end
+end
+do while K &lt;= M; J = J + 1; C.J = A.K; K = K + 1; end
+do while L &lt;= N; J = J + 1; C.J = B.L; L = L + 1; end
+return J
+</code>
+</pre>
+</div>
+</p>
+<h3>Example</h3><p>
+The following fragment of program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+M = 3
+A.1 = 54 12; A.2 = 80 65; A.3 = 10000 3
+N = 4
+B.1 = 12 3; B.2 = 54 "-13"; B.3 = 98 13
+B.4 = 10000 7
+J = SPARSE_POLYADD(M, N)
+do I = 1 to J; say C.I; end
+exit
+SPARSE_POLYADD: procedure expose A. B. C.
+...
+</code>
+</pre>
+</div>
+displays on the screen
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+12 3
+54 -1
+80 65
+98 13
+10000 10
+</code>
+</pre>
+</div>
+</p><h3>Connections</h3><p>
+<a href="a_horn.html">Evaluating the Polynomials</a>
+<br>
+<br><a href="a_ddpo.html">Evaluation of polynomial and its derivatives (simultaneously)</a>
+<br>
+<br><a href="a_dpol.html">Division of polynomials</a>
+<br>
+<br><a href="a_sent.html#merging">Merging</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

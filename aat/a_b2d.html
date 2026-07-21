@@ -1,0 +1,503 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>How to convert from any base to any base.</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="convert from any base to any base, binary, nonary, decimal,
+	hexadecimal">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Content</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_b2d.html"    class="active">Algorithms</a>
+    <a href="../cz_aat/a_b2d.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>How to convert from any base to any base</h1><hr>
+<br><br>
+<h2>FROM ANY BASE TO DECIMAL</h2><p>
+Let <code>B &gt; 1</code> be a positive integer (the base). Then every positive integer 
+<code>X</code> can be represented in one and only one way by the sequence
+<code>N</code>-digits <code>&lt;D<sub>N-1</sub>, D<sub>N-2</sub>, ..., D<sub>1</sub>, D<sub>0</sub>&gt;</code>, where digits 
+<code>D<sub>J</sub></code> lie in the range 
+<code>0 &lt;= D<sub>J</sub> &lt;= B - 1</code>, for all <code>J</code> (see [1], p. 12.) 
+Number <code>X</code> has the decimal value:
+<p>&nbsp;</p>
+Y = D<sub>N-1</sub> * B<sup>N-1</sup> + D<sub>N-2</sub> * B<sup>N-2</sup> + ... D<sub>1</sub> * B<sup>1</sup> + D<sub>0</sub> * B<sup>0</sup>
+<p>&nbsp;</p>
+A simple algorithm which avoids recomputation of the powers of <code>B</code> is known as 
+<a href="a_horn.html">Horner's rule</a> (see [2], p. 33.). A degree <code>N</code> polynomial can be evaluated
+ using only <code>N-1</code> multiplications and <code>N</code> additions.
+Because <code>X</code> is written as a string in the REXX language, we can use REXX built-in function 
+<code>SUBSTR</code> for finding <code>J</code>-th digit:
+
+<a name="b_n2d">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000";>B_N2D: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> B
+N <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">)</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+  Y <span style="color:#808030; ">=</span> Y <span style="color:#808030; ">*</span> B <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+</pre>
+</div>
+
+
+This function will work only with bases <code>2</code> through <code>9</code> 
+(<i>Binary</i> to <i>Nonary</i>, therefore <code>B_N2D</code> name for this function). 
+For base <code>B &gt; 9</code>
+ we must use the following function <code>ANYBASE2D(X, B)</code>. The parameter <code>X &gt;= 0</code> is natural integer in base 
+ <code>B</code>; the parameter <code>B</code> is base, where <code>2 &lt;= B &lt;= 16</code>. 
+
+<a name="anybase2d">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000";>ANYBASE2D: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> B
+Digit <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"0123456789ABCDEF"</span>
+<span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>Digit<span style="color:#808030; ">)</span>
+  Figure <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>Digit<span style="color:#808030; ">,</span> I<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Dig<span style="color:#808030; ">.</span>Figure <span style="color:#808030; ">=</span> I <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+N <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">)</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+  K <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Y <span style="color:#808030; ">=</span> Y <span style="color:#808030; ">*</span> B <span style="color:#808030; ">+</span> Dig<span style="color:#808030; ">.</span>K
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+</pre>
+</div>
+</p>
+<h3>And how to set numeric digits?</h3><p>
+According [3], p. 22 the size of integer <code>X</code> in base <code>B</code>
+ is the same as its size in base <code>10</code>, 
+times a constant factor 
+<br><a href="a_floo.html#floor">CEILING</a>(<a href="a_ln.html#ln">LN</a>(B)/<a href="a_ln.html#ln">LN</a>(10)). Values of this facror are:
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Base           Factor
+ 2, ..., 10      1
+11, ..., 16      2
+</code>
+</pre>
+</div>
+</p>
+<h2>FROM DECIMAL TO ANY BASE</h2><p>
+Given a number,
+<code>X</code>, which we want to convert to a base <code>B</code>, here is the algorithm for performing the
+conversion (see [4], p. 53):
+<br>1. The rightmost digit of <code>X</code> is <code>X // B</code>. 
+<br>2. Replace <code>X</code> with <code>X % B</code>.
+<br>3. Repeat steps 1 and 2 until <code>X = 0</code> and there are no significant digits remaining.
+<br>Following function in REXX doesn't use a stack and recursion for base <code>2, ..., 9</code>:
+
+<a name="d2b_n">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">D2B_N: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> B
+<span style="color:#800000; font-weight:bold; ">if</span> X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">0</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &gt; <span style="color:#008c00; ">0</span>
+  Y <span style="color:#808030; ">=</span> X <span style="color:#808030; ">/</span><span style="color:#808030; ">/</span> B <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> Y
+  X <span style="color:#808030; ">=</span> X % B
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+</pre>
+</div>
+Non recursive version <code>D2ANYBASE(X, B)</code> for 
+<code>B = 2, ..., 16</code> follows. The parameter 
+<code>X &gt;= 0</code> is natural
+decimal integer; the parameter 
+<code>B</code> is base of output, where 
+<code>2 &lt;= B &lt;= 16</code>.
+The functions returns <code>Y</code>, where 
+<code>Y<sub>B</sub> = X<sub>10</sub></code>.
+<a name="d2anybase">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">D2ANYBASE: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> B
+<span style="color:#800000; font-weight:bold; ">if</span> X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">0</span>
+Digit <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"0123456789ABCDEF"</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &gt; <span style="color:#008c00; ">0</span>
+  Rem <span style="color:#808030; ">=</span> X <span style="color:#808030; ">/</span><span style="color:#808030; ">/</span> B
+  Y <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>Digit<span style="color:#808030; ">,</span> Rem <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> Y
+  X <span style="color:#808030; ">=</span> X % B
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+</pre>
+</div>
+</p>
+<h3>And how to set numeric digits?</h3><p> 
+According [3], p. 22: 
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Base           Factor
+ 2               4
+ 3               3
+ 4, ..., 9       2
+ 10, ..., 16     1
+</code>
+</pre>
+</div>
+</p>
+<h3>Practice - comparison of the functions</h3><p>
+Testing system: Processor Intel Pentium Gold G5400, 16 GB RAM, Windows 10, REXX-Regina_3.9.3(MT) 5.00 5 Oct 2019.
+<br> 
+<br>Program:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">BD <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10</span>
+B <span style="color:#808030; ">=</span> <span style="color:#008c00; ">16</span>
+N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">50000</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"*** Test for B ="</span> B <span style="color:#0000e6; ">"and N = "</span> N
+X <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N<span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">0</span><span style="color:#808030; ">,</span> BD <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> R <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"0123456789ABCDEF"</span><span style="color:#808030; ">,</span> R<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+Nd <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">MAX</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">9</span><span style="color:#808030; ">,</span> CEILING<span style="color:#808030; ">(</span>LN<span style="color:#808030; ">(</span><span style="color:#008c00; ">10</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> LN<span style="color:#808030; ">(</span>B<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> N<span style="color:#808030; ">)</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> Nd
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span> 
+D2A <span style="color:#808030; ">=</span> D2ANYBASE<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> B<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"D2ANYBASE:"</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+  <span style="color:#808030; ">.</span><span style="color:#808030; ">.</span><span style="color:#808030; ">.</span>
+Nd <span style="color:#808030; ">=</span> CEILING<span style="color:#808030; ">(</span>LN<span style="color:#808030; ">(</span>B<span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> LN<span style="color:#808030; ">(</span><span style="color:#008c00; ">10</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> N
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> Nd
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span> 
+A2D <span style="color:#808030; ">=</span> ANYBASE2D<span style="color:#808030; ">(</span>D2A<span style="color:#808030; ">,</span> B<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"ANYBASE2D:"</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+  <span style="color:#808030; ">.</span><span style="color:#808030; ">.</span><span style="color:#808030; ">.</span>
+</pre>
+</div>
+
+There are results for pseudorandom integer numbers  <code>X</code> with <code>N = 50000</code> digits.
+ Time is round to the nearest whole second.
+</p><br>
+<p class="green">FROM ANY BASE TO DECIMAL</p>
+<p>
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Base      B_N2D      ANYBASE2D   X2D(X)     X2D(B2X(X))        
+  2         34           24                    34               
+  3         19           19                                           
+  4         15           15                                   
+  5         10           10                                  
+  6         14           14                                   
+  7         15           15                                  
+  8         14           14                                    
+  9         15           15                                    
+ 10         11           11                                    
+ 11                      17                                              
+ 12                      18                                              
+ 13                      19                                              
+ 14                      19                                              
+ 15                      17                                              
+ 16                      20         34                                              
+</code>
+</pre>
+</div>
+</p>
+<h3>Conclusion</h3><p>
+<code>ANYBASE2D</code> is better than built-in functions. 
+We need not the special function <code>B_N2D</code>, because for converting from any base to 
+decimal we can use the <code>ANYBASE2D</code> function for <code>B = 2, 3, ..., 16</code>. 
+</p><br>
+<p class="green">FROM DECIMAL TO ANY BASE</p><p>
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Base      D2B_N     D2ANYBASE      D2X(X)      X2B(D2X(X))
+  2        286         286                        36
+  3        191         193 
+  4        153         152
+  5        128         128 
+  6        119         119
+  7        110         110
+  8         98          98 
+  9         90          90
+ 10        105         105
+ 11                    108
+ 12                    108
+ 13                    108
+ 14                    103
+ 15                     96
+ 16                    100           36
+</code>
+</pre>
+</div>
+</p>
+<h3>Conclusion</h3><p>
+For <code>B = 2</code> and <code>B = 16</code> is better use  the built-in function. 
+We need not the special function <code>D2B_N</code>, because for converting from decimal base to 
+any base we can use the <code>D2ANYBASE(X, B)</code> function for 
+<code>B = 3, ..., 15</code>.
+</p><br>
+<h2>CONVERTING BETWEEN BASES</h2><p>
+The following function <code>ANYBASE2ANYBASE(X, Bi, Bo)</code> takes a 
+string <code>X</code>, representing an positive number in the base 
+<code>Bi</code> and converts it into the base 
+<code>Bo</code>, returning the new string 
+<code>Y</code>, <code>Y<sub>Bo</sub> = X<sub>Bi</sub></code>
+for <code>2 &lt;= Bi, Bo &lt;= 16</code> a <code>Bi &lt;&gt; Bo</code>.
+
+<a name="anybase2anybase_simple">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">ANYBASE2ANYBASE: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> Bo
+<span style="color:#800000; font-weight:bold; ">return</span> D2ANYBASE<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+
+The sophisticated version <code>ANYBASE2ANYBASE(X, Bi, Bo)</code> 
+using the methods describing in [5], chapter 4.1.3:
+<cite>
+Converting from base <code>2</code> to base <code>2<sup>k</sup></code>: 
+Group the bits in the base <code>2</code> expansion into
+blocks of <code>k</code> bits, starting from the right, and then convert each block of k bits into a
+base <code>2<sup>k</sup></code> digit. 
+<br>For example, converting from binary to octal is done
+by grouping the bits of the binary expansion into blocks of <code>3</code> bits starting from the
+right and converting each block into an octal digit. Similarly, converting from binary to
+hexadecimal is done by grouping the bits of the binary expansion into blocks
+of <code>4</code> bits starting from the right and converting each block into a hex digit.
+Converting from base <code>2<sup>k</sup></code> to binary (base <code>2</code>): convert each base 
+<code>2<sup>k</sup></code> digit into a block
+of <code>k</code> bits and string together these bits in the order the original digits appear. 
+</cite>
+Similalry for converting from <code>3</code> to base <code>3<sup>2</sup></code> and vice-versa.
+<p>&nbsp;</p>The function <code>DIRECTCONVERT(X, Bi, Bo)</code> takes a string <code>X</code>, representing an positive number in the base 
+<code>Bi</code> and converts it into the base <code>Bo</code>, returning the new string <code>Y</code>, 
+<code>Y<sub>Bo</sub> = X<sub>Bi</sub></code>, 
+for pairs values <code><br>[Bi, Bo]: [2, 4], [4, 2], [2, 8], [8, 2], [3, 9], [9, 3], [2, 16], [16, 2]</code>.
+<br>Array <code>LookT.</code>  is look-up table. 
+<br>
+<br>EXAMPLE
+<br>For <code>Bi = 2, Bo = 16</code> the function 
+<code>DIRECTCONVERT</code>
+creates the array:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">4</span>
+LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0000</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0001</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0010</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0011</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">3</span>
+LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0100</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">4</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0101</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">5</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0110</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">6</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">0111</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">7</span>
+LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1000</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">8</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1001</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">9</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1010</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"A"</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1011</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"B"</span>
+LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1100</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"C"</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1101</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"D"</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1110</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"E"</span><span style="color:#808030; ">;</span> LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1111</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"F"</span>
+</div>
+</pre>
+
+<br>
+Convert the binary number <code>10010011</code> to a hexadecimal number is done by 
+replacing each <code>4</code>-bit binary number (<code>4</code> is the value of the variable 
+<code>LookT.2.16</code>) its hexadecimal equivalent. <br>Final result is obtained direct:
+<code>LookT.2.16.1001 || LookT.2.16.0011 = 93</code>.
+
+<a name="directconvert">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">DIRECTCONVERT: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> Bo
+<span style="color:#696969; ">/* Create Lookup Table */</span>
+<span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">4</span> <span style="color:#696969; ">/* number of bits for base = 2 ** K */</span>
+  Base2K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> K
+  LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.</span>Base2K <span style="color:#808030; ">=</span> K
+  LookT<span style="color:#808030; ">.</span>Base2K<span style="color:#808030; ">.</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">to</span> Base2K <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    Xi <span style="color:#808030; ">=</span> D2ANYBASE<span style="color:#808030; ">(</span>I<span style="color:#808030; ">,</span> Base2K<span style="color:#808030; ">)</span>
+    Bin<span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RIGHT</span><span style="color:#808030; ">(</span>D2ANYBASE<span style="color:#808030; ">(</span>I<span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> K<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"0"</span><span style="color:#808030; ">)</span>
+    LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">2.</span>Base2K<span style="color:#808030; ">.</span>Bin <span style="color:#808030; ">=</span> Xi
+    LookT<span style="color:#808030; ">.</span>Base2K<span style="color:#808030; ">.</span><span style="color:#008000; ">2.</span>Xi <span style="color:#808030; ">=</span> Bin
+   <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">2</span> <span style="color:#696969; ">/* number of bits for base = 3 ** K */</span>
+  Base3K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">3</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> K
+  LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">3.</span>Base3K <span style="color:#808030; ">=</span> K
+  LookT<span style="color:#808030; ">.</span>Base3K<span style="color:#808030; ">.</span><span style="color:#008c00; ">3</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">to</span> Base3K <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    Num <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RIGHT</span><span style="color:#808030; ">(</span>D2ANYBASE<span style="color:#808030; ">(</span>I<span style="color:#808030; ">,</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> K<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"0"</span><span style="color:#808030; ">)</span>
+    LookT<span style="color:#808030; ">.</span><span style="color:#008000; ">3.</span>Base3K<span style="color:#808030; ">.</span>Num <span style="color:#808030; ">=</span> I
+    LookT<span style="color:#808030; ">.</span>Base3K<span style="color:#808030; ">.</span><span style="color:#008000; ">3.</span>I <span style="color:#808030; ">=</span> Num
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#696969; ">/* end of Lookup Table creating */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">)</span>
+Group <span style="color:#808030; ">=</span> LookT<span style="color:#808030; ">.</span>Bi<span style="color:#808030; ">.</span>Bo
+Length_Group <span style="color:#808030; ">=</span> N <span style="color:#808030; ">/</span><span style="color:#808030; ">/</span> Group
+<span style="color:#800000; font-weight:bold; ">if</span> Length_Group &gt; <span style="color:#008c00; ">0</span> 
+  <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+    N <span style="color:#808030; ">=</span> N <span style="color:#808030; ">+</span> Group <span style="color:#808030; ">-</span> Length_Group
+    X <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RIGHT</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> N<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"0"</span><span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> Index <span style="color:#808030; ">=</span> N <span style="color:#808030; ">-</span> Group <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">1</span> by <span style="color:#808030; ">-</span>Group
+  Figure <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Index<span style="color:#808030; ">,</span> Group<span style="color:#808030; ">)</span>
+  Y <span style="color:#808030; ">=</span> LookT<span style="color:#808030; ">.</span>Bi<span style="color:#808030; ">.</span>Bo<span style="color:#808030; ">.</span>Figure <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> Y
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+</pre>
+</div>
+
+
+For pairs values <code>[Bi, Bo]: [4, 8], [8, 4], [4,16], [16, 4], [8, 16], [16, 8]</code> 
+we call the function <code>DIRECTCONVERT</code>:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">DIRECTCONVERT<span style="color:#808030; ">(</span>DIRECTCONVERT<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+Computation of the <code>ANYBASE2ANYBASE(X, Bi, Bo)</code> can be sometimes speeded up for the special values 
+<code>Bi</code> and <code>Bo</code> (found experimentally). The improvement function follows:
+<br><br>
+<a name="anybase2anybase">&nbsp;</a>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">ANYBASE2ANYBASE: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> Bo
+TestQOX<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+TestQOX<span style="color:#808030; ">.</span><span style="color:#008c00; ">4</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> TestQOX<span style="color:#808030; ">.</span><span style="color:#008c00; ">8</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> TestQOX<span style="color:#808030; ">.</span><span style="color:#008c00; ">16</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+Test2K<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+Test2K<span style="color:#808030; ">.</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Test2K<span style="color:#808030; ">.</span><span style="color:#008c00; ">4</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Test2K<span style="color:#808030; ">.</span><span style="color:#008c00; ">8</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Test2K<span style="color:#808030; ">.</span><span style="color:#008c00; ">16</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+Test3K<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+Test3K<span style="color:#808030; ">.</span><span style="color:#008c00; ">3</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Test3K<span style="color:#808030; ">.</span><span style="color:#008c00; ">9</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">select</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> Bi <span style="color:#808030; ">=</span> Bo <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> X
+  <span style="color:#800000; font-weight:bold; ">when</span> <span style="color:#808030; ">(</span>TestQOX<span style="color:#808030; ">.</span>Bi &amp; TestQOX<span style="color:#808030; ">.</span>Bo<span style="color:#808030; ">)</span>
+  <span style="color:#696969; ">/* Bi, Bo from {4, 8, 16}, i.e. Quaternary, Octal, heXadecimal */</span>
+    <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> DIRECTCONVERT<span style="color:#808030; ">(</span>DIRECTCONVERT<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> <span style="color:#808030; ">(</span>Test2K<span style="color:#808030; ">.</span>Bi &amp; Test2K<span style="color:#808030; ">.</span>Bo<span style="color:#808030; ">)</span> <span style="color:#808030; ">|</span> <span style="color:#808030; ">(</span>Test3K<span style="color:#808030; ">.</span>Bi &amp; Test3K<span style="color:#808030; ">.</span>Bo<span style="color:#808030; ">)</span>
+  <span style="color:#696969; ">/* Bi, Bo either from {2, 2 ** K}, or from {3, 3 ** K} */</span>
+    <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> DIRECTCONVERT<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> Bi <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> D2ANYBASE<span style="color:#808030; ">(</span>X2D<span style="color:#808030; ">(</span>B2X<span style="color:#808030; ">(</span>X<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> Bo <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> X2B<span style="color:#808030; ">(</span>D2X<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> Bo <span style="color:#808030; ">=</span> <span style="color:#008c00; ">16</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> D2X<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">when</span> Bo <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> ANYBASE2D<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">otherwise</span> <span style="color:#800000; font-weight:bold; ">return</span> D2ANYBASE<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+<br><br>
+I tested the <code>ANYBASE2ANYBASE(X, Bi, Bo)</code> function in the 
+program:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* TEST */</span>
+Output_file <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">'test01.txt'</span> 
+N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">50000</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">4</span> <span style="color:#808030; ">*</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> Bi <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">16</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> Bo <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">16</span>
+    X <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+      R <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">0</span><span style="color:#808030; ">,</span> Bi <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+      R <span style="color:#808030; ">=</span> R <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+      X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"0123456789ABCDEF"</span><span style="color:#808030; ">,</span> R<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span>
+    Y <span style="color:#808030; ">=</span> ANYBASE2ANYBASE<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span>
+    Line <span style="color:#808030; ">=</span> Bi Bo <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> Line
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">lineout</span> Output_file<span style="color:#808030; ">,</span> line
+    <span style="color:#800000; font-weight:bold; ">if</span> <span style="color:#800000; font-weight:bold; ">STRIP</span><span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"L"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span> &lt;&gt; <span style="color:#800000; font-weight:bold; ">STRIP</span><span style="color:#808030; ">(</span>D2ANYBASE<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>Y<span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"L"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span> 
+      <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+        <span style="color:#800000; font-weight:bold; ">say</span> Bi Bo <span style="color:#0000e6; ">"error"</span> X D2ANYBASE<span style="color:#808030; ">(</span>ANYBASE2D<span style="color:#808030; ">(</span>Y<span style="color:#808030; ">,</span> Bo<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Bi<span style="color:#808030; ">)</span>
+        <span style="color:#800000; font-weight:bold; ">exit</span>
+      <span style="color:#800000; font-weight:bold; ">end</span>	
+  <span style="color:#800000; font-weight:bold; ">end</span>		
+<span style="color:#800000; font-weight:bold; ">end</span>	
+<span style="color:#800000; font-weight:bold; ">exit</span>
+</pre>
+</div>
+
+There are results of the test, function <code>ANYBASE2ANYBASE(X, Bi, Bo)</code> 
+for pseudorandom natural numbers  <code>X</code> with <code>N = 50000</code> 
+digits and <code>Bi, Bo = 2, ..., 16.</code>
+In the cell with coordinates <code>Bi, Bo</code> is actual
+execution time. It is round to the nearest whole second. 
+Cells written in red are result of the <code>DIRECTCONVERT</code> function.
+<img src="../images/BiBo.png" width=513 height=385 border=0 align=center alt="Red cells are result of the DIRECTCONVERT function" 
+style="max-width:100%;height:auto;">
+<br><p class="red"><b>Table 1</b> Execution time of <code>ANYBASE2ANYBASE(X, Bi, Bo)</code>
+</p>
+</p><br>
+<h3>Connections</h3><p>
+<a href="a_floo.html#floor">function CEILING</a>
+<br>
+<br><a href="a_ln.html#ln">function LN</a>
+<br>
+<br><a href="a_bit2d.html">Technique: bit array encoded as decimal number
+</a>
+</p>
+<br>
+<h3>Literature</h3>
+<p>
+[1] Wilf Herbert S. (1994)  <i>Algorithms and Complexity.</i> Internet Edition, Summer, 1994. Available at 
+<a href="https://www2.math.upenn.edu/~wilf/AlgoComp.pdf">https://www2.math.upenn.edu/~wilf/AlgoComp.pdf</a>
+<br><br>
+[2] Wirth Niclaus (1985) <i>Algorithms and Data Structures</i>. Oberon version: August 2004. Available at 
+<a href="https://people.inf.ethz.ch/wirth/AD.pdf">https://people.inf.ethz.ch/wirth/AD.pdf</a>
+<br><br>
+[3] Dasgupta S., Papadimitriou C. H., Vazirani U. V. (2006) <i>Algorithms</i>. Available at  
+<a href="http://algorithmics.lsi.upc.edu/docs/Dasgupta-Papadimitriou-Vazirani.pdf">
+http://algorithmics.lsi.upc.edu/docs/Dasgupta-Papadimitriou-Vazirani.pdf</a>
+<br><br>
+[4] McMillan Michael (2014) <i>Data Structures and Algorithms
+with JavaScript</i>. First Version. O'Reilly Media inc., Sebastopol.
+<br><br>
+[5] Rosen Kenneth H.[et al.] (2000) <i>Handbook of discrete and combinatorial mathematics</i>. CRC Press. 
+Boca Raton London New York Washington, D.C. ISBN 0-8493-0149-1 
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

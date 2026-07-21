@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Evaluation of polynomial and its derivatives simultaneously</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Evaluation polynomials and its derivatives 
+	simultaneously at a given point, first derivation" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_ddpo.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_ddpo.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Evaluation polynomial and its derivatives simultaneously</h1>
+<hr>
+<h3>Problem</h3>
+<p>
+Compute the value of a given polynomial 
+<code>A.N*X**N + ... + A.1*X + A.0</code>
+of degree <code>N</code>  and its first derivative at a given point
+ <code>V</code>.
+</p><br><h3>Implementation</h3><p>
+Unit:
+ nonrecursive internal function
+<br>&nbsp;
+ <br>Global variables:
+input vector <code>A.0, A.1, ..., A.N</code>  of coefficients from the set of
+ real numbers
+<br>&nbsp;
+<br>Parameters:
+ a positive integer <code>N</code> - the degree of the polynomial, 
+ real number <code>V</code> -
+ a given point
+<br>&nbsp;
+<br>Returns:
+ A pair of values separated by blank, evaluating the polynomial  and its 
+ first derivative
+<a name="ddpoly1">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DDPOLY1: procedure expose A.
+parse arg N, V
+P = A.N; D = 0
+do J = N - 1 to 0 by -1
+  D = D * V + P; P = P * V + A.J
+end
+P = A.N; D = 0; J = N
+do J = N - 1 to 0 by -1
+  D = D * V + P; P = P * V + A.J
+end
+return P D
+</code>
+</pre>
+</div>
+</p>
+<h3>Problem</h3>
+<p>
+Compute the value of a given polynomial <code>A.N*X**N + ... + A.1*X + A.0</code> 
+of 
+degree <code>N</code>  and its <code>D</code> derivatives at a given point 
+<code>V</code>.
+</p><br><h3>Implementation</h3><p>
+Unit:
+ nonrecursive internal subroutine
+<br>&nbsp;
+<br>Global variables:
+input vector <code>A.0, A.1, ..., A.N</code>  of coefficients from the set 
+of
+ real numbers, output vector <code>Pd.0, Pd.1, ..., Pd.D</code> of 
+ derivatives
+<br>&nbsp;
+<br>Parameters:
+ a positive integer <code>N</code> - the degree of the polynomial, a 
+ positive
+ integer <code>D</code> - number of derivatives, real number <code>V</code> 
+ -
+ a given point
+<br>&nbsp;
+<br>Result: 
+This routine computes the polynomial evaluated at<code>V</code>  as 
+<code>Pd.0</code> and <code>D</code> derivatives as 
+<code>Pd.1, ..., Pd.D</code>
+<a name="ddpoly">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DDPOLY: procedure expose A. Pd.
+parse arg N, D, V
+Const = 1; Pd. = 0; Pd.0 = A.N
+do I = N - 1 to 0 by -1
+  if D &lt; N - I then Nd = D; else Nd = N - I
+  do J = Nd to 1 by -1
+    Jm1 = J - 1; Pd.J = Pd.J * V + Pd.Jm1
+  end
+  Pd.0 = Pd.0 * V + A.I
+end
+do I = 2 to D
+  Const = Const * I; Pd.I = Pd.I * Const
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h4>Example</h4><p>For given values
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 5; D = 5; V = 2
+A. = 0
+A.5 = 1; A.3 = -4; A.2 = 6
+A.1 = -8; A.0 = 10
+</code>
+</pre>
+</div>
+the first elements (with index 0 to 5)  of <code>Pd.</code> array 
+will  <code>18, 48, 124, 216, 240, 120</code>
+after the interpretation of <code>call DDPOLY N, D, V</code>  
+statement 
+</p><br>
+<h3>Connections</h3><p>
+<a href="a_horn.html">Evaluation</a>
+<br>
+<br><a href="a_apol.html">Polynomial addition</a>
+<br>
+<br><a href="a_apol.html#sparse_poly">Sparse polynomial addition</a>
+<br>
+<br><a href="a_dpol.html">Division of polynomials</a>
+</p><br>
+<h3>Literature</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

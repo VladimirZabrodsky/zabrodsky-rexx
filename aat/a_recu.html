@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technique: Recursion elimination</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Examples of Recursion Elimination,
+	GCD, Fibonacci numbers, Quicksort" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_recu.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_recu.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Technique: Recursion elimination</h1><hr>
+<br><p>
+Many algorithms from a variety of applications can be expressed most clearly and 
+succintly in a recursive manner.  One such unadvisable example of a recursive 
+program is the computation of the Fibonacci Numbers, which are defined by the 
+recurrence relation
+<br>
+<br><code>F<sub>0</sub>=0; F<sub>1</sub>=1; F<sub>N</sub>=F<sub>N-1</sub>+F<sub>N-2</sub></code>
+<br><br>
+The recursive function closely follows the definition, where <code>F</code> we 
+consider as the calling of the function
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+if N &lt;= 0 then return 0
+  else if N = 1 then return 1
+    else return FIB(N - 1) + FIB(N - 2)
+</code>
+</pre>
+</div>	
+This recursive function needlessly repeats the same calculations over and over and 
+the amount of time used by the <code>FIB</code> function grows exponentially!
+When we will consider <code>F</code> in the definition as an array then we can write 
+a fast straightforward iterative program
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+F.0 = 0; F.1 = 1
+do J = 2 to N
+  Jm1 = J - 1; Jm2 = J - 2
+  F.J = F.Jm1 + F.Jm2
+end
+return F.N
+</code>
+</pre>
+</div>	
+We can produce a simpler iterative program by noting that we can start at 0 and keep 
+only two variables and not the whole array.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+if N = 0 | N = 1 then return N
+A = 0; B = 1
+do N - 1
+  parse value(B (B + A)) with A B
+end
+return B
+</code>
+</pre>
+</div>
+
+And there is <a href="a_eucl.html">Euclid's algorithm</a> for computation of the 
+greatest common divisor (GCD) of two positive integers.  It is based on the 
+following recursion theorem:
+<br><code>GCD(A, B) = GCD(B, A mod B)</code> 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GCD: procedure
+parse arg A, B
+if B = 0 then return A
+  else return GCD(B, A // B)
+</code>
+</pre>
+</div>  
+The very last action of the function is to make a recursive call to itself. That 
+program use "tail recursion". It can always be transformed to iteration by replacing 
+function calls by assignment and <code>do while</code> loop statements. The 
+iterative version of <code>GCD</code> is shown: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GCD: procedure
+parse arg A, B
+do while B > 0
+  parse value(B A//B) with A B
+end
+return A
+</code>
+</pre>
+</div> 
+Recursion is a valuable programming tool to allow programmer to concentrate on the 
+key step of an algorithm, without having initially to worry about coupling that step
+ with all the others ("... reapply the action to a smaller part of the problem!"). 
+The wonderful example is the original version of the famous <code>QUICKSORT</code> 
+algorithm.
+
+<a name="recursive_quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+QUICKSORT_RECURSIVE: procedure expose A.
+parse arg L, R
+if L &lt; R then do
+  Q = PARTITION(L, R)
+  call QUICKSORT_RECURSIVE L, Q
+  call QUICKSORT_RECURSIVE Q + 1, R
+end
+return
+ 
+PARTITION: procedure expose A.
+parse arg L, R
+X = A.L; I = L - 1; J = R + 1;
+do forever
+  do until A.J &lt;= X; J = J - 1; end
+  do until A.I &gt;= X; I = I + 1; end
+  if I &lt; J
+    then do; W = A.I; A.I = A.J; A.J = W; end
+    else return J
+end
+</code>
+</pre>
+</div> 
+The recursive call can be eliminated by using a stack. I used the External Data Queue
+ as the stack.
+
+<a name="nonrecursive_quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+QUICKSORT_ITERATIVE: procedure expose A.
+parse arg L, R
+push L R
+do while QUEUED() &gt; 0
+  pull L R
+  if L &lt; R
+    then do
+      Q = PARTITION(L, R)
+      push L Q; push Q + 1 R
+    end
+end
+return
+</code>
+</pre>
+</div> 
+The average time over <code>10</code> trials required by iterative and recursive 
+version of <code>QUICKSORT</code> and <a href="a_quic.html#quicksort">sophisticated 
+version</a> of <code>QUICKSORT</code> for <code>N = 100, 1000, 10000</code> was found
+ experimentally
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+COMPARISONS OF ALGORITHMS
+ 
+Algorithms       N=100	N=1000	N=10000
+Recursive        0.060	0.489	7.410
+Iterative        0.043	0.386	6.904
+Sophisticated    0.034	0.323	5.997
+</code>
+</pre>
+</div> 
+<span class="green">NOTE</span>: This test ran in the Windows 2000 Professional environment on the 
+computer with 132MB RAM and processor x86Family 6 Mode 6 Stepping 5.
+</p>
+<h4>Another examples</h4><p>
+<a href="a_diop.html">Diophantine linear equation</a>
+<br>
+<br><a href="a_minm.html">Minimum and Maximum at the same time</a>
+</p><br>
+<h3>Literature</h3><p>
+Kruse R. L. <i></i>Data Structures and Program Design</i> 
+Prentice Hall International Editions, ISBN 0-13-196049-0.
+<br>
+<br>Bird R. S. <i>Notes on Recursion Elimination</i> 
+CACM, June 1977, vol. 20, No. 6, pp. 434-439.
+<br>
+<br>Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+

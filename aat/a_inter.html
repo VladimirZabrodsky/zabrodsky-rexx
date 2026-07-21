@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technique: How to interchange the values of variables</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Interchanging of the values of variables. 
+	Try to use the minimum number of replacements" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_inter.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_inter.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Technique: How to interchange the values of variables</h1><hr>
+<br>
+<p>To interchange the values of two variables <code>X</code> and <code>Y</code>, 
+we can write: 
+<br><br>
+<code>W = Y; Y = X; X = W</code>
+<br><br>
+In Rexx we can exchange <i>words</i> <code>X</code> and  <code>Y</code> by 
+statement:
+<br><br>
+<code>parse value X Y with Y X</code>
+<br><br>
+Another (general) way is using of the <code>VALUE</code> function. The 
+<code>VALUE</code> function returns the value of the symbol named by the first 
+argument and optionally assigns it a new value.
+<br><br>
+<code>X = VALUE('Y', X)</code>
+<br><br>
+And the values of sequence <code>X, Y, Z</code> can be rearranged to 
+<code>Z, X, Y</code>
+ (ie. the new value of <code>Y</code> is to be the original value of 
+ <code>X</code>, etc.) by the fragment
+<br><br>
+<code>W = Z; Z = Y; Y = X; X = W</code>
+<br><br>
+A general solution of this problem, for <code>I</code>-variables 
+<code>A.1, A.2, ..., A.I (I &gt;= 2)</code>, 
+follows
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+W = A.I
+do J = I - 1 to 1 by -1
+  Jp1 = J + 1; A.Jp1 = A.J
+end
+A.1 = W
+</code>
+</pre>
+</div>
+We use this technique for programming the <i>insertion sort</i> algorithm. 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+do I = 2 to N
+  Im1 = I - 1
+  if A.I &lt; A.Im1 then do
+    W = A.I
+    do J = I - 1 by - 1 until A.Jm1 &lt;= W | J = 1
+      Jp1 = J + 1; A.Jp1 = A.J; Jm1 = J - 1
+    end
+    A.J = W
+  end
+end
+</code>
+</pre>
+</div>
+</p>
+<h3>Connections</h3><p>
+<div class=t><a href="a_quic.html#quicksort">Quicksort</a>
+<br>
+<br><a href="a_univ.html">Technique: Universal unit</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

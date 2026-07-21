@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Extended Euclid's algorithm</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computes integer coefficients X and Y that 
+	D = GCD(A,B) = A*X + B*Y">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_exeu.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_exeu.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>EXTENDED EUCLID'S ALGORITHM</h1><hr>
+<h3>Problem</h3><p>
+We can compute integers <code>X</code> and 
+<code>Y</code> such as  
+ <code>D = <a href="a_eucl.html#euclid">GCD</a>(A,B) = A*X + B*Y</code>
+</p>
+<br><h3>Implementation</h3><p>
+Unit: recursive internal function, 
+external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Parameters:
+a nonnegative integer <code>A</code>, a positive integer 
+<code>B</code>
+<br>&nbsp;
+<br>Interface: the 
+<code><a href="a_floo.html#mod">MOD</a></code> function
+<br>&nbsp;
+<br>Returns: the string of three numbers 
+<code>D X Y</code> separated by blanks. This triple satisfies equation 
+above
+
+
+
+<a name="exeuclid">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+EXEUCLID: procedure
+parse arg A, B
+if B = 0 then return A 1 0
+parse value EXEUCLID(B, MOD(A, B)) with D X Y
+return D Y (X - (A % B) * Y)
+</code>
+</pre>
+</div>
+<h3>Example</h3><p>
+
+<code>EXEUCLID(786, 311)</code> returns <code>1 55 -139</code>
+</p><br>
+<h3>Connections</h3><p>
+<a href="a_eucl.html">Euclid's GCD (and LCM) algorithms</a>
+<br>
+<br><a href="a_equs.html">Modular linear equations</a>
+<br>
+<br><a href="a_floo.html">CEILING, FLOOR, MOD</a>
+
+</p><br>
+<h3>Literature</h3><p>
+Knuth D. E., <i>Seminumerical Algorithms, vol. 2 of The Art of Computer 
+Programming</i> Addison-Wesley, 1973
+<br>
+<br>Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

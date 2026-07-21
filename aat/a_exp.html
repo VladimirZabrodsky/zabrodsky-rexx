@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Exponential function</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Computing the EXP (exponential) function E**X" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_exp.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_exp.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Exponential function <span class="serif lowercase"><i>e<sup>x</sup></i></h1><hr>
+<h3>Problem</h3><p>
+Compute <code>E**X</code> where <code>E</code> is 
+<a href="a_e.html">Euler's number <i>e</i></a>. 
+<code>E**X</code> is <code>EXP</code> function. This function is defined:
+<code>EXP(X) = 1 + X/FACT(1) + X**2/FACT(2) + ... + X**N/FACT(N) + ...</code>
+where <code><a href="a_fact.html#fact">FACT</a></code> is the 
+<a href="a_fact.html">factorial</a> function and <code>X</code> is any number.
+</p>
+<br><h3>Implementation</h3><p>
+Unit:</code> internal function, external function without 
+<code>procedure</code> statement
+
+<br>&nbsp;
+<br>Parameters: a number <code>X</code>, a positive integer <code>P</code> - number of significant digits of <code>EXP(X)</code>, default is <code>9</code>
+<br>&nbsp;
+<br>Interface: the <code><a href="a_e.html#econst">ECONST</a></code> function, 
+for <code>P &lt= 200</code> or the <code><a href="a_e.html#e">E</a></code>
+ function for <code>P &gt; 200</code> 
+<br>&nbsp;
+<br>Returns: the first <code>P</code> significant decimal digits of
+ <code>EXP(X)</code>
+
+
+<a name="exp">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+EXP: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+Y = X % 1
+if ABS(X - Y) &gt; 0.5 then Y = Y + SIGN(X)
+X = X - Y
+Sum = 1; Term = 1
+do J = 1
+  Term = Term * X / J; NewSum = Sum + Term
+  if NewSum = Sum then leave
+  Sum = NewSum
+end
+if Y = 0 then return Sum
+return (ECONST() ** Y) * Sum
+</code>
+</pre>
+</div>
+<h3>Example</h3><p>
+<code>EXP(2.1879653,16)</code> returns <code>8.917051119945531</code>
+<br>VISUAL BASIC <code>MsgBox(EXP(2.1879653))</code> displays 
+<code>8.91705111994553</code>
+</p><br>
+<h3>Connections</h3><p>
+<div class=t><a href="a_e.html">Euler's number e</a>
+<br>
+<br><a href="a_fact.html">Factorial</a>
+<br>
+<br><a href="a_ln.html">Natural logarithms</a>
+<br>
+<br><a href="a_bcco.html">Technique: Beforehand computed constants</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trick by Walter Pachl</a> in refle<span class="reflexio">XX</span>io
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

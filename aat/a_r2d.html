@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="windows-1250">
+<TITLE>Roman to decimal and the other way round</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Function returns decimal representation of 
+	Roman numerals and the other way round">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Contents</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_r2d.html"    class="active">Algorithm</a>
+    <a href="../cz_aat/a_r2d.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>ROMAN TO DECIMAL AND VICE-VERSA</h1><hr>
+<h3>Problem</h3><p>
+Convert Roman numerals (MDCCCIX) to their decimal equivalents (1809). 
+</p><br>
+<h3>Implementation</h3><p>
+Unit:
+ internal function, external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Parameter:
+the <code>Roman</code> string - a given Roman number
+<br>&nbsp;
+<br>Returns: 
+ the decimal representation of a given Roman number
+<a name="r2d">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+R2D: procedure
+parse upper arg Roman .
+RtoD.I = 1; RtoD.V = 5; RtoD.X = 10
+RtoD.L = 50; RtoD.C = 100
+RtoD.D = 500; RtoD.M = 1000
+Decimal = 0; Rdigit = LEFT(Roman, 1)
+Ddigit = RtoD.Rdigit
+do J = 2 to LENGTH(Roman)
+  Rdigit = SUBSTR(Roman, J, 1)
+  Next = RtoD.Rdigit
+  if Next > Ddigit
+    then Decimal = Decimal - Ddigit
+    else Decimal = Decimal + Ddigit
+  Ddigit = Next
+end
+return Decimal + Ddigit
+</code>
+</pre>
+</div>
+</p>
+<h3>Problem</h3><p>
+Convert a number from decimal to Roman numerals.  
+
+</p><br>
+<h3>Implementation</h3><p>
+Unit:
+ internal function, external function without <code>procedure</code> statement
+<br>&nbsp;
+<br>Parameter:
+<code>Decimal</code>, <code>1&lt;= Decimal &lt;=3999</code>
+<br>&nbsp;
+<br>Returns: the Roman representation of a given decimal number
+
+<a name="d2r">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+D2R: procedure
+parse arg Decimal
+if (Decimal < 1) | (Decimal > 3999) | ^DATATYPE(Decimal, "W")
+  then call ERROR,
+    "D2R: Error - integer must be in range 1 - 3999"
+parse value RIGHT(FORMAT(Decimal, , 0), 4, 0),
+  with A +1 B +1 C +1 D
+parse value "1 1 1 1 3 4 4 4 4 7",
+  with X.0 X.1 X.2 X.3 X.4 X.5 X.6 X.7 X.8 X.9
+parse value "0 1 2 3 2 1 2 3 4 2",
+  with Y.0 Y.1 Y.2 Y.3 Y.4 Y.5 Y.6 Y.7 Y.8 Y.9
+R = "IIIVIIIXXXLXXXCCCDCCCMMM"
+/*            1         2      */
+/*   123456789012345678901234  */
+return SUBSTR(R, X.A + 21, Y.A) || SUBSTR(R, X.B + 14, Y.B),
+    || SUBSTR(R, X.C +  7, Y.C) || SUBSTR(R, X.D, Y.D)
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Co-author</h3><p>
+Roderic A. Davis - the <code>D2R</code> function
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
