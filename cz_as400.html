@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<!--Created Vladimir Zabrodsky 1998-2021 -->
+<html lang="cs">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" /><TITLE>Putování od Rexxu až k AS/400</TITLE>
+		<META name="DESCRIPTION" content="Rexx v prostředí AS/400. Zvláštností je vstup a výstup:  
+standardní vstup a výstup, externí datová fronta, Query/400, SQL při přístupu k relační databázi." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="cz_index.html">REXX</a>
+    <a href="cz_introrexx.html">Úvod</a>
+    <a href="cz_arithmetic.html">Aritmetika</a>
+    <a href="cz_turing.html">Turingův stroj</a>
+    <a href="cz_as400.html"  class="active">AS400</a>
+    <a href="cz_3alg.html">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="as400.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>PUTOVÁNÍ OD REXXU
+AŽ K AS/400</h1><hr><br>
+<p>
+Máte rádi Rexx a začínáte s AS/400? Můžete používat AS/400 a zároveň číst můj článek? 
+Tak neváhejte a vyzkoušejte si sami možnosti jazyka Rexx v tomto prostředí. Na této
+úvodní cestě Od Rexxu k AS/400 vám řeknu JAK, aniž bychom se zdržovali tím PROČ. 
+Budete-li následovat moje pokyny, překonáte
+
+<cite>Pohoří Tisíce Manuálů</cite> i <cite>Řeku Omezení</cite> a nemusíte se bát ani 
+nejvyšší hory  
+
+<cite>Mt. CL</cite> - přes 2000 commands vysoké!)
+
+
+
+<br>Kapitola 1: <a HREF="#as4001">[Jak napsat a spustit program]</a>
+<br>
+<br>Kapitola 2: <a HREF="#as4002">[Standardní vstup a výstup]</a>
+<br>
+<br>Kapitola 3: <a HREF="#as4003">[Externí datová fronta]</a>
+<br>
+<br>Kapitola 4: <a HREF="#as4004">[SQL povely]</a>
+<br>
+</p>
+<hr>
+<h2 id ="as4001">Jak napsat a spustit program</h2><p>
+
+Zkusíme si napsat malý, jednoduchý, možná i užitečný program a spustíme ho. Nejdříve ze
+ všeho si ale musíme vytvořit složku, do které budeme svoje dílka ukládat - soubor 
+ zdrojových textů.
+<br>
+<br>Prohlédneme si spolu (pro mě užitečný) program DSPLIBF napsaný v jazyce Rexx a 
+pracující v prostředí systému AS/400. Vznikl proto, abych mohl snadno dostat výstupní 
+informace o knihovně do souboru. CL povel DSPLIB má syntaxi:
+ <br>
+ <br>DSPLIB LIB(<i>library</i>) OUTPUT({*|*PRINT})
+ <br>
+<br>Parametr OUTPUT určuje, zda informace o knihovně půjdou na displej (*) nebo na tiskárnu, přesněji řečeno do spoolu (*PRINT). Program DSPLIBF rozšiřuje možnosti povelu DSPLIB a ukládá výstupní informaci o vybrané knihovně do souboru INFO v knihovně MYLIB.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* DSPLIBF */
+parse arg Knihovna
+do while Knihovna = ""
+  say "Zadejte jméno knihovny"
+  parse linein Knihovna
+end
+'DSPLIB' Knihovna 'OUTPUT(*PRINT)'
+'CHKOBJ MYLIB/INFO *FILE'
+if RC <> 0 then 'CRTPF MYLIB/INFO RCDLEN(132)'
+'CPYSPLF FILE(QPDSPLIB) TOFILE(MYLIB/INFO) SPLNBR(*LAST)'
+if RC = 0 then say 'OK'; else say 'Chyba'
+</code>
+</pre>
+</div>
+V jazyce Rexx je řetězec znaků, který není rozpoznaným příkazem jazyka, předán k provedení do určeného prostředí. V AS/400 je implicitně chápán jako CL povel, prováděný operačním systémem OS/400. Program DSPLIBF ukazuje využití CL povelů: CHKOBJ (Check Object) kontroluje existenci fyzického souboru INFO (tabulky v terminologii SQL); CRTPF (Create Physical File) jej případně vytváří s délkou věty 132 znaků; CPYSPLF (Copy Spooled File) kopíruje poslední (viz parametr SPLNBR(*LAST)) soubor ve spoolu, vytvořený povelem DSPLIB, do souboru INFO.
+<br>
+<br>Jak napíšete a spustíte program DSPLIBF? Pokud dosud nemáte vytvořenu knihovnu a v ní soubor zdrojových textů, napište na povelovou řádku povel CRTLIB (Create Library) pro vytvoření knihovny MYLIB a předejte ho k provedení operačnímu systému klávesou Enter:
+<br>
+<br>CRTLIB MYLIB
+<br>
+<br>
+Poznámka: Jméno knihovny musí být v systému jedinečné. Poraďte se proto se systémovým administrátorem, jaké jméno pro knihovnu zvolit. V tomto článku předpokládám, že se vaše knihovna jmenuje MYLIB.
+<br>
+<br>Povelem CRTSRCPF (Create Source Physical File) vytvořte soubor zdrojových textů QREXSRC:
+<br><br>
+<br>
+<code class="wrap">CRTSRCPF FILE(MYLIB/QREXSRC)</code>
+</p>
+<br>
+<h3 class="red">Krok 1</h3><p>
+
+Teď už můžete v knihovně zdrojových textů vytvořit svůj první program. Povel
+<br><br>
+<code class="wrap">WRKMBRPDM FILE(MYLIB/QREXSRC)</code>
+<br><br>
+zobrazí:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                       Work with Members Using PDM
+File  . . . . . .   QREXSRC   
+  Library . . . .     MYLIB               Position to  . . . .  
+Type options, press Enter.
+ 2=Edit         3=Copy  4=Delete 5=Display       6=Print  
+ 8=Display description  9=Save  13=Change text  14=Compile
+Opt  Member      Type       Text
+  (No members in file)
+</code>
+</pre>
+</div>
+Stiskněte F6, tj. Create.<br><br>
+</p><h3 class="red">Krok 2</h3><p>
+
+V zobrazeném formuláři vyplňte jméno programu (DSPLIBF), jeho typ (REXX), můžete připojit i vysvětlující poznámku, chcete-li (Výstup DSPLIB do souboru INFO). Stisknutím klávesy Enter formulář odešlete systému.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                  Start Source Entry Utility (STRSEU)
+Type choices, press Enter.
+Source file  . . . . . . . . . . . > QREXSRC       Name, *PRV   
+  Library  . . . . . . . . . . . . >   MYLIB       Name, *LIBL, 
+Source member  . . . . . . . . . .   DSPLIBF       Name, *PRV,  
+Source type  . . . . . . . . . . .   REXX          Name, *SAME, 
+Text 'description' . . . . . . . .   Output from DSPLIB into the INFO
+</pre>
+</code>
+</div><br>
+</p><h3 class="red">Krok 3</h3><p>
+
+V editoru přepíšete text programu DSPLIBF. Editování ukončíte klávesou F3:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+Columns . . . :    1   71            Edit
+SEU==>                                                           
+FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+..
+       *************** Beginning of data *********************** 
+'''''' /* DSPLIBF */
+'''''' 
+</code>
+</pre>
+</div>
+</p><h3 class="red">Krok 4</h3><p>
+
+V obrazovce nadepsané Exit potvrďte klávesou Enter uložení zdrojového textu do členu DSPLIBF v souboru QREXSRC. V následující obrazovce Work with Members Using PDM napište na pole pro zadání volby číslo 16, tj. Run a stiskněte F4 pro zadání parametrů.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                       Work with Members Using PDM
+ 
+File  . . . . . .   QREXSRC   
+  Library . . . .     MYLIB               Position to  . . . . 
+ Type options, press Enter.
+ 2=Edit         3=Copy  4=Delete 5=Display       6=Print
+ 8=Display description  9=Save  13=Change text  14=Compile
+Opt  Member      Type       Text
+16   DSPLIBF     REXX       Output from DSPLIB into the INFO   
+</code>
+</pre>
+</div>
+</p><h3 class="red">Krok 5</h3><p>
+
+Napište jméno knihovny do pole parametrů; stisknutím klávesy Enter program odstartujete. Ovšem, program DSPLIBF jste mohli pustit rovnou, v předchozím kroku místo F4 stisknout Enter, on už by si o jméno knihovny řekl sám.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                  Start REXX Procedure (STRREXPRC)
+Type choices, press Enter.
+Source member  . . . . . . . . . > DSPLIBF       Name
+Source file  . . . . . . . . . . > QREXSRC       Name
+  Library  . . . . . . . . . . . >   MYLIB       Name, *LIBL 
+Parameters . . . . . . . . . . .   MYLIB                    
+</code>
+</pre>
+</div>
+Poznámka: Program DSPLIBF můžete odstartovat i povelem STRREXSRC (Start REXX Procedure), když na povelový řádek napíšete:
+ <br>
+ <br><code class="wrap">STRREXPRC SRCMBR(DSPLIBF) SRCFILE(MYLIB/QREXSRC) PARM(MYLIB)</code>
+ <br>
+ <br>
+ O průběhu programu vás bude informovat tato obrazovka:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+ 
+Start of terminal session.
+OK
+Press ENTER to end terminal session.               
+</code>
+</pre>
+</div>
+Povelem DSPPFM (Display Physical File Member) si můžete prohlédnout výsledek (obsah souboru INFO) na obrazovce:
+<br>
+<br><code class="wrap">DSPPFM FILE(MYLIB/INFO)</code>
+<br>
+<br>
+Takhle může vypadat jeho začátek:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                         Display Physical File Member
+File . . . . . . :   INFO                Library  . . . . :   MYLIB 
+Member . . . . . :   INFO                Record . . . . . :   1 
+Control  . . . . .                       Column . . . . . :   1 
+Find . . . . . . .                                            
+*...+....1....+....2....+....3....+....4....+....5....+....6....+..  
+ 5763SS1 V3R2M0  960517                   Display Library
+ Library . . . . . . . . . . . . . :   MYLIB
+ Type  . . . . . . . . . . . . . . :   PROD             
+</code>
+</pre>
+</div>
+</p>
+<br>
+<hr>
+<br>
+<h2 id="as4002">Standardní vstup a výstup</h2><p>
+
+Příkazem <code>parse linein</code> můžeme číst z jediného souboru STDIN a příkazem 
+<code>say</code> zapisovat do jediného souboru STDOUT. Oba soubory musí být určeny 
+před jejich prvním použitím, <i>jednou jen a pak už ne</i>. Omezení? Ukážu vám první 
+možnost, jak je překonat.
+<br>
+<br>
+Programy v jazyce Rexx se vždy interpretují. Mohou být spuštěny buď v interaktivním 
+prostředí (tak tomu bylo v předcházejícím příkladě) nebo v dávkovém prostředí. 
+Interpretovaný program má přístup ke dvěma souborům pro standardní vstupní a výstupní
+ operace. Standardním souborem pro vstup je STDIN; standardním souborem pro výstup je 
+ STDOUT. Je tu ještě jeden výstupní soubor, totiž STDERR, který používá interpret k 
+ zápisu chybových hlášení a informací o průběhu výpočtu vyžádaných příkazem trace. 
+ Příkaz <code>parse linein</code> čte ze souboru STDIN a příkaz <code>say</code> zapisuje
+  do souboru STDOUT.
+<br>
+<br>
+Implicitně se v interaktivním režimu považuje za STDIN klávesnice a za STDOUT displej. V dávkovém režimu se implicitně považuje za STDIN soubor se jménem QINLINE a za STDOUT spoolový soubor QPRINT.
+<br>
+<br>Implicitní nasměrování souborů STDIN a STDOUT můžete změnit pomocí CL povelů začínajících OVR..., ale tyto povely musí být vydány před prvním použitím souboru STDIN nebo souboru STDOUT a v průběhu programu už nasměrování nelze znovu změnit. Možná si teď říkáte Chudáček Rexx, co to s ním v té čtyřstovce udělali ....
+ <br>
+ <br>Ukážu vám, jak se mohou snadno spojit silné prostředky jazyka Rexx a AS/400 pro extrémně snadné řešení jinak nijak jednoduché úlohy.
+ <br>
+ <br>Naším cílem bude napsat program, který v zadaném textu (předložen na vstupu jako
+  první člen souboru INFO v knihovně MYLIB) určí, kolikrát se v něm to které slovo 
+  vyskytlo. Pojmem slovo tu rozumím posloupnost znaků neobsahující mezeru, jak je v 
+  Rexxu obvyklé. Řešení ukazuje následující program <code>KOLIKRAT</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* KOLIKRAT */
+Citac = 0
+'RTVMBRD FILE(MYLIB/INFO) MBR(*FIRST) NBRCURRCD(&CITAC)'
+'OVRDBF FILE(STDIN) TOFILE(MYLIB/INFO)'
+Kolikrat. = 0; Ruzne = ""
+do Citac
+  parse linein Veta
+  do J = 1 to WORDS(Veta)
+    Slovo = WORD(Veta, J)
+    if Kolikrat.Slovo = 0 then Ruzne = Ruzne Slovo
+    Kolikrat.Slovo = Kolikrat.Slovo + 1
+  end
+end
+do J = 1 to WORDS(Ruzne)
+  Slovo = WORD(Ruzne, J); say Kolikrat.Slovo Slovo
+end           
+</code>
+</pre>
+</div>
+Program ukazuje využití asociativního pole a CL povelů. RTVMBRD 
+(Retrieve Member Description) povel vrací v proměnné Citac počet vět vstupního souboru. 
+Této proměnné se říká pseudo-CL proměnná. Její jméno musí začínat znakem &. OVRDBF
+ (Override with Data Base File) povel přesměrovává STDIN k souboru INFO v knihovně 
+ MYLIB. V interaktivním prostředí uvidíme výsledek na displeji. Pokud by měl být zapsán 
+ na papíře, máme dvě možnosti. Můžeme přidat k textu programu povel 
+ 'OVRPRTF FILE(STDOUT) TOFILE(QSYSPRT)' nebo povelem SBMJOB (Submit Job) předat 
+ interpretaci programu do dávkového prostředí:
+<br>
+<br><code class="wrap">SBMJOB CMD(STRREXPRC SRCMBR(HOWMANY) SRCFILE(MYLIB/QREXSRC))</code>
+<br>
+<br>Aby mohl být program <code>KOLIKRAT</code> opravdu užitečný, musí být výsledek 
+utříděn. Jak to udělat co nejjednodušeji? Využívej systémových prostředků radí 
+Jon Bentley v knize <i>Programming Pearls</i>. V systému OS/400 je nejjednodušším řešením
+ zapsat výsledek do souboru a tento soubor pak jednoduše utřídit předem připraveným 
+ dotazem (tzv. query v terminologii AS/400) s výstupem na displej. Query/400 je 
+ generátor výstupních sestav z databázových souborů. Je jednoduchý a snadno se jej 
+ naučíte používat. Vytvoření a použití query vám opět ukážu krok za krokem.
+</p>
+<h3 class="red">Krok 1</h3><p>
+
+Nejprve pomocí povelu systému
+<br>
+<br><code>CRTPF MYLIB/OUTPUT RCDLEN(80)</code>
+<br>
+<br>
+<br>vytvoříme soubor OUTPUT. Budeme předpokládat, že v něm budou zapsány dvojice hodnot 
+počet výskytů slova a slovo samo oddělené mezerou. Teď sestavíme potřebné query na tento
+ soubor. Napište WRKQRY na povelovou řádku a stiskněte Enter. Formulář, který se objeví 
+ na obrazovce, vyplňte, jak je ukázáno na dalším obrázku a stiskněte Enter.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                               Work with Queries 
+Type choices, press Enter.
+  Option  . . . . . .    1              1=Create, 2=Change, 3=
+                                        5=Display, 6=Print def
+                                        8=Run in batch, 9=Run   
+  Query . . . . . . .    SAYWORD        Name, F4 for list     
+    Library . . . . .      MYLIB        Name, *LIBL, F4 for li          
+</code>
+</pre>
+</div>
+</p>
+<h3 class="red">Krok 2</h3><p>
+
+Stiskněte Enter v obrazovce Define the Query s implicitní hodnotou 1 (tj. Select) v poli volby u kolonky Specify file selections. V následující obrazovce Specify File Selection napište jméno souboru (OUTPUT) a jméno knihovny (MYLIB). Stiskněte Enter.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                           Specify File Selections 
+Type choices, press Enter.  Press F9 to specify an additional   
+  file selection.
+  File . . . . . . . . .   OUTPUT         Name, F4 for      
+    Library  . . . . . .     MYLIB        Name, *LIBL, F4 for
+  Member . . . . . . . .   *FIRST         Name, *FIRST, F4 for   
+  Format . . . . . . . .   *FIRST         Name, *FIRST, F4 for        
+</code>
+</pre>
+</div>
+ Vrátíte se k Define the Query obrazovce. Napište 1 do pole volby u kolonky Select sort fields. Teď se dostáváme k vlastnímu třídění. Na této obrazovce (vidíte ji dole) zvolíte pole, které bude tříděno, prioritu třídění v sloupci Sort Prty (důležité, obsahuje-li soubor více polí). A to, co nás nejvíce zajímá, způsob třídění: vzestupně (ascending), sestupně (descending). Do sloupce A/D zapište volbu D.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                           Select Sort Fields 
+Type sort priority (0-999) and A (Ascending) or D (Descendin   
+  the names of up to 32 fields, press Enter.
+Sort
+Prty A/D Field         Text
+ 1    D  OUTPUT          
+</code>
+</pre>
+</div>
+Potvrďte klávesou Enter. Zase se vrátíte k obrazovce Define the Query. Teď stiskněte F3 pro ukončení. V následující obrazovce Exit this Query přesuňte kurzor na pole volby Run a napište 3 (Do not run). Stiskněte Enter - query je uloženo. Klávesou F3 opustíte prostředí Work with Queries.
+</p>
+ <h3 class="red">Krok 3</h3><p>
+ Změňte program <code>KOLIKRAT</code> tak, aby dvojice hodnot počet výskytů a slovo 
+ byly uloženy do souboru OUTPUT. Protože výsledek bude tříděn podle počtu výskytů, 
+ použijte příkaz:
+ <br>
+ <br><code class="Wrap">say FORMAT(Kolikrat.Slovo, 5) Slovo</code>
+ <br>
+ <br>Přidejte k programu <code>KOLIKRAT</code> provedení query SLOVA a na samém začátku 
+ vymažte momentální obsah souboru OUTPUT povelem 
+ <code class="Wrap">CLRPFM FILE(MYLIB/OUTPUT)</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* KOLIKRAT */
+'CLRPFM FILE(MYLIB/OUTPUT)'
+'OVRDBF FILE(STDOUT) TOFILE(MYLIB/OUTPUT)'
+Citac = 0
+'RTVMBRD FILE(MYLIB/INFO) MBR(*FIRST) NBRCURRCD(&CITAC)'
+'OVRDBF FILE(STDIN) TOFILE(MYLIB/INFO)'
+Kolikrat. = 0; Ruzne = ""
+do Citac
+  parse linein Veta
+  do J = 1 to WORDS(Veta)
+    Slovo = WORD(Veta, J)
+    if Kolikrat.Slovo = 0 then Ruzne = Ruzne Slovo
+    Kolikrat.Slovo = Kolikrat.Slovo + 1
+  end
+end
+do J = 1 to WORDS(Ruzne)
+  Slovo = WORD(Ruzne, J)
+  say FORMAT(Kolikrat.Slovo, 5) Slovo
+end
+'RUNQRY QRY(MYLIB/SLOVA)'      
+</code>
+</pre>
+</div>
+V definici query můžete snadno přesměrovat výstup (na displej, do souboru, do spoolu). Vidíte? Výstup z programu byl už přesměrován do souboru OUTPUT povelem 'OVRDBF FILE(STDOUT) ...' a přece výsledek vystupuje na displeji!
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                                Display Report
+Query . . . :   MYLIB/SAYWORD                Report width . . . 
+Position to line  . . . . .              Shift to column  . . . 
+Line   ....+....1....+....2....+....3....+....4....+....5....+.        
+       OUTPUT
+000001    66 .
+000002    10 *
+000003     7 :
+000004     2 1   
+</code>
+</pre>
+</div>
+<hr>
+</p>
+<h2 id="as4003">Externí datová fronta</h2><p>
+Představím vám podrobně externí datovou frontu (tentokrát dokonce ani nepředpokládám vaši znalost tohoto mechanizmu v "klasickém" Rexxu). Představím vám ji jako prostředek pro komunikaci mezi programy, jako prostředek vstupu a výstupu, jako užitečnou datovou strukturu - frontu, zásobník, ...
+<br>
+<br>Externí datová fronta (External Data Queue) je systémový objekt AS/400, obsahující posloupnost položek, podobných větám souborů. Po startu úlohy (job), v interaktivním prostředí po přihlášení pomocí povelu SIGN ON, se externí datová fronta vytvoří a je dostupná všem programům úlohy po celou dobu jejího trvání, v interaktivním prostředí tedy až do provední povelu SIGNOFF. Jeden program může položky do fronty uložit, druhý přečíst - fronta plní úlohu zařízení pro komunikaci mezi programy.
+<br>
+<br>Užitečnou analogií pro pochopení mechanizmu fronty je představovat si ji jako hadici od vysavače (prohlédněte si následující obrázek) s vyznačeným začátkem a koncem. Jak vidíte, můžete ukládat pinpongové míčky (položky) z obou stran, ale vypadnout vám mohou jen z jejího začátku.
+<br><img src="images/hose.gif"  align=center border=0 width=550 height=300 alt="Jako hadice od vysavače">
+<br>
+
+Příkaz <code>queue</code> přidá na konec fronty novou položku.
+<br>
+<br><img src="images/queue.gif" align=center border=0 width=488 height=100 alt="Příkaz queue">
+<br>
+<br>Příkaz <code>push</code> přidá na začátek fronty novou položku.
+queue.
+<br>
+<br><img src="images/push.gif" alt="Příkaz push" border=0 width=488 height=100>
+<br>
+<br>Příkaz <code>parse pull</code> přečte položku ze začátku fronty, je-li však fronta prázdná, pak příkaz
+<code>parse pull</code> bude číst ze souboru STDIN.
+<br>
+<br><img src="images/pull.gif" alt="Příkaz parse pull" border=0 width=488 height=100>
+<br>
+<br>Volání vestavěné funkce <code>QUEUED()</code> vrací počet položek ve frontě.
+<br>
+<br><img src="images/queued.gif" alt="Volání funkce QUEUED()" border=0 width=488 height=100>
+<br>
+<br>CL povely ADDREXBUF (Add REXX Buffer) a RMVREXBUF (Remove REXX Buffer) je možné 
+vydělit a uvolňovat uskupení položek ve frontě (buffers). Nebudu o těchto povelech 
+hovořit podrobně, ale povel 'RMVREXBUF 0', který vymaže všechny položky ve frontě 
+(volání funkce QUEUED() bude vracet 0), je užitečný.
+<br>
+<br>Když potřebujete simulovat losování, použijete funkci RANDOM. Ale chci vám ukázat způsob, který mnohem věrněji napodobuje otáčení osudím nebo míchání karet atd., protože výsledek závisí i na době trvání této činnoti. Jon Bentley napsal:
+<br>
+<br><i>Jak může počítač rozdávat karty v pokru? Když přiřadíme každé kartě v balíčku celé číslo mezi 1 až 52, pak rozdání můžeme provést náhodným výběrem pěti celých čísel z intervalu 1..52, například,,</i>
+<br>
+<br><code>4  8  31  46  47</code>
+<br>
+<br>
+<i>(To je důležité, aby se žádné číslo nevyskytovalo ve výběru dvakrát; 
+držet v ruce více než jedno srdcové eso by mohlo ohrozit hráčovo zdraví) --</i>
+<br>
+<br>Napíšeme si program, který bude míchat a rozdávat karty. Začneme s 
+představou balíčku karet - to budou čísla od 1 do 52. Uložíme je jako jeden 
+řetězec znaků - posloupnost slov oddělených od sebe mezerami. Následující program 
+MICHEJ umístí balíček na začátek fronty v případě, že je fronta prázdná. Na začátek 
+fronty uloží položku obsahující momentální čas. A to je vše. Takže, kdo vlastně
+ míchá? Čas.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* MICHEJ */
+Balicek = ""
+if QUEUED() = 0 then do
+  do J = 1 to 52; Balicek = Balicek J; end
+  push Balicek
+end
+push TIME("S") 
+</code>
+</pre>
+</div>
+Pustíte-li po několika minutách, náhodně, dále uvedený program <code>ROZDEJ</code>, tak z externí datové fronty odebere položku s časem a balíček karet. Z časového záznamu a momentálního času určí číslo od 1 do počtu karet v balíčku - tj. vybere náhodně jednu kartu. Vybere ji doslova, protože ji zobrazí (příkazem say) a odstraní z balíčku (pomocí funkce DELWORD).
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* ROZDEJ */
+parse pull T; parse pull Balicek
+J = ABS(TIME("S") - T) // WORDS(Balicek) + 1
+say "Rozdána karta" WORD(Balicek, J)
+if WORDS(Balicek) > 1 then push DELWORD(Balicek, J, 1)
+</code>
+</pre>
+</div>
+Střídavým spouštěním programů <code>MICHEJ</code> - <code>ROZDEJ</code> - 
+<code>MICHEJ</code> - ... počítač míchá a rozdává karty. 
+Po skončení programu <code>MICHEJ</code> můžete dělat cokoliv jen se neodhlašujte 
+povelem SIGNOFF a neměňte obsah externí datové fronty.
+<br>
+<br>Ale externí datová fronta není jen pro komunikaci mezi programy. Tak například, budete-li eliminovat rekurzi, můžete ji využít jako zásobník, budete-li programovat topologický sort, můžete ji využít jako frontu.
+ <br>
+ <br>Když externí datovou frontu využíváte, musíte kontrolovat její obsah. Dokázali byste napsat program, který by to prováděl? Opravdu užitečný program by mohl zobrazit obsah fronty a podle přání uživatele by ji buď ponechal beze změny nebo by všechny v ní uložené položky vymazal. Zkuste si to nejprve sami. (Řešení této úlohy následuje)
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* XAMINE */
+do QUEUED()
+  parse pull Polozka; say Polozka; queue Polozka
+end
+do until Odpoved = "A" | Odpoved = "N"
+  say "Vyjmout polozky z fronty? (A/N)"
+  parse upper linein Odpoved
+end
+if Odpoved = "A" then 'RMVREXBUF 0'
+</code>
+</pre>
+</div>
+<hr>
+</p>
+<h2 id="as4004">SQL povely</h2><p>
+
+
+IBM DB2 je systém řízení databáze, který implementuje relační model dat. Z pohledu uživatele je relační databáze množinou tabulek (souborů). Každý řádek (věta) tabulky obsahuje množinu sloupců (polí). Všechny řádky tabulky mají tutéž formu.
+ <br>
+ <br>Operace s daty se provádí pomocí jazyka Structured Query Language - SQL. Tento jazyk umožňuje vytvářet, modifikovat, rušit tabulky; vyhledávat, měnit, rušit data v tabulkách; přidávat data do tabulek. Tím, že povely SQL můžete uvádět v textu svých programů, jsou překonána všechna omezení kladená na příkazy vstupu a výstupu u jazyka Rexx v prostředí AS/400.
+  <br>
+<br>Ukažme si možnosti a způsob využití SQL: Vytvoříme si jednoduchý oboustranný
+ anglicko-česko-anglický slovník a napíšeme si program pro jeho praktické využívání. 
+ Slovník vytvoří program <code>SLOVNIK</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* SLOVNIK vytváří anglicko-česko-anglický slovnik */
+address EXECSQL
+EXECSQL 'SET OPTION COMMIT = *NONE'
+EXECSQL 'CREATE TABLE MYLIB/DICTIONARY',
+  ' (E_SLOVO CHAR(20) NOT NULL,',
+  ' C_SLOVO CHAR(20) NOT NULL)'
+INS = 'INSERT INTO MYLIB/DICTIONARY VALUES(?, ?)'
+EXECSQL 'PREPARE I1 FROM :INS'
+say "Napiš dvojice slov: anglické-české"
+do forever
+  say "anglické-české"
+  parse linein E "-" C
+  if E = "" then leave
+  EXECSQL 'EXECUTE I1 USING :E, :C'
+  if RC = 0 then say "OK"; else say "Chyba, RC =" RC
+end
+</code>
+</pre>
+</div>
+Příkaz address EXECSQL v programu určuje, že řetězec znaků, který není rozpoznaným příkazem jazyka Rexx, bude předán do prostředí provádějícího povely SQL.
+<br>
+<br>Implicitním nastavením programu v jazyce Rexx je volba COMMIT = *CHG. Pokud tabulka není souborem zabezpečeným žurnálem, musíte uvést explicitní povel SQL
+<br>
+<br><code>'SET OPTION COMMIT = *NONE'</code>
+<br>
+<br>Povelem 'CREATE TABLE MYLIB/DICTIONARY (E_SLOVO CHAR(20) NOT NULL, C_SLOVO CHAR(20) 
+NOT NULL)' se vytváří tabulka se dvěma sloupci: prvním pro anglická a druhým pro česká 
+slova.
+<br>
+<br>Povel PREPARE
+ <br>
+ <BR><code>'PREPARE I1 FROM :INS'</code>
+ <BR>
+ <BR>připravuje k provedení povel
+ <br>
+ <br><code>'INSERT INTO MYLIB/DICTIONARY VALUES(?, ?)'</code>
+ <br>
+ <br>v proměnné INS. Takto připravený povel je pak dynamicky proveden povelem EXECUTE
+ <br>
+ <br><code>'EXECUTE I1 USING :E, :C'</code>
+ <br>
+ <br>Jména začínající dvojtečkou označují v SQL povelech programové proměnné (host variables). Hodnoty proměnných E a C jsou uloženy do sloupců jednoho řádku tabulky DICTIONARY.
+   <br>
+   <br>Proměnná RC indikuje zda byl povel SQL proveden bezchybně (RC je nula) nebo ne (RC má nenulovou hodnotu).
+<br>
+<br>Následuje příklad dialogu člověka s programem <code>SLOVNIK</code> při vytváření slovníku:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Start of terminal session.
+Napiš dvojice slov: anglické-české
+abandon-opustit
+OK
+abandon-vzdát se
+OK
+abandon-oddávat se
+OK
+abbey-opatství
+OK
+abbreviation-zkratka
+OK
+abdicate-vzdát se
+OK
+ 
+Press ENTER to end terminal session.
+</code>
+</pre>
+</div>
+ Programem <code>HLEDEJ</code>, budeme oboustranný slovník využívat.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* HLEDEJ překlad v anglicko-česko-anglickém slovníku */
+address EXECSQL
+EXECSQL 'SET OPTION COMMIT = *NONE'
+do until Odpoved = "A" | Odpoved = "C"
+  say "Anglicko->český nebo česko->anglický? (A/C)"
+  parse upper linein Odpoved
+end
+Vyzva.A = "Word to translate"; Vyzva.C = "Napiš slovo"
+if Odpoved = "A" then
+  SEL = 'SELECT C_SLOVO FROM MYLIB/DICTIONARY WHERE E_SLOVO = ?'
+  else
+  SEL = 'SELECT E_SLOVO FROM MYLIB/DICTIONARY WHERE C_SLOVO = ?'
+EXECSQL 'PREPARE S1 FROM :SEL'
+EXECSQL 'DECLARE C1 CURSOR FOR S1'
+do forever
+  say Vyzva.Odpoved; parse linein Slovo
+  if Slovo = "" then leave
+  EXECSQL 'OPEN C1 USING :SLOVO'
+  do forever
+    EXECSQL 'FETCH C1 INTO :PREKLAD'
+    if SQLCODE <> 0 then leave
+    say COPIES(" ", 10) Preklad
+  end
+  say COPIES(" ", 10) ".."; EXECSQL 'CLOSE C1'
+end
+</code>
+</pre>
+</div>
+Ukazatel do tabulky, která je výsledkem SQL povelu, se v terminologii SQL nazývá kurzor. 
+Umožňuje prozkoumat výsledek povelu SQL - tabulku - řádek po řádku. V našem případě je 
+výsledkem povelu SELECT tabulka - prázdná (není-li slovo ve slovníku), jednořádková nebo 
+víceřádková, tvořená těmi řádky, které mají v tomtéž sloupci uvedeno stejné slovo, jako 
+slovo přijaté z klávesnice. Po otevření kurzoru můžeme tyto řádky číst povelem FETCH. 
+Kurzor je zprvu nastaven před první řádek výsledné tabulky. Tento řádek je běžným řádkem
+ pro povel FETCH, který obsah řádku uloží do programových proměnných uvedených v klauzuli
+  INTO (v našem případě je to jediná programová proměnná Preklad). Běžným řádkem se nyní
+   stane druhý řádek výsledné tabulky atd. dokud tabulku neprojdeme celou. O tom, že jsme
+    dosáhli poslední věty výsledku, nás informuje proměnná SQLCODE hodnotou 100. 
+    Po prozkoumání výsledné tabulky (přečtení, případně změně nebo zrušení řádků), 
+    je kurzor uzavřen povelem CLOSE. Máme-li ho použít znovu, musíme ho opět otevřít 
+    povelem OPEN. Podívejte se, jak by mohl vypadat dialog člověka s programem 
+    <code>HLEDEJ</code>:
+ <br>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Start of terminal session.
+Anglicko->český nebo česko->anglický? (A/C)
+A
+Word to translate:
+abandon
+           opustit
+           vzdát se
+           ..
+Word to translate:
+robot
+           ..
+Word to translate:
+abbreviation
+           zkratka
+           ..
+Word to translate:
+ 
+Press ENTER to end terminal session.
+</code>
+</pre>
+</div>
+<p><h2 class="red">Shrnutí</h2><p>
+
+Zvláštností jazyka Rexx v prostředí AS/400 je vstup a výstup. Je zvláštností, ale, 
+jak jste mohli vidět, není omezením. Vaše aplikace mohou využívat standardní vstup a 
+výstup, externí datovou frontu, kouzla AS/400, jakým je třeba Query/400, a také veškeré 
+možnosti jazyka SQL při přístupu k relační databázi. V prostředí AS/400, kde je jen 
+jediná relační databáze, to znamená, že tyto povely můžete používat při práci s 
+libovolnými soubory.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>  

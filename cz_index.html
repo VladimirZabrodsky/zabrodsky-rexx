@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!--Vytvoril Vladimir Zabrodsky 1998-2021 -->
+<html>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<head lang="cs">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" /><TITLE>O jazyku Rexx</TITLE>
+		<META name="DESCRIPTION" content="Moje články o jazyku Rexx a Album algoritmů a technik. Úvod.
+		Rexx a AS/400, aritmetické operace, Turingův stroj." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="cz_index.html" class="active">REXX</a>
+    <a href="cz_introrexx.html">Úvod</a>
+    <a href="cz_arithmetic.html">Aritmetika</a>
+    <a href="cz_turing.html">Turingův stroj</a>
+    <a href="cz_as400.html">AS400</a>
+    <a href="cz_3alg.html">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="index.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<h1>O JAZYKU REXX</h1><hr><br>
+<p>Rexx se používá  jako makrojazyk editorů a textových procesorů;
+ jako
+povelový  jazyk  databázových,  dialogových,  operačních  systémů a systémů
+řízení počítačové sítě; jako jazyk pro tvorbu skriptů umožňujících 
+automatizovat a integrovat aplikace. Příklad možností použití jazyka
+ v prostředí konkrétního operačního systému - OS/400 - popisuje článek <a HREF="cz_as400.html">Od Rexxu k AS/400</a>.
+Souhrnnou představu o využití jazyka Rexx  v současnosti získáte, projdete-li si <a HREF="cz_links.html">Odkazy</a>. 
+<br><br>
+<a HREF="cz_introrexx.html">Úvod</a> ukazuje, že Rexx je také zajímavým  programovacím jazykem. Tento článek je  svérázným
+ úvodem do jazyka, ve kterém se   soustředím   především   na   neobvyklé  
+ výrazové   prostředky, nevyskytující se ve svém souhrnu v jiném 
+jazyce (nakonec, proč se podrobně věnovat něčemu, co z jiných programovacích jazyků už znáte?). Mám na mysli aritmetické operace, zpracování slov, příkaz 
+<code>interpret</code>, funkci <code>SOURCELINE</code>, cyklus s více výstupy a asociativní pole. Další z divů jazyka Rexx popisuji v článku 
+<a HREF="cz_as400.html#as4003">Externí datová fronta</a>. Možnost provádět aritmetické výpočty s mnohacifernými čísly a s velikou přesností 
+(jediným omezením je obvykle rozsah operační paměti) je však natolik neobvyklá, že jsem jí věnoval samostatný výklad v 
+<a HREF="cz_arithmetic.html">Aritmetika</a>. 
+<br><br>
+Programy, které uvidíte v příkladech, dokazují, že výrazovýmí prostředky jazyka lze zapsat i složitý 
+algoritmus krátkým programem. To mě přivádí k přesvědčení, že tento jazyk je vhodný pro výuku jak programování tak i matematické teorie programů,  konstrukce kompilátorů; atd. 
+Důkazem je  jednoduchost implementace  <a HREF="cz_turing.html">Turingova stroje</a>. 
+<br><br>
+
+Tato stránka je nejen o jazyku Rexx, ale i o mém dalším odborném zájmu - o algoritmech. <a HREF="cz_aat/index.html">Album algoritmů a technik</a> dokazuje, že Rexx je skutečně vhodný nástroj pro definici, popis a 
+kódování algoritmů, přeložených ze známých knih (Cormen-Leiserson-Rivest, Knuth, Kruse, Martello-Toth, Sedgewick, Lipski, Wirth), 
+do funkcí a podprogramů v přehledné, stručné a jednotné formě. Pro mě je Rexx ideálním nástrojem pro vývoj a testování algoritmů. Praktickou ukázkou je můj článek <a HREF="cz_3alg.html">FIND, SELECT, MODIFIND</a>, 
+který popisuje můj algoritmus MODIFIND. Interpret, případně kompilátor, jazyka je součástí každého operačního systému firmy IBM. 
+Ale na Internetu jsou volně dostupné interprety jazyka i pro ostatní operační systémy. Užitečné odkazy, nabízející zcela zadarmo i manuály, zdrojové texty programů, učební texty, knihovny programů, elektronický časopis, konference a jiné, najdete v mé sbírce <a HREF="cz_links.html">Odkazů</a>. 
+Obdobou je článek <a HREF="#robinson">Jazyk pro robinzony</a>. 
+Byl napsán s cílem popularizovat Rexx u nás.  Publikoval jej e-zin OS/2.cz. Také další informace z mé stránky byly zařazeny na jejich CD-ROM. 
+John Dvorak v článku Get Rexx — It Pays napsal: "<i>... je zřejmé, že Rexx je mezi programovacími jazyky 
+něco jako švýcarský armádní nůž.</i>"<br><br>
+16. 11. 2011 jsem poskytl Album algoritmů a technik (v rámci the Common Public License v1.0) týmu, který vytváří ooRexx. David Ashley mi napsal: 
+"Tyto procedury jsou k dispozici jako externí knihovna, která může být použita na vyžádání v ooRexx.“  Seznam lidí, kteří se zúčastnili projektu Open Object Rexx, uvádí 
+<a HREF="https://github.com/ooRexx/ooRexx/blob/master/CONTRIBUTORS">Github.com</a>. 
+Podrobnosti najdete na <a HREF="https://sourceforge.net/p/oorexx/code-0/6394/tree/incubator/ZabrodskyAAT/ZabrodskyAAT.cls">SourceForge.net.</a>
+<br><br>
+<hr>
+<!-- jazyk pro robinzony -->
+</p><h1 id="robinson">Rexx - jazyk pro robinzony</h1><p>
+Předurčený pro psaní maker, skriptů i programů a k mání zcela zadarmo pro všechny operační systémy. Není to ideální nástroj pro správce současných heterogemnních sítí?
+<br>
+<br>Potřebujete spustit posloupnost programů vydáním jediného povelu, kliknutím na jedinou ikonu? Kontrolovat automaticky velikost prostoru, který zabírají vybrané adresáře? Sledovat výskyt jisté události v event logu? 
+Určit, zda se ve dvou souborech vyskytuje tentýž vzorek? Napsat CGI skript? Vypočítat číslo <i>pí</i> na 3000 desetinných míst? Chce se po vás tohle všechno (snad s výjimkou toho <i>pí</i>, ale něčím se člověk přece 
+musí potěšit) na PC a zároveň na serverech s operačnímy systémy OS/400 a Windows  NT a/nebo 2000 a Linux a Unix a ... Hm, vy děláte správce sítě, že? Tak to potřebujete programy. Že vám je nikdo nekoupí? 
+Tak to potřebujete programovací jazyk, ve kterém byste je mohli psát. Jasně, nikdo vám nekoupí jeho překladač a v pěti, deseti exemplářích pro různé systémy, no to už vůbec ne. Ale vy to musíte zvládnout. 
+A tak to děláte všelijak: něco ručně, něco ve FoxPro, s něčím pomůže Internet, s něčím kamarádi ... Mimochodem, lidem, kteří si musí umět poradit se vším sami, se v přeneseném smyslu říká <i>robinzoni</i>.
+<br>
+<br>A přece je tu programovací jazyk právě pro vás. Rexx. Pro každou (dnes snad opravdu pro každou) platformu, téměř vždy zdarma. Interpret povelů stejně tak dobrý pro psaní maker a skriptů jako pro „obyčejné" programování, 
+tvorbu prototypů programů nebo programátorské rekreace (tím myslím to <i>pí</i>, vážně). Řečeno s Donem Limbaughem: jediná, a protože zadarmo, nejlevnější <i>alternativa</i> kdoví kolika jazyků
+ (<i>The Rexx Language: A simple alternative for programming</i>, Computer Bits, October 1998). Jazyk natolik univerzální a nástroj tak všestranný, že si vysloužil od známého počítačového publicisty Johna Dvoraka v článku
+  Get Rexx - It Pays (Computer Shopper, November 1999) chlapskou pochvalu: <i>Rexx je mezi programovacími jazyky něco jako švýcarský armádní nůž</i>. A ty CGI skripty? Les Cottrell vás poučí ve své příručce Guide to 
+  Writing CGI Scripts in Rexx and Perl jak je psát. A aby to bylo opravdu snadné, Henri Henault &amp; Sons nabízejí k tomuto účelu knihovnu funkcí i s řadou předlohových programů.
+<br><br>
+</p><h2>Prvních 21 let</h2><p>
+
+V roce 1974 prišel k IBM absolvent  (B. Sc.) university v Birminghamu Mike Cowlishaw. Pracoval s operačním systémem VM/CMS, a když chtěl jediným povelem spustit posloupnost akcí, jen jednu akci v závislosti na podmínce,
+ jednu akci několikrát ..., musel použít jazyk EXEC nebo EXEC2 (názvy jsou odvozeny od slova <i>executor</i>). Počítačový pravěk. Příšerné povelové jazyky (<i>Procedures Languages</i> nebo <i>Command Languages</i> či 
+ <i>Control Languages</i>). Něco jako CL v OS/400, něco jen o málo lepšího než je jazyk, ve kterém píšete BAT programy v DOSu. Obyčejný praprogramátor v nich psal naprosto nepřehledné procedury (já ještě v roce 1987), 
+ ale budoucí <i>IBM Fellow</i> a budoucí člen učené Královské společnosti v Londýně v jedné osobě to nevydržel a stvořil jazyk nový. A nazval jej REX, <i>protože to tak hezky znělo</i> ... (A brief History of 'Classic' Rexx).
+<br>
+<br>29. března 1979 publikoval v interní síti IBM (spojovala přes 1400 sálových počítačů v 40ti zemích) nástin dosud neexistujícího jazyka - tři jednoduché programy, vystihující jeho podstatu a možnosti. Po přihlédnutí ke 
+kritice i doporučení svých kolegů vytvořil ke konci roku 1979 fungující interpret. Ten se stal u IBM velice populární. Po neformálních elektronických diskuzích stovek uživatelů s Mikem Cowlishawem dospěl jazyk téměř k současné 
+podobě. V roce 1982 přidala firma IBM k jeho názvu ještě jedno X, protože REX byl v té době chráněnou značkou. <i>REstructured eXtended eXecutor</i> píše se od té doby v IBM manuálech. Na obálce knih Mika Cowlishawa ale 
+vidíme karetního krále a Anders Christensen nazve svůj interpret <i>Regina</i> - latinsky královna. Na otázku, jak slovo Rexx vyslovovat, mi Gerard Schildberger odepsal: <i>... jako "hex", ale s "r" na začátku...</i> 
+<br>
+<br>Jazyk se stal součástí VM/System Product Release 3 v roce 1983. Hranice IBM však překročil už v roce 1985: Z implementace pro PC-DOS vznikl dnešní Personal REXX americké firmy 
+Quercus Systems pro DOS, OS/2 a Windows. Od roku 1987 zařazuje firma IBM jazyk Rexx do všech svých operačních systémů jako standardní interpret povelů. 
+Stal se také součástí operačního systému Amiga (pod názvem ARexx). První kompilátor vyvinula laboratoř IBM ve Vídni v roce 1989 pro VM/CMS. 
+V současnosti jsou dostupné  interprety pro DOS, Netware, Windows, Unix, Linux, OpenVMS. Novinkou je úspěšné provozování interpretu 
+Regina v prostředí MacOS X, AtheOS a verze 2.3 je určena pro EPOC32, operační systém kapesních počítačů (PSION) a některých mobilních telefonů.
+<br>
+<br>První návrh ANSI standardu jazyka (X3.274) vyšel v roce 1996.
+<br><br>
+<h2>Interprety, programy a knihovny funkcí</h2>
+Takže ještě jednou: interpret jazyka Rexx je součástí operačního systému Amiga (ve světě se  běžně používá) a je v každém operačním systému IBM. 
+V následujících odstavcích uvádím produkty pro ostatní platformy. Není-li řečeno jinak, jsou úplně zdarma.
+<UL>
+<LI>Interpret REXX/imc pro Linux a Unix vytvořil a dále vyvíjí Ian Collier (<i>imc</i> jsou jeho iniciály) z počítačových laboratoří oxfordské univerzity.  
+<LI>Řek Vassilis N. Vlachoudis je autorem interpretu BREXX pro operační systémy Amiga, MS-DOS, Linux, Unix, WinCE.  
+<LI>Nejrozšířenějším intrerpretem je Regina. První implementace pro Unix byly dílem Anderse Christensena z univerzity v norském Trondheimu. 
+Současná  Regina pracuje v systémech Amiga, AtheOs, BeOS, DOS, Linux, MacOS X, OpenVMS, OS/2, QNX, Unix, Windows 3.x/9x/NT/2000. Pro Windows NT/2000 ji můžete získat od 
+Microsoftu, ale je to jen její starší verze, tak proč byste to dělali? Tím nejlepším místem k jejímu stažení jsou neustále aktualizované stránky Australana 
+Marka Hesslinga, který v posledních letech Reginu udržuje a dále vyvíjí. Dlouho se uvádělo, že v  MacOS X plnohodnotný Rexx neběží. 
+Potěšující zpráva o bezchybném běhu Reginy i v tomto prostředí se objevila v comp.lang.rexx na jaře 2001. Tamtéž pak v létě inzeroval Mark Hessling připravovanou verzi Reginy 2.3, 
+která  už pracuje v prostředí operačních systémů kapesních počítačů a některých mobilních telefonů (OS EPOC32).
+<li>Od léta 2001 je k dispozici další interpret vytvořený na bázi Reginy - 
+Reginald Jeffa Glatta. 
+<LI>Může se zdát, že demo komerčního produktu Personal REXX pro DOS, OS/2, Windows 3.x/9x/NT/2000 v této kapitole nemá co dělat. V demu totiž nemůžete spustit program, který by měl 
+víc jak 50 řádků. Ale! Za prvé: Učíte-li se jazyk, nepíšete velké programy. Za druhé: Program spouštíte pouhým stiskem F5; výsledky se zobrazují v jiném okně. 
+Za třetí: Můžete napsat program ne delší než 50 řádků a ten může volat podprogramy, které nemají více jak 50 řádků, a některé z nich mohou volat podprogramy ne delší než 50 řádků ... 
+Jak poznamenal kdosi v Rexx Listserveru: <i>Tomu se dřív říkalo modulární programování</i> ...
+</UL>
+<br><br>
+Součástí standardu jazyka Rexx je 69 vestavěných funkcí. Ale třeba SQRT a SIN mezi nimi nejsou. Můžete si je napsat sami nebo opsat, třeba z <a HREF="cz_aat/index.html">Alba algoritmů a technik pro standardní Rexx</a>. 
+<br><br>
+Na Internetu najdete i knihovny funkcí a pomocných programů, které pak použijete stejně snadno a stejně efektivně jako standardní vestavěné funkce jazyka:
+<UL><LI>Patrick TJ McPhee vytvořil knihovnu utilit pro Reginu a REXX/imc. Je ekvivalentem knihovny REXXUTIL, která je součástí OS/2. Patrick dále nabízí funkce pro Reginu 
+umožňující práci s registry, event logem apod. ve Windows NT/2000. 
+<LI>
+REXXIO pro OS/2 a Windows od firmy LesTec Pty Ltd. je knihovnou funkcí pro práci se soubory a s okny a s registry, klávesnicí, myší, ... Bohužel, ne všechny funkce jsou zadarmo.
+</UL>
+</p><br>
+<h2>Literatura</h2><p>
+<ul><li>Definice jazyka
+<ul><li>
+Kniha Mika Cowlishawa <i>The Rexx Language: A Practical Approach to Programming</i> (často se setkáte s její zkratkou <i>TRL</i>) 
+vyšla ve dvou vydáních (1984, 1990) a dlouhá léta sloužila jako jediný zdroj definice. Lze si ji objednat, třeba na 
+www.amazon.com. Já jsem využil meziknihovní výpůjční službu Moravské zemské knihovny.
+<li>Výjimečný význam má dokument popisující standard: <i>ANSI X3J18-1996 Programming Language Rexx</i>. 
+Chtěl bych vás zvlášť upozornit na formální popis vestavěných funkcí pomocí programů v jazyce Rexx. V některých případech takový šestiřádkový program překoná svou výstižností 
+celé odstavce klasického slovního výkladu.
+</ul>
+<li>Manuály pro praktické použití v konkrétním operačním systému 
+<UL><LI>Manuál Arexxu od Robina Evanse.
+<LI>IBM manuály - Kolem 80ti manuálů. Rexx pro operační systémy IBM (CICS, OS/2, OS/390, OS/400, MVS, VM, VSE). 
+<LI>A. Christensen, M. Hessling: <i>The Regina Rexx Interpreter</i>. 
+<LI>Uživatelské a referenční příručky pro REXX/imc od Iana Colliera.</UL>
+
+
+<li>A česky?
+<ul><li><a HREF="cz_index.html">O jazyku Rexx</a>. Tuhle návštěvu vám doporučují na svých stránkách i Mike Cowlishaw, Ian Collier a Mark Hessling. 
+</ul>
+</ul>
+<br>
+</p><h2>Dotazy a odpovědi</h2><p>
+<i>Každá oblast lidského vědění, jakkoli malá, jakkoli utajená,má svoje odborníky a své stoupence. 
+A ti se<br>obvykle shromažďují na určitém místě, aby si popovídali, vyměnili zprávy a sdělili nejnovější zkazky ...</i>
+<br>FREDERICK FORSYTH (<i>Ďáblova alternativa</i> 1979)
+<br>
+<br>Proto tu jsou od roku 1990 každoroční Rexx-sympozia. Proto vznikla v roce 1994 Rexx Language Associations. Na její stránce 
+Who's who se můžete podívat na fotografie Mika Cowlishawa, Iana Colliera, Marka Hesslinga a dalších.
+Na Internetu se odborníci a stoupenci setkávají především v diskuzní skupině <i>comp.lang.rexx</i>. 
+Není zvláštností, že na vaši otázku odpoví Ian Collier nebo Mark Hessling nebo Frank Clarke nebo sám Mike Cowlishaw ... A není tu nouze o jiskření všeho druhu:  
+<br>
+<br>William Warren: <i>... a po restartu uviděl MOS</i>. Frank Clarke: <i>Co je MOS?</i> Mark Yudkin <i>No přece Modrá Obrazovka Smrti</i>  (v originále BSOD - Blue Screen Of Death), 
+<i>co jiného?</i> Mike Ruskai: <i>Spousta lidí na světě nepoužívají Windows a neví proto, co je MOS</i>.  Thomas Conley: <i>Franku, i ti co dělají u sálových počítačů by měli vědět, co MOS znamená</i>.  
+Frank Clarke: <i>Pch. Mně mainframe žádnou MOS ještě neukázal. Nikdy nevěř počítači, který můžeš uzdvihnout</i>.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

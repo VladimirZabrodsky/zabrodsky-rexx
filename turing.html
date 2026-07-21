@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" /><TITLE>Turing machine in Rexx</TITLE>
+		<META name="DESCRIPTION" content="simple tools to learning and studying famous Turing machines" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="index.html">REXX</a>
+    <a href="introrexx.html">Introduction</a>
+    <a href="arithmetic.html">Arithmetic</a>
+    <a href="turing.html" class="active">Turing machine</a>
+    <a href="as400.html">AS400</a>
+    <a href="3alg.html">Modifind</a>
+	<a href="aat/index.html">Album of Algorithms</a>
+	<a href="links.html">Links</a>
+    <a href="cz_turing.html">Česky</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- text of page -->
+<h1>TURING
+MACHINE</h1><hr><br>
+<p>
+This article includes the base for building of simple tools to learning and studying 
+famous Turing machines. The program <code>AlanMath</code> (the abbreviation of Alan 
+Mathison Turing) interprets descriptions of Turing machines as the following example:
+a Turing machine accepting the set of all strings
+<code>COPIES("a", N) || COPIES("b", N), for N >= 0,</code>
+can be described:
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Begin End # 1
+Begin # # End R
+Begin a A 2 R
+2 B B 2 R
+2 a a 2 R
+2 b B 3 L
+3 B B 3 L
+3 A A 5 R
+3 a a 4 L
+4 a a 4 L
+4 A A Begin R
+5 B B 5 R
+5 # # End R
+</code>
+</pre>
+</div>
+The first line in the description contains:
+<br>
+<br><font color="darkblue"><code>
+Start Halt Blank Head [note]
+</code></font>
+<br>
+<br><code>Start</code>	 	- a word, the name of the start state
+<br><code>Halt</code>	 	- a word, the name of the halt state
+<br><code>Blank</code>	 	- a character used to denote a blank
+  (but no really blank)
+<br><code>Head</code>	 	- a number, the initial position of the head
+  on the tape
+  <br><br>
+  
+  A transition table follows as the series of 5-tuples, one on each line. The transition is like this:
+<br><br>  
+  <font color="darkblue"><code>State Symbol NewSymbol NewState Move [note]</code></font>
+<br><br>
+ <code>State</code>	 	- a word, the current state
+<br><code>Symbol</code>	 	- a character, the current symbol
+  a character on the tape below the head
+<br><code>NewSymbol</code>	 	- a character, the new symbol
+  a character written on the tape
+ <br><code>NewState</code>	 	- a word, the new state
+ <br><code>Move</code>	 	- the direction of move the head:
+  "R" to the right, "L" to the left
+  <br><br>
+  This description corresponds to the book of Zohar Manna <i>Mathematical theory of Computation</i>, 
+  McGraw-Hill, NY, 1974. The program <code>AlanMath</code> can be necessary adapt for an another 
+  textbook. When the ASCII file <code>FIGURE1.TXT</code> includes the description from 
+  the figure 1, then the program AlanMath on the figure 2 with the value of the 
+  argument <code>FIGURE1.TXT</code> shows the course of the computation and writes 
+  <code>"Accepted"</code> for the input string <code>"aaabbb"</code>; writes 
+  <code>"Rejected"</code> for the input string <code>"aaabb"</code>.
+  <div class="scrolling-wrapper-flexbox">
+  <pre>
+  <code>
+/* AlanMath */
+TM = ARG(1)
+parse value LINEIN(TM) with Start Halt Blank Head .
+T. = ""
+/* 5-tuples are State Symbol NewSymbol NewState Move */
+do while LINES(TM) > 0
+     parse value LINEIN(TM) with State Symbol T.State.Symbol
+end
+Tape. = Blank; Shot = ""
+say "Enter input string"; parse pull Input .
+do J = 1 to LENGTH(Input)
+     Tape.J = SUBSTR(Input, J, 1); Shot = Shot || Tape.J
+end
+say COPIES(" ", Head - 1) ||"_"; say Shot "in" Start
+State = Start; Symbol = Tape.Head
+do until State = Halt | T.State.Symbol = ""
+     parse var T.State.Symbol Tape.Head State Move .
+     Shot = OVERLAY(Tape.Head, Shot, Head, 1)
+     if Move = "L" then Head = Head - 1; else Head = Head + 1
+     if Head = 0 then leave
+     Symbol = Tape.Head
+     say COPIES(" ", Head - 1) || "_"; say Shot "in" State
+end
+if State = Halt then say "Accepted"; else say "Rejected"
+</code>
+</pre>
+</div>
+
+The following example shows the course of the computation for the input string 
+<code>"ab"</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Enter input string
+ab
+ab in Begin
+Ab in 2
+AB in 3
+AB in 5
+AB in 5
+AB# in End
+Accepted  
+</code>
+</pre>
+</div>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

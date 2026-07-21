@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="cs">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<meta charset="utf-8" /><TITLE>ARITMETICKÉ OPERACE</TITLE>
+		<META name="DESCRIPTION" content="Aritmetické operace v jazyce Rexx. 
+		aritmetické výpočty s mnohacifernými čísly a s velikou přesností (jediným omezením je obvykle rozsah operační paměti)" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+<a href="cz_index.html">REXX</a>
+    <a href="cz_introrexx.html">Úvod</a>
+    <a href="cz_arithmetic.html"  class="active">Aritmetika</a>
+    <a href="cz_turing.html">Turingův stroj</a>
+    <a href="cz_as400.html">AS400</a>
+    <a href="cz_3alg.html">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="arithmetic.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- text of page -->
+<h1>ARITMETICKÉ OPERACE</h1><hr><br>
+<p>
+"Kolik číslic má číslo devět na devátou na devátou?", ptá se účastník internetovského 
+matematického fóra (The Math Forum, Ask Dr. Math). Odpovídají odborníci (25. září 1997, 
+Re: 9 ^ 9 ^ 9) a ... odpovídají špatně. Na mnohaciferná čísla nejsme zvyklí; neumíme si 
+je představit; neumíme je efektivně používat. Jazyk Rexx umožňuje provádět výpočty s
+ velikou přesností. Jediným omezením je obvykle rozsah operační paměti. V tomto příspěvku
+  bych chtěl ukázat, jak neobvyklé možnosti jazyka mohou vést k neobvyklým úvahám nad 
+  úlohou, ve svém výsledku i k neobvyklým algoritmům a dokonce k překvapujícím výsledkům.
+</p><br>
+<h2>Zápis čísla</h2><p>Chceme-li znát přesně dobu výpočtu fragmentu programu, můžeme využít vestavěnou 
+funkci  <code>TIME</code>. Program <code>DUEL</code> porovnává rychlost provedení dále popisovaných
+ funkcí <code>STANDARD</code> a <code>HIGMAN</code>. Funkce  
+
+<code>TIME</code> je v něm nejprve vyvolána jako podprogram s argumentem 
+ <code>"R"</code> - analogie stisknutí stopek při startu. Následující vyvolání (opět 
+ s argumentem  <code>"R"</code>) je pak analogií stisknutí stopek po proběhnutí cílem; 
+ volání funkce v tomto přirovnání vrací dobu běhu v sekundách.
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* DUEL */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">1000</span><span style="color:#808030; ">;</span> Chyba <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#800000; font-weight:bold; ">DATATYPE</span><span style="color:#808030; ">(</span>N<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"W"</span><span style="color:#808030; ">)</span> &amp; N &gt;<span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> Chyba <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"Zadejte nezáporné celé číslo."</span>
+  <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> N
+  Chyba <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"["</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> N <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"] eh? "</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> Vysledek1 <span style="color:#808030; ">=</span> STANDARD<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> Vysledek2 <span style="color:#808030; ">=</span>   HIGMAN<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+<span style="color:#800000; font-weight:bold; ">exit</span>
+</pre>
+</div>
+Pomocí vestavěné funkce  <code>DATATYPE</code> se v programu <code>DUEL</code>
+testuje, zda zadaná hodnota <code>N</code> je celé číslo (<code>"W"</code> z anglického 
+<i>whole number</i>). Toto číslo musí být zároveň (operátorem konjunkce je symbol  
+<code>&amp;</code>) 
+větší nebo rovno nule.
+<br><br>
+Podmínky splňuje např. hodnota 200 zapsaná jako <code>200</code> nebo <code>200.0</code>
+nebo <code>2E+2</code> (i.e.
+
+ 2 . 10<SUP>2</SUP> v exponenciální notaci mantisaEexponent) a to s libovolným počtem 
+ mezer na začátku a 
+na konci. Voláním vestavěné funkce <code class="wrap">DATATYPE(<i>řetězec</i>, <i> třída</i>)</code>
+ je možné dále otestovat, 
+zda <i>řetězec</i> je zápisem desítkového čísla (<code>N</code> - number), 
+dvojkového čísla (<code>B</code> - binary), 
+šestnáctkového čísla (<code>X</code> - heXadecimal) apod.
+<br></p>
+<h3 class="blue">Cvičení 1</h3><p>
+Napište program Stopky, který vám umožní změřit si, například, jak dlouho vydržíte bez 
+dechu.<br><br>
+
+</p><h2>Počítá jako my</h2><p>
+
+  Kolik je (1/0!) + (1/1!) + (1/2!) + ... + (1/N!) pro N &gt;= 0? Úloha souvisí s 
+  výpočtem základu přirozeného logaritmu, označovaného, na památku Leonarda Eulera, 
+  symbolem 
+
+<i>e</i>. V řadě učebnic se můžeme setkat s doporučením, které popisuje funkce 
+
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* STANDARD - vnitřní funkce */</span>
+STANDARD: <span style="color:#800000; font-weight:bold; ">procedure</span>
+Suma <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Clen <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Clen <span style="color:#808030; ">=</span> Clen <span style="color:#808030; ">/</span> J<span style="color:#808030; ">;</span> Suma <span style="color:#808030; ">=</span> Suma <span style="color:#808030; ">+</span> Clen
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Suma
+</pre>
+
+</div>
+V jazyce Rexx se aritmetické operace sečítání (operátor +), odčítání (-), násobení (*), 
+dělení (/), celočíselné dělení (% - mnemotechnika: operátor dělení má vždy jen 
+jeden znak) a zbytek po celočíselném dělení (//) provádějí v podstatě podle týchž 
+pravidel, která používáme při výpočtu na papíře nebo na tabuli.
+Požadovaná přesnost se zadává příkazem <code>numeric digits</code>. Pro libovolné číslo
+<code>A</code> a libovolné 
+číslo <code>B &lt;&gt; 0</code> platí:<br>
+<br> <code>A + 0 = (A % B) * B + (A // B)</code>. 
+<br>
+<br>Přičtení nuly <code>(A + 0)</code> zajistí, že 
+oba výrazy budou vyčísleny se stejnou přesností.
+Při výpočtu hodnoty výrazu 1/6 s přesností na 4 platné číslice určíme nejprve jednotlivé
+ číslice podílu 0.16666 a pak výsledek zaokrouhlíme na 0.1667. Aby totéž provedl
+  interpret jazyka, stačí zadat <code>numeric digits 4; say 1/6</code>.
+Nikdo z nás by však při výpočtu výše uvedené řady nepostupoval jako funkce STANDARD, 
+tj. neurčil by už hodnotu čtvrtého členu řady na tisíc platných číslic jako 
+<code>0.166 ... 67</code>.
+ S využitím vestavěné funkce <code>COPIES</code> můžeme tuto hodnotu zapsat jako hodnotu výrazu
+ <code>0.1 || COPIES(6, 998) || 7)</code>. Člověk řešící zadanou úlohu by postupně počítal hodnoty 
+ čitatele a jmenovatele částečných součtů řady a teprve na závěr by provedl jediné
+  dělení s požadovanou přesností. Tento postup použil při výpočtu přibližné hodnoty 
+  čísla <i>e</i> Bryan Higman ve své knize <i>Porovnávacia štúdia programovacích jazykov</i> 
+  (Alfa Bratislava, 1973) a popisuje jej funkce <code>HIGMAN</code>. Na PC s procesorem IBM MMX 
+  233 MHz, 32 MB RAM s demem Personal REXXu od Quercus Systems trvá, pro <code>N = 100</code>, 
+  provedení funkce <code>STANDARD</code> 0.38 sec a provedení funkce <code>HIGMAN</code> 0.06 sec.
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* HIGMAN - vnitřní funkce */</span>
+HIGMAN: <span style="color:#800000; font-weight:bold; ">procedure</span>
+Citatel <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Jmenovatel <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Citatel <span style="color:#808030; ">=</span> Citatel <span style="color:#808030; ">*</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+  Jmenovatel <span style="color:#808030; ">=</span> Jmenovatel <span style="color:#808030; ">*</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Citatel <span style="color:#808030; ">/</span> Jmenovatel
+</pre>
+
+</div>
+	</p><h2>Porovnání čísel</h2><p>
+
+Relačními operátory jsou
+
+ <code>=, &gt;, &lt;</code> a jejich kombinace. Obecně se operace porovnání zahájí úpravou hodnot operandů - odstraněním mezer na začátku 
+a na konci. Nejsou-li oba operandy čísla, kratší z nich se doplní mezerami zprava a 
+porovnají se znak po znaku. V případě čísel se operandy odečtou s přesností na D - F 
+platných číslic, přesnost je definována příkazy <code>numeric digit D</code>
+(implicitně D = 9) a <code>numeric fuzz F</code> (implicitně F = 0).
+Hodnotou výrazů D a F musí být celá čísla, D > F >= 0. Je-li rozdíl operandů záporný, 
+pak výsledkem operace s operátory &lt;, &lt;=, &lt;&gt; je pravda (v jazyce Rexx je pravda 
+reprezentována znakem 1 a nepravda znakem 0); je-li nula, pak výsledkem operace s 
+operátory >=, &lt;=, = je pravda; je-li kladný, pak výsledkem operace s operátory &gt;, &gt;=, &lt;&gt; 
+je pravda (TRUE). Přehledně to ukazuje následující tabulka.
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;">Je<span style="color:#808030; ">-</span>li rozdíl operandů	pak výsledek operace  je
+záporný                 &lt;<span style="color:#808030; ">,</span> &lt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;&gt;             TRUE
+   nula                 &gt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">=</span>             TRUE
+ kladný                 &gt;<span style="color:#808030; ">,</span> <span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;&gt;              TRUE
+</pre>
+
+</div>
+Porovnáme-li v programu <code>DUEL</code> hodnoty <code>Vysledek1</code> a 
+<code>Vysledek2</code>, například příkazem
+
+<br>
+<br><code>say Vysledek1 = Vysledek2</code>
+<br>
+<br>zjistíme, že se nerovnají - zobrazí se nula. Proč? Protože hodnotou výrazu 
+<code>Vysledek1 - Vysledek2</code> je 0.00 ... 04. Po provedení níže uvedených příkazů 
+se zobrazí 1 (pravda).
+<br>
+
+<br><code>numeric fuzz 1; say Exp1 = Vysledek1 = Vysledek2</code> 
+<br>
+<br>
+</p><h2>Jiné číselné soustavy</h2><p>
+
+Díky vestavěným funkcím <code>B2X</code> (Binary to heXadecimal), <code>D2X</code> 
+(Decimal to heXadecimal), <code>X2B</code>, 
+<code>X2D</code> můžeme v jazyce Rexx provádět aritmetické operace i s dvojkovými nebo 
+šestnáctkovými 
+čísly. Například součet šestnáctkových čísel, které jsou uloženy v proměnných 
+<code>Hex1</code> a <code>Hex2</code>, je výsledkem výrazu
+<br>
+<br><code>D2X(X2D(Hex1) + X2D(Hex2))</code>
+<br>
+<br>Dvojková čísla nejprve převedeme na čísla šestnáctková (funkcí <code>B2X</code>), 
+sečteme už 
+známým způsobem a teprve výsledek převedeme na dvojkové číslo (funkcí <code>X2B</code>). 
+Součet binárních hodnot v proměnných <code>Bin1</code> a <code>Bin2</code> tedy určíme 
+výrazem:
+<br>
+<br><code class="wrap">X2B(D2X(X2D(B2X(Bin1)) + X2D(B2X(Bin2))))</code>
+<br>
+<br>Chceme-li vynechat nuly na začátku zápisu binárního čísla, aby zápis dvojkového 
+čísla začínal jedničkou, můžeme využít vestavěnou funkci <code>STRIP</code>. Volání 
+funkce <code>STRIP</code>(<i>řetězec</i>, <i>volba</i>, <i>znak</i>), vrací hodnotu 
+<i>řetězce</i> bez znaků znak na začátku 
+i na konci (je-li <i>volba</i> rovna <code>"B"</code>; zkratka both); jen na začátku (je-li <i>volba</i>
+ rovna <code>"L"</code>; 
+zkratka leading); jen na konci (je-li <i>volba</i> rovna <code>"T"</code>; zkratka trailing).
+<br></p>
+
+<h3 class="blue">Cvičení 2</h3><p>
+Napište program, který by dokázal vyluštit šifru: Edgar Allan Poe (narozen 
+MDCCCIX - zemřel MDCCCXLIX). <br><br>
+</p><h2>Operace umocnění</h2><p>
+
+K aritmetickým operacím v jazyce Rexx patří také umocnění (operátor **) s celočíselným 
+exponentem.
+<br>
+<br>V manuálech je algoritmus výpočtu mocniny  X<sup>Z</sup> podrobně popsán. Protože
+Rexx je nejen jazykem pro komunikaci člověka s počítačem, ale také člověka s člověkem, 
+místo popisu slovy použiji popis následujícím fragmentem programu. Omezuji se jen na 
+případ Z >= 0. Pro záporná Z a X &lt;&gt; 0 bychom počítali hodnotu
+ X<sup>Z</sup> = 1 / X<SUP>ABS(Z)</SUP>.
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* Popis algoritmu umocnění (X ** Z) */</span>
+Vysledek <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+BinarZ <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">STRIP</span><span style="color:#808030; ">(</span>X2B<span style="color:#808030; ">(</span>D2X<span style="color:#808030; ">(</span>Z<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"Leading"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>BinarZ<span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">1</span> by <span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>BinarZ<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">then</span> Vysledek <span style="color:#808030; ">=</span> Vysledek <span style="color:#808030; ">*</span> X
+  X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">*</span> X
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"X ** Z ="</span> Vysledek
+</pre>
+
+</div>
+<br>Algoritmus pochází ze starověké Indie. Indové měli zálibu ve velkých číslech od nepaměti. 
+Používali zvláštní slova pro čísla až do sta miliard. Buddha (asi 563 - 483 př. n. l.) 
+prý sám pokračoval ve tvoření těchto číslovek až do 10<SUP>54</SUP>. 
+<br>
+<br>Dále uvedená funkce <code>MOCNINA</code> je překladem starobylého algoritmu z kapitoly 
+4.6.3 knihy D. E. Knutha <i>The Art of Computer Programming</i> (díl 2, Addison-Wesley
+1969) do jazyka Rexx. Upraveným programem <code>DUEL (X = 15; Z = 959; numeric 
+digits 1128)</code> můžete porovnat rychlost provedení příkazů 
+<code>Vysledek1 = X ** Z</code> a <code>Vysledek2 = MOCNINA(X, Z)</code>. 
+Hodnoty <code>Vysledek1, Vysledek2</code> jsou zcela shodné. Přitom v systému 
+AS/400 trvalo provedení prvního příkazu téměř dvakrát déle než druhého!
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* MOCNINA - vnitřní funkce */</span>
+MOCNINA: <span style="color:#800000; font-weight:bold; ">procedure</span><span style="color:#808030; ">;</span> X <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span>
+Vysledek <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">forever</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> Z <span style="color:#808030; ">/</span><span style="color:#808030; ">/</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">then</span> Vysledek <span style="color:#808030; ">=</span> Vysledek <span style="color:#808030; ">*</span> X
+  Z <span style="color:#808030; ">=</span> Z % <span style="color:#008c00; ">2</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> Z <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> Vysledek
+  X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">*</span> X
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+
+</div>
+<br>Tuto překvapující skutečnost jsem představil účastníkům elektronické konference o jazyku 
+Rexx pomocí listserveru REXXLIST svým e-mailem z 16.1.1998. Z jejich reakcí vznikla 
+následující unikátní tabulka. Mnohem zajímavější než samotný rozdíl rychlosti provedení 
+operace ** a funkce MOCNINA je porovnání rychlosti stejného výpočtu v různých 
+implementacích jazyka Rexx, v různých prostředích. Srovnejte si například rychlost 
+interpretace s provedením přeloženého programu (REXX370 kompilátor versus interpret) 
+nebo výkonnost sálového počítače současnosti (IBM/390) s výkonností PC nebo pracovní 
+stanice.
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POČÍTAČ         SYSTEM	        IMPLEMENTACE        **	    POWER	PODĚKOVÁNÍ PATŘÍ
+mainframe IBM	CMS             REXX370 compiler    0,0013  0,0017	Plungjan M.
+mainframe IBM	TSO             REXX370 compiler    0,0013  0,0018	Plungjan M.
+PC              Windows NT 4.0  Object REXX 6.0	    0,21    0,28	Stuurman J.
+mainframe IBM	CMS             REXX370 interpret   0,2349  0,1694	Plungjan M.
+mainframe IBM	TSO             REXX370 interpret   0,2884  0,152	Plungjan M.
+PC Pentium 166	OS/2 Warp 4     Classic Rexx	    0,37    0,25	Kazimirchik V.
+PC Pentium 90   Linux           REXX/imc            0,4583  0,5062	Gurski A.F.
+PC 486/33       OS/2 Warp 4     Object REXX         1,30    1,86	Vermo B.
+Sun Sparc 2     Solaris 2.5.1   REXX/imc 1.6d	    1,85    2,1000	Collier I.
+PC              Windows NT 4.0  Regina	            faster  slower	Saxton J.M.
+</code>
+</pre>
+</div>
+	</p><h2>Číselní obři a trpaslíci</h2><p>
+
+
+V praxi nepracujeme s čísly, která by obsahovala na začátku zápisu stovky nul. 
+K vyjádření velkých čísel užíváme mocnin deseti a k vyjádření malých čísel mocnin deseti 
+se záporným exponentem. Přibližnou hmotnost zeměkoule v kilogramech zapíšeme v 
+exponenciální notaci 6E+24 a hmotnost vodíkového atomu v gramech 2E-24.
+<br>
+<br>Předpokládejme provedení příkazu <code>numeric digits D</code>. Jestliže výsledkem 
+aritmetického výrazu je velké číslo, které má před desetinnou tečkou více jak D číslic; 
+nebo jestliže výsledkem je malé číslo, které má za desetinnou tečkou minimálně D + 1 nul 
+a celkem má za desetinnou tečkou více než 2 * D číslic, pak interpret jazyka pro 
+urychlení výpočtu a lepší využití paměti převede toto číslo do exponenciální notace 
+automaticky.
+<br><br>
+</p><h2>Poznámka</h2><p>
+
+Ian Collier (přečtěte si <a HREF="#appendix">
+Exponential notation, with Ian Collier's reply</a>), implementátor jazyka v prostředí
+ operačního systému SunOs a UNIX (REXX/imc), ukázal, že tato definice je shodná s 
+ definici uvedenou v manuálech jazyka Rexx. Mě osobně se zdá jednodušší a jasnější.
+  Porozumíme jí i bez detailní znalosti termínu <i>platná číslice</i>. 
+  <br>
+  <br>Porovnejme hodnoty <code>Vysledek1 = STANDARD(N)</code> a 
+  <code>Vysledek2 = HIGMAN(N)</code>. Rozdíl <code>Vysledek1 - Vysledek2</code> je roven
+   číslu 0.000 ... 04 s 999. nulami. V přehlednější formě (4E-999) bude vyjádřen buď 
+   pomocí vestavěné funkce <code>FORMAT</code> nebo provedením příkazů:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">Rozdil <span style="color:#808030; ">=</span> Vysledek1 <span style="color:#808030; ">-</span> Vysledek2<span style="color:#808030; ">;</span> D <span style="color:#808030; ">=</span> <span style="color:#008c00; ">9</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> D<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> Rozdil <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+</pre>
+</div>
+<br>Přičtení nuly (násobení jedničkou apod.) je nutné, aby se uplatnilo nové nastavení 
+přesnosti příkazem <code>numeric digits</code>.
+<br></p>
+
+<h3 class="blue">Cvičení 3</h3><p>
+
+Jakou minimální a maximální hodnotu může mít proměnná <code>D</code> (viz výše uvedený
+ řádek programu), aby se zobrazilo <code>4E-999</code>?
+<br><br>
+
+</p><h2>Bernoulli...</h2><p>
+Celočíselný exponent (v exponenciální notaci a v operaci umocnění) nesmí mít více číslic 
+než určuje příkaz <code>numeric digits</code>, maximálně však 9. V roce 1728 Daniel 
+Bernoulli dokázal, že číslo <i>e</i> je rovno limitě posloupnosti
+ <code>(1 + 1/N)<sup>N</sup></code>, pro N 
+jdoucímu k nekonečnu. Řádkem programu s maximální možnou hodnotou N:
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* BERNOULLI počítá e, 1. verze */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">50</span><span style="color:#808030; ">;</span> N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">999999999</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"e ="</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">/</span>N<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> N
+</pre>
+
+</div>
+se zobrazí <code>e = 2.7182818270...</code> Přesnější výsledek ale nedostaneme, 
+protože pro větší N skončí provádění programu chybovým hlášením <code>Invalid whole 
+number</code>. 
+Využijeme-li však funkci <code>MOCNINA</code>, program:
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* BERNOULLI počítá e, 2. verze */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">50</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> <span style="color:#008000; ">1E+40</span>
+X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> Z<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"e ="</span> MOCNINA<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Z<span style="color:#808030; ">)</span>
+</pre>
+
+</div>
+doběhne a zobrazí číslo <code class="wrap">e = 2.71828182845904523560287...</code>
+<br></p>
+
+<h3 class="blue">Cvičení 4</h3><p>
+
+<i>Epocha</i> (č. 3, 1905): <i>Pomocí pouhých tří číslic lze zapsat číslo tak ohromné, že
+ si je ani nedovedeme představit. Číslo to .. jest devět na devátou na devátou. Počet
+ číslic, jichž je třeba pro napsání tohoto čísla, je mezi 369 690 000 a 369 790 000. 
+ Kdybychom je chtěli napsat, a to tak, aby na délku 1 dm přišlo 20 číslic, povstala by 
+ tak řádka dlouhá skorem 1848.5 km (asi vzdálenost Lipsko - Helsinki).</i> Kolik číslic 
+ je skutečně zapotřebí?
+<br></p>
+<h3 class="blue">Cvičení 5</h3><p>
+Počet všech černobílých fotografií o rozměru 10 x 15 cm, vytvořených z černých a 
+bílých teček velikosti 0.1 x 0.1 mm (tečky nebudou rozeznatelné pouhým okem a fotografie 
+tak budou dostatečně kvalitní) je 2<SUP>1500000</SUP>.
+<br>
+<br>Co bude 
+na těch fotografiích?
+<br><br>
+
+
+
+</p><h2>Řešení cvičení:</h2>
+
+<h3>Cvičení 1</h3><p>
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* STOPKY - program */</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Enter = Start"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">pull</span> Enter
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Teď! ..."</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Enter = Stop"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">pull</span> Enter
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Uběhlo:"</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+</pre>
+</p>
+</div>
+<h3>Cvičení 2</h3><p>
+Funkce R2D (Roman to Decimal) dokáže rozluštit tuto záhadu. Pro zadaný řetězec 
+
+ <code>MDCCCIX</code> (nebo třeba <code>mDccCIx</code>) vrací 1809 a pro
+  <code>MDCCCXLIX</code>
+
+vrací 1849.
+<div class="scrolling-wrapper-flexbox">
+<br><br>
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* R2D (Roman to Decimal) vnitřní funkce */</span>
+R2D: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">upper</span> <span style="color:#800000; font-weight:bold; ">arg</span> Roman <span style="color:#808030; ">.</span>
+RtoD<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>V <span style="color:#808030; ">=</span> <span style="color:#008c00; ">5</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">50</span><span style="color:#808030; ">;</span>
+RtoD<span style="color:#808030; ">.</span>C <span style="color:#808030; ">=</span> <span style="color:#008c00; ">100</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>D <span style="color:#808030; ">=</span> <span style="color:#008c00; ">500</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>M <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1000</span>
+Decimal <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> Rdigit <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+Ddigit <span style="color:#808030; ">=</span> RtoD<span style="color:#808030; ">.</span>Rdigit
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">)</span>
+  Rdigit <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Next <span style="color:#808030; ">=</span> RtoD<span style="color:#808030; ">.</span>Rdigit
+  <span style="color:#800000; font-weight:bold; ">if</span> Next &gt; Ddigit <span style="color:#800000; font-weight:bold; ">then</span> Decimal <span style="color:#808030; ">=</span> Decimal <span style="color:#808030; ">-</span> Ddigit
+    <span style="color:#800000; font-weight:bold; ">else</span> Decimal <span style="color:#808030; ">=</span> Decimal <span style="color:#808030; ">+</span> Ddigit
+  Ddigit <span style="color:#808030; ">=</span> Next
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Decimal <span style="color:#808030; ">+</span> Ddigit
+</pre>
+</p>
+</div>
+<h3>Cvičení 3</h3><p>
+
+Hledané číslo D musí splňovat podmínku 2 * D + 1 &lt;= 999. A protože z hodnoty proměnné
+ <code>Rozdil</code> chceme vidět jen poslední platnou číslici, je jeho minimální hodnota 1 a 
+ maximální 499.
+<br></p>
+<h3>Cvičení 4</h3><p>
+
+ 
+<code>say 9 ** (9 ** 9) </code> zobrazí <code>4.28124773 ... E+369693099
+
+</code> (celkem tedy 369693100 digits). Nesmí však být předtím proveden příkaz 
+
+<code>numeric digits D</code> instruction, kde D &lt; 9.
+<br></p>
+<h3>Cvičení 5</h3><p>
+Eduard Fuchs odpovídá ve skriptech <i>Teorie množin</i> (UJEP Brno 1974) takto:
+"Budou na nich portréty všech lidí, kteří již dávno zemřeli nebo se narodí někdy v 
+budoucnosti, jejich fotografie ve všech úsecích jejich života; budou zde všechna díla 
+vědecká i umělecká v překladech do všech jazyků; logaritmické tabulky i fotografie, 
+které teprve v budoucnu odešlou vesmírné sondy, partitury všech symfonií, které teprve 
+budou napsány a stavby, které již dávno neexistují atd. atd. Většina těchto fotografií 
+pak bude pouhý <i>šum</i>, nepředstavující nic nám známého."
+<br><br>
+
+</p><h2>Poznámky a poděkování</h2><p>
+V tomto článku byly použity moje maily z Archive of REXXLIST
+
+(<i>Surprise for REXXperts</i> 98/01/16, <i>Exponential notation</i> 98/10/05,
+
+<i>How many digits has 9**(9**9)</i> 98/10/20 and 98/10/23) and 
+<br>Dále pak literatura:<br>
+
+<br>M. F. Cowlishaw: <i>The REXX Language - A Practical Approach to Programming</i> Prentice-Hall, inc., 
+Engelwood Cliffs, New Jersey 1985 
+
+<br>
+<br><i>REXX/400 Reference</i> SC24-5664-00, IBM Corp. 1994
+<br>
+<br>Helps from <i>Personal REXX for Windows(tm) Version 3.50, Quercus Systems</i>
+<br>
+<br>Rád bych poděkoval Gerardu Schildbergerovi, který opravil řadu chyb v tomto článku.
+<br><br>
+</p>
+<h2 id="appendix">Exponential notation, with Ian Collier's reply</h2><p>
+
+This is my article <i>Exponential notation</i> (98/11/05) in 
+ Archive of REXXLIST.
+ <div class="scrolling-wrapper-flexbox">
+ 
+<pre style="color:#000000;"><span style="color:#696969; ">/* Note: This e-mail is a program too. So, you can try it.</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;Hi Rexx community,</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;As we can read in manuals of the Rexx language (for example in</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;AS/400 REXX/400 Reference; SC41-5729-00; chapter 6; 6.2.7 Exponential notation):</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;"If the number of places needed before the decimal point exceeds</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;DIGITS, or the number of places after the point exceeds twice DIGITS,</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;exponential form will be used."</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;It is not exactly true as shown in a following example:</span>
+<span style="color:#696969; ">*/</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">4</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"12345 + 0 -&gt;"</span> <span style="color:#008c00; ">12345</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.123456789 + 0 -&gt;"</span> <span style="color:#008000; ">0.123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.00000123 + 0 -&gt;"</span> <span style="color:#008000; ">0.00000123</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.000001234 + 0 -&gt;"</span> <span style="color:#008000; ">0.000001234</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.0000123456789 + 0 -&gt;"</span> <span style="color:#008000; ">0.0000123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.0000012345678 + 0 -&gt;"</span> <span style="color:#008000; ">0.0000012345678</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.00001234567890123456789 + 0 -&gt;"</span><span style="color:#808030; ">,</span>
+<span style="color:#008000; ">0.00001234567890123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+ 
+<span style="color:#696969; ">/* Results are:</span>
+<span style="color:#696969; ">&nbsp;</span>
+<span style="color:#696969; ">12345 + 0 -&gt; 1.235E+4</span>
+<span style="color:#696969; ">0.123456789 + 0 -&gt; 0.1235</span>
+<span style="color:#696969; ">0.00000123 + 0 -&gt; 0.00000123</span>
+<span style="color:#696969; ">0.000001234 + 0 -&gt; 1.234E-6</span>
+<span style="color:#696969; ">0.0000123456789 + 0 -&gt; 0.00001235</span>
+<span style="color:#696969; ">0.0000012345678 + 0 -&gt; 1.235E-6</span>
+<span style="color:#696969; ">0.00001234567890123456789 + 0 -&gt; 0.00001235</span>
+<span style="color:#696969; ">Therefore I advice you to think of this theorem:</span>
+<span style="color:#696969; ">"If the number of places needed before the decimal </span>
+<span style="color:#696969; ">point exceeds DIGITS, or the number leading zeros </span>
+<span style="color:#696969; ">after the point exceeds DIGITS and number of places</span>
+<span style="color:#696969; ">after the point exceeds twice DIGITS, exponential </span>
+<span style="color:#696969; ">form will be used."</span>
+<span style="color:#696969; ">Do you agree?</span>
+<span style="color:#696969; ">*/</span>
+</pre>
+
+</div>
+<hr>
+<br><br>
+</p><h2>Ian Collier´s reply</h2><p>
+the subject <i>Re: Exponential notation</i>
+
+(98/10/07) in 
+Archive of REXXLIST
+<br>
+
+<br>In article <i>Exponential notation</i> 
+
+Vladimir Zabrodsky would have us change the rules for exponential notation
+
+from:
+
+
+
+
+
+<br><cite>
+
+  "If the number of places needed before the decimal point exceeds DIGITS,
+
+   or the number of places after the point exceeds twice DIGITS, exponential
+
+   form will be used."</cite>
+
+<br>
+
+<br>to:
+
+<br>
+<br>  <cite>"If the number of places needed before the decimal point exceeds
+
+  DIGITS, or the number leading zeros after the point exceeds DIGITS
+
+   and number of places after the point exceeds twice DIGITS,
+
+   exponential form will be used."
+
+</cite>
+
+
+<br><br>
+
+There is no difference between these two statements. When you say:
+
+<br>
+
+
+
+<br><code class="wrap">0.00001234567890123456789 + 0</code>
+
+<br>
+
+<br>the first thing Rexx will do is chop off all those unnecessary digits,
+
+leaving you with <code>0.00001235</code> (since <code>numeric digits</code> is
+ <code>4</code>).  The second thing
+
+it will do is use the above rule to determine whether to write the result
+
+in exponential notation.  There are only eight digits after the decimal
+
+point, so exponential notation is not used.
+<br>
+
+<br>Once the number has been rounded there can be at most DIGITS non-zero
+
+digits after the decimal point, so the first statement above implies
+
+the second.  That is, if the number of places after the point exceeds
+
+twice DIGITS then at least DIGITS+1 of them must be zeros.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

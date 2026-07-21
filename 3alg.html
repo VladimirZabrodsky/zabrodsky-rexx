@@ -1,0 +1,775 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<meta charset="utf-8" /><TITLE>FIND, SELECT, MODIFIND</TITLE>
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<META name="DESCRIPTION" content="A comparative study of three selection algorithms FIND, SELECT, MODIFIND, median, quantile" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="index.html">REXX</a>
+    <a href="introrexx.html">Introduction</a>
+    <a href="arithmetic.html">Arithmetics</a>
+    <a href="turing.html">Turing machine</a>
+    <a href="as400.html">AS400</a>
+    <a href="3alg.html"  class="active">Modifind</a>
+	<a href="aat/index.html">Album of Algorithms</a>
+	<a href="links.html">Links</a>
+    <a href="cz_3alg.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- text of page -->
+<h1>FIND, SELECT, MODIFIND</h1><hr>
+<br><p>
+A comparative study of three selection algorithms, and their implementations in
+the Rexx language, for finding Kth smallest of N elements: Hoare's FIND, my
+modification of FIND (MODIFIND) and Floyd's and Rivest's SELECT.
+<br>
+<br>The selection problem can be stated as follows (C. A. R. Hoare in [1]): given
+an array <i>A</i> of <i>N</i> distinct elements and an integer <i>K</i>, 1 &lt;= <i>K</i> &lt;= <i>N</i>, determine the <i>K</i>th
+smallest element of <i>A</i> and rearrange the array in such a way that this element is placed
+in <i>A</i>[<i>K</i>] and all elements
+with subscripts lower than <i>K</i> have fewer values and all elements with subscripts greater
+than <i>K</i> have greater values. Thus on completion of the program, the following
+relationship
+will hold:
+<br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i>-1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i>+1], ..., 
+<i>A</i>[<i>N</i>]
+</code>
+<br>
+<br>
+The usefulness of a solution of this problem arises from its application to the
+problem of
+finding the median or other quantiles or finding the minimum or the maximum or
+second-largest
+elements ... Straightforward solution would  be to sort the whole array. But if
+the array is
+large, the time taken to sort it will also be large.
+I'll introduce a faster algorithm due to C. A. R. Hoare.
+He called his program FIND (I'll refer to the implementation in this article as
+H) and it
+selects the <i>K</i>th smallest element in just <i>O</i>(<i>N</i>) average time.
+<br><br></p>
+<h2>The H algorithm</h2><p> 
+Hoare's algorithm is based on the following corollary of the obvious definition:
+<br><br></p>
+<h3>Definition</h3><p>
+<i>K</i>th smallest element of <i>N</i> elements is a unique
+element which is greater than <i>K</i> - 1 other elements but less than 
+<i>N</i>&nbsp;-&nbsp;<i>K</i> elements.
+</p>
+<br>
+<h3>Corollary</h3><p>
+An element can't be <i>K</i>th smallest when it is greater than <i>K</i> (and more) elements or less than <i>N</i>  -  <i>K</i> + 1 (and more) elements.<BR>We begin with a conjecture: <i>A</i>[<i>K</i>] is <i>K</i>th smallest. The algorithm of the proof or rejection this conjecture is:
+The array is divided by scanning from  the left (for indexes <i>I</i> = 1, 2, ...) to find an
+element <i>A</i>[<i>I</i>] &gt;= <i>A</i>[<i>K</i>],
+scanning from the right (for indexes <i>J</i> = <i>N</i>, <i>N</i> - 1, ... ) to find an 
+element <i>A</i>[<i>J</i>] &lt;= <i>A</i>[<i>K</i>], exchanging them, and continuing 
+the process until the
+pointers <i>I</i> and <i>J</i> cross. This procedure gives three cases:
+</p>
+<br>
+
+<h3>Case 1 (<i>J</i> &lt; 
+<i><font color="#ff3333">K</font></i> &lt; <i>I</i>)</h3><p>
+Q. E. D. 
+<i>K</i>th smallest element is in its final place and
+the program finished.
+Example:
+<br>
+<img src="images/case1.gif" width=380 height=220 border=0 alt="Case1: J < K < I" 
+style="max-width:100%;height:auto;">
+</p>
+<br>
+<h3>Case 2 (<i>J</i> &lt; <i>I</i> &lt;= <i>
+<font color="#ff3333">K</font>
+</i>)</h3><p>
+<i>A</i>[1] ... <i>A</i>[<i>J</i>] are less than 
+<i>N</i> - <i>K</i> + 1 other elements,
+exactly they are less than <i>N</i> - <i>I</i> + 1 &gt;= <i>N</i> - <i>K</i> + 1 elements. I. e.
+any one can't be <i>K</i>th smallest, so we'll find (<i>K</i> - <i>I</i> + 1)th smallest
+element in the subarray <i>A</i>[<i>I</i>] ... <i>A</i>[<i>N</i>].
+
+Example:
+<br><img src="images/case2.gif" width=380 height=220 border=0 align=center alt="Case2: J < I <= K" 
+style="max-width:100%;height:auto;">
+<br>
+</p>
+
+<h3>Case 3 (<i><font color="#ff3333">K</font></i> &lt;= 
+<i>J</i> &lt; <i>I</i>)</h3><p>
+<i>A</i>[<i>I</i>] ... <i>A</i>[<i>N</i>] are greater than <i>K</i> other elements,
+exactly they are greater than <i>J</i> &gt;= <i>K</i> elements. I. e.
+any one can't be <i>K</i>th smallest, so we'll find <i>K</i>th smallest element in the
+subarray <i>A</i>[1] ... <i>A</i>[<i>J</i>].
+
+Example:
+<br><img src="images/case3.gif" width=380 height=220 border=0 align=center alt="Case3: K <= J <= I" 
+style="max-width:100%;height:auto;">
+<br>
+<br>
+The following program H ilustrates this algorithm. It is the translation
+Niklaus
+Wirth's program from [6] to the Rexx language.
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">H: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> N<span style="color:#808030; ">,</span> K
+L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> L &lt; R
+  X <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> I &gt; J
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; X<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &lt; A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> I &lt;<span style="color:#808030; ">=</span> J <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+      W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+      I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt; K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> I
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt; I <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+</p>
+<h2>The analysis of the H algorithm</h2><p>  
+Let us determine the number of comparisons, as  <code>A.I &lt; X</code>
+ is, and swaps 
+<code>W = A.I; A.I = A.J; A.J = W</code> that H makes. 
+Let <i>C</i>(<i>N</i>, <i>K</i>) be the number of comparisons made by H when
+applied to finding <i>K</i>th smallest of <i>N</i> elements, and let 
+<i>S</i>(<i>N</i>, <i>K</i>) be the number of swaps of items.
+<br>
+<br>
+ In worst case:<br><br>
+<br><br>
+<code class="wrap">
+<i>C</i><sub>max</sub>(<i>N</i>, 1) = 
+<i>C</i><sub>max</sub>(<i>N</i>, <i>N</i>) = (<i>N</i><sup>2</sup> 
++  5<i>N</i> -  8) / 2<br><i>C</i><sub>max</sub>(<i>N</i>, <i>K</i>) = (<i>N</i><sup>2</sup> + 5<i>N</i> - 12) / 2,
+for <i>K</i> = 2, 3, ..., <i>N</i> - 1
+</code>
+<br><br>
+In [3] I showed examples of arrays for worst cases (<i>K</i>th position is red coloured):
+<br><br>
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+for K = 1: <span class="red">N</span>  2  1  3  ...  N-1
+for K = 2: 1  <span class="red">N</span>  2  3  ...  N-1
+for K = 3: 3  2  <span class="red">N</span>  1  4  5  ...  N-1
+for 3 &lt; K &lt; N-1: 2  ...  K-2  K  K-1  <span class="red">N</span>  1  K+1  ...  N-1
+for K = N-1: 2  ...  N-1  <span class="red">1</span>  N
+for K = N: 2  ...  N-2  N  N-1  <span class="red">1</span> 
+</code>
+</pre>
+</div> 
+<br>In average case (D. E. Knuth in [2]):
+<br>
+<br>
+<code class="wrap">
+<i>C</i>(<i>N</i>, <i>K</i>) = 2((<i>N</i> + 1)<i>H</i><sub>N</sub> -  (<i>N</i> - <i>K</i> + 3)<i>H</i><sub><i>N</i> - <i>K</i> + 1</sub> - (<i>K</i> + 2)<i>H</i><sub><i>K</i></sub> + <i>N</i> + 3)
+</code>
+<br>
+<br>
+where:
+<br>
+<br>
+<code class="wrap">
+<i>H</i><sub>N</sub> = 1 + 1/2 + ... + 1/<i>N</i>
+</code>
+<br>
+<br> This yields as special cases:
+<br>
+<br>
+<code class="wrap">
+<br><i>C</i>(<i>N</i>, 1) = <i>C</i>(<i>N</i>,<i>N</i>) = 2<i>N</i> + o(<i>N</i>)
+<br>
+<br><i>C</i>(<i>N</i>, <i>median</i>)= 2<i>N</i>(1 + ln2) + o(<i>N</i>) = 3.39<i>N</i> + o(<i>N</i>)
+</code>
+<br>
+<br>
+I proved:
+<br>
+<br>
+<code class="wrap">
+<i>S</i>(<i>N</i>, 
+<i>K</i>) = (1 / 3)((<i>N</i> + 1)<i>H</i><sub>N</sub> - 
+(<i>N</i> - <i>K</i> + 2.5)<i>H</i><sub>N-K+1</sub> - (<i>K</i> + 1.5)<i>H</i><sub>K</sub> + <i>N</i> + 2)
+</code>
+<br></p>
+<h3>Corollary</h3><p>
+<br>
+
+<code class="wrap">
+<i>S</i>(<i>N</i>, 1) = <i>S</i>(<i>N</i>, <i>N</i>) =<i>H</i><sub>N</sub>
+<br>
+<br><i>S</i>(<i>N</i>, <i>median</i>) = (1 / 3)((ln2 + 1)<i>N</i> - 3ln<i>N</i>) = 0.56<i>N</i> + o(<i>N</i>)
+</code>
+<br>
+</p>
+<br>
+<h2>The Z algorithm</h2><p>
+We consider the array 1, 10, 2, 3, 4, 5, 6, 7, 8, 9,
+and <i>K</i>= 2. The array is split into two parts <i>A</i>[1], ..., <i>A</i>[9] and
+ <i>A</i>[10]: 1, 9, 2, 3, 4, 5, 6, 7, 8 and 10 by the help of one swap and 12
+comparisons. But when I find that 10 is greater than two elements (1 and 9)
+then I know: it can't be second smallest element. I can reach the same result
+(1, 9, 2, 3, 4, 5, 6, 7, 8, 10) by the help of one swap
+and three comparisons  and I'll search second smallest element in the subarray 
+<i>A</i>[1], ..., <i>A</i>[9]. This modification of the H
+algorithm describes the program Z. It is the translation to the Rexx language
+from my article
+[3], I called it MODIFIND for <b>Algorithms, Data Structures, and Problems
+Terms and Definitions</b> of the
+CRC Dictionary of Computer Science, Engineering and
+Technology:
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">Z: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> N<span style="color:#808030; ">,</span> K
+L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> L &lt; R
+  X <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> J &lt; K <span style="color:#808030; ">|</span> K &lt; I
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; X<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &lt; A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+    I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt; K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> I
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt; I <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+</p>
+<br>
+<h2>The analysis of the Z algorithm</h2>
+<h3>In worst case</h3>
+<p>
+<code class="wrap">
+<i>C</i><sub>max</sub>(<i>N</i>, <i>K</i>) = 
+<i>NK</i> + <i>N</i> + <i>K</i> - <i>K</i><sup>2</font></sup> - 1, for 
+<i>K</i> = 1, 2, ..., <i>N</i>
+</code>
+<br>
+<br>In worst case the number of comparison for the algorithm H doesn't depend on 
+<i>K</i>.
+But for the algorithm Z the number of comparison depends on <i>K</i>. The following 
+graph shows the time of execution H and Z in worst case.
+<br>
+<br>
+<img SRC="images/wh.gif" border=1 width=441 height=315 alt="time of execution H and Z in worst case" 
+style="max-width:100%;height:auto;">
+<br><br>
+<br><h3>In average case</h3>
+<p>
+In [3] I state only values of <i>C</i>(<i>N</i>, 1), <i>C</i>(<i>N</i>, <i>N</i>)
+and <i>S</i>(<i>N</i>, <i>K</i>):
+<br>
+<br>
+<code class="wrap">
+<i>C</i>(<i>N</i>, 1) = <i>C</i>(<i>N</i>, <i>N</i>) = <i>N</i> + <i>H</i><sub>N</font></sub>
+<br>
+<br><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub>N</sub> - (<i>N</i> - <i>K</i>)<i>H</i><sub>N-K+1</sub> - (<i>K</i> - 1)<i>H</i><sub>K</sub></i>)
+</code>
+<br><br>
+<h4>Special cases</h4>
+<code class="wrap">
+<i>S</i>(<i>N</i>, 1) = <i>S</i>(<i>N</i>, <i>N</i>) = ln<i>N</i> + o(<i>N</i>)
+<br><i>S</i>(<i>N</i>, <i>medián</i>) = 0.5(<i>N</i>ln2 + 2ln<i>N</i>) + o(<i>N</i>) = 0.35<i>N</i> + o(<i>N</i>)
+</code>
+</p>
+<br>
+<h2>The FR algorithm</h2><p>
+In their article <i>Expected Time Bounds for Selection</i>[4] R. W. Floyd and R. Rivest
+presented a new
+selection algorithm SELECT which is shown to be very efficient on the average,
+both theoretically and
+practically. The number of comparisons used to select the <i>K</i>th smallest of <i>N</i> numbers is <i>N</i> + min(<i>K</i>, <i>N</i> - <i>K</i>) + o(<i>N</i>).
+I express SELECT in the Rexx language as the FR program.
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">FR: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> L<span style="color:#808030; ">,</span> R<span style="color:#808030; ">,</span> K
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> R &gt; L
+  <span style="color:#800000; font-weight:bold; ">if</span> R <span style="color:#808030; ">-</span> L &gt; <span style="color:#008c00; ">600</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+    N <span style="color:#808030; ">=</span> R <span style="color:#808030; ">-</span> L <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> K <span style="color:#808030; ">-</span> L <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> LN<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span>
+    S <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#008000; ">0.5</span> <span style="color:#808030; ">*</span> EXP<span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> Z <span style="color:#808030; ">/</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+    SD <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#008000; ">0.5</span> <span style="color:#808030; ">*</span> SQRT<span style="color:#808030; ">(</span>Z <span style="color:#808030; ">*</span> S <span style="color:#808030; ">*</span> <span style="color:#808030; ">(</span>N <span style="color:#808030; ">-</span> S<span style="color:#808030; ">)</span><span style="color:#808030; ">/</span>N<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> <span style="color:#800000; font-weight:bold; ">SIGN</span><span style="color:#808030; ">(</span>I <span style="color:#808030; ">-</span> N<span style="color:#808030; ">/</span><span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+    LL <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">MAX</span><span style="color:#808030; ">(</span>L<span style="color:#808030; ">,</span> K <span style="color:#808030; ">-</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span>I <span style="color:#808030; ">*</span> S <span style="color:#808030; ">/</span> N<span style="color:#808030; ">)</span> <span style="color:#808030; ">+</span> SD<span style="color:#808030; ">)</span>
+    RR <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">MIN</span><span style="color:#808030; ">(</span>R<span style="color:#808030; ">,</span> K <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#808030; ">(</span>N <span style="color:#808030; ">-</span> I<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> S <span style="color:#808030; ">/</span> N<span style="color:#808030; ">)</span> <span style="color:#808030; ">+</span> SD<span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> FR LL<span style="color:#808030; ">,</span> RR<span style="color:#808030; ">,</span> K
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  T <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>K <span style="color:#808030; ">=</span> W
+   <span style="color:#800000; font-weight:bold; ">if</span> A<span style="color:#808030; ">.</span>R &gt; T <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>R<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>R <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+   <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> I &lt; J
+     W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+    I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; T<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>J &gt; T<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> T <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>R<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>R <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt;<span style="color:#808030; ">=</span> K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt;<span style="color:#808030; ">=</span> J <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+Floyd and Rivest in [5] write: <i>The arbitrary constants 600, 0.5, 0.5 appearing 
+in the algorithm
+minimize execution time on the particular machine used.</i> I experimentally found that 
+constants
+600, 0.5, 0.5 are the good choice. For classic Rexx there is a problem with
+functions LN, EXP and
+SQRT (they aren't built-in). But hundreds experiments for <i>N</i> = 10000 shown, 
+that the maximum precision <code>numeric digits 6</code> will be sufficient. Hence I used the following simple algorithms from
+textbooks:
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">EXP: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> Tr<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">;</span> Sr <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X <span style="color:#808030; ">=</span> Tr
+<span style="color:#800000; font-weight:bold; ">do</span> R <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">until</span> Tr &lt; <span style="color:#008000; ">5E-3</span>
+  Sr <span style="color:#808030; ">=</span> Sr <span style="color:#808030; ">+</span> Tr<span style="color:#808030; ">;</span> Tr <span style="color:#808030; ">=</span> Tr <span style="color:#808030; ">*</span> X <span style="color:#808030; ">/</span> R
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Sr
+
+SQRT: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span>
+<span style="color:#800000; font-weight:bold; ">if</span> X &lt; <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">if</span> X<span style="color:#808030; ">=</span><span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">0</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#800000; font-weight:bold; ">ABS</span><span style="color:#808030; ">(</span>Yp <span style="color:#808030; ">-</span> Y<span style="color:#808030; ">)</span> &lt;<span style="color:#808030; ">=</span> <span style="color:#008000; ">5E-3</span>
+  Yp <span style="color:#808030; ">=</span> Y<span style="color:#808030; ">;</span> Y <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">/</span> Yp <span style="color:#808030; ">+</span> Yp<span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> <span style="color:#008c00; ">2</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+ 
+LN: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span>
+M <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Ln <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> M
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">3</span> by <span style="color:#008c00; ">2</span>
+  T <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> <span style="color:#808030; ">(</span>J <span style="color:#808030; ">*</span> M <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> J<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> T &lt; <span style="color:#008000; ">5E-3</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">leave</span>
+  Ln <span style="color:#808030; ">=</span> Ln <span style="color:#808030; ">+</span> T
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> Ln
+</pre>
+</div>
+I experimantally found that for achievement of the lowest average time is
+the best choice: the constant 3 in statement <kbd>numeric digits</kbd> and the 
+constant 5E-3.
+For the lowest number of comparisons I found more candidates: sometimes 4 and
+5E-3 or 5 and 5E-5 or
+6 and 6E-6 ... I used 3 and 5E-3 because the FR program was fastest as well as.
+The results showed that the average number of comparisons
+for finding the median is proportional to 1.5<i>N</i>.
+</p><br>
+<h2>Comparisons of Algorithms</h2><p>
+For comparisons I used the program as following one (this example is only
+for timing results and for <i>K</i> &gt;= 500):
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* COMPARISON */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10000</span>
+<span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">500</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">5000</span> by <span style="color:#008c00; ">500</span>
+  TH <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> TZ <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> TFR <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> Trial <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">100</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> RANDARRAY<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> H N<span style="color:#808030; ">,</span> K<span style="color:#808030; ">;</span> TH <span style="color:#808030; ">=</span> TH <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> Z N<span style="color:#808030; ">,</span> K
+    TZ <span style="color:#808030; ">=</span> TZ <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">time</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> FR <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> N<span style="color:#808030; ">,</span> K
+    TFR <span style="color:#808030; ">=</span> TFR <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">end</span> Trial
+  <span style="color:#800000; font-weight:bold; ">say</span> K TH<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span> TZ<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span> TFR<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span>
+<span style="color:#800000; font-weight:bold; ">end</span> K
+<span style="color:#800000; font-weight:bold; ">exit</span>
+
+RANDARRAY: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> B<span style="color:#808030; ">.</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N<span style="color:#808030; ">;</span> B<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">100000</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+
+INITIALIZE: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span> B<span style="color:#808030; ">.</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> B<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+As a measuring instrument I used my PC with 6x86MX-PR233 processor and 32MB
+RAM.
+<br>
+<br>The graph <i>Average time required H, Z, FR</i> shows, that Z is faster than 
+FR only for <i>K</i> = 1.
+I repeated a few times the measuring and always the finding of the median was
+faster than the finding of the <i>K</i>-th element, for <i>K</i> = 3000 or 4000.
+<br>
+<br>
+<img SRC="images/time.gif" border=1 width=469 height=267  
+alt="Average time required H, Z, FR" 
+style="max-width:100%;height:auto;">
+<br>
+<br>The graph <i>H, Z, FR - comparison count, average case</i> explains previous 
+results. It proves that the Knuth's estimate of the average
+case for the number of comparison for H holds, too. The Z algorithm is best
+only for <i>K</i> = 1 otherwise FR is the winner. The theoretical result for FR for the finding
+of the median holds, i. e. 1.5<i>N</i> comparisons.
+<br>
+<br>
+<img SRC="images/c.gif" border=1 width=509 height=347  
+alt="H, Z, FR - comparison count, average case" 
+style="max-width:100%;height:auto;">
+<br>
+<br>The graph <i>H, Z, FR - swap count, average case</i> shows
+that Z has the least count of swaps. It shows that my estimate for 
+<i>S</i>(<i>N</i>, <i>K</i>) for Z holds as well as.
+<br>
+<br>
+<img SRC="images/s.gif" border=1 width=502 height=264 
+alt="H, Z, FR - swap count, average case" 
+style="max-width:100%;height:auto;">
+</p><br>
+<h2>Conclusion</h2><p>
+Algorithms Z and FR are always better than H; FR has fewer the number of
+comparison than Z; Z has fewer the number of swaps than FR.
+</p><br>
+<h2 class="red">Richard Harter's comment in <i>comp.programming</i></h2>
+<p>
+It is interesting.  One of the attractive things about the Z algorithm is that
+it is simple and easy to code.  This is no small thing; quite often one is
+trading off coding time versus performance time.  In any case it is nice to
+know where to find the algorithms on line.<br>&nbsp;<br>Richard Harter, cri@tiac.net, The Concord Research Institute 
+<i>What is the difference between Mechanical Engineers and Civil Engineers?
+<br>Mechanical Engineers build weapons, Civil Engineers build targets.</i>
+</p>
+<br>
+<h2>Literature</h2><p>
+<b>1.</b> C. A. R. HOARE: <i>Proof of a Program: FIND</i>. CACM, Vol 14,
+No. 1, January 1971, pp. 39-45.<br>
+<br><b>2.</b> D. E. KNUTH: <i>The Art of Computer 
+Programming. Sorting and Searching</i>.
+Addison-Wesley, Reading, Mass., 1973.<br>
+<br><b>3.</b> V. ZABRODSKY: <i>Variace na klasicke tema.</i>Elektronika (Czech magazine), No. 6, 
+1992, pp. 33-34.<br>
+<br><b>4.</b> R. W. FLOYD, R. L. RIVEST: <i>Algorithm 489 The Algorithm SELECT - for Finding the 
+<i>i</i>th
+Smallest of <i>n</i> Elements [M1].</i>CACM, March 1975, Vol. 18, No. 3, p. 173<br>
+<br><b>5.</b> R. W. FLOYD, R. L. RIVEST: <i>Expected Time Bounds for Selection.</i>CACM, March 1975, 
+Vol. 18, No. 3, pp. 165-172.<br>
+<br><b>6.</b> N. WIRTH: <i>Algorithms and data structures.</i> New Jersey 07632, Prentice Hall, Inc.,
+Engelwood Cliffs, 1986.<br>
+</p>
+<hr>
+<br>
+<h1>Appendix: About Modifind</h1>
+<h2>I. Correspondence with Paul E. Black</h2><p>
+I sent (2
+ April 1999) to the forum comp.programming and comp.theory the 
+ following subject <i>Three Selection Algorithms</i>:
+ 
+ <br>
+ <br>
+
+Hello,<br>
+could you read my article FIND, SELECT, MODIFIND, please? 
+<br>
+Abstract:<br>
+A comparative study of three selection algorithms for finding K-th
+smallest of N elements:
+<br><br>
+Hoare's FIND (the H algorithm);<br>
+my modification of FIND (the Z algorithm);<br>
+Floyd's and Rivest's SELECT (the FR algorithm).
+<br><br>
+Algorithms Z and FR are always better than H; FR has lesser the
+number of comparison than Z; Z has lesser the number of swaps
+than FR. When the number of swaps isn't critical then is FR better
+than Z - and vice versa.
+
+<br>
+<br>
+Paul E. Black wrote me on the 6th April 1999:
+<br>
+<br>
+Dear Dr. Zabrodsky:
+<br>
+I saw your posting on comp.theory and was impressed with your article
+"Three Algorithms for Finding K-th Smallest of N Elements".  I
+volunteered to be the area editor for Algorithms, Data Structures, and
+Problems of the new CRC Dictionary of Computer Science, Engineering
+and Technology.
+<br>
+I plan for this site to be an on-line reference for the entire
+computer science community.
+<br>
+I am recruiting people to add terms and definitions or check current
+definitions.  Would you contribute?
+<br>
+Sincerely,<br>
+-paul-<br>
+-- <br>
+Paul E. Black 
+<br><br>
+I replied him 12 April 1999:
+<br>
+<br>
+Dear Dr Black,
+<br>
+I can offer you:
+<br><br>
+1) A succint definition of the Selection
+problem (entries Selection problem, select k-th element
+in your dictionary).
+<br>
+Given an array A of N elements and an the positive integer K &lt;= N,
+determine the K-th smallest element of A and rearrange the array in
+such a way that 
+<br>
+<br>
+A[1], A[2], ..., A[K-1] &lt;= A[K] &lt;= A[K+1], ..., A[N] 
+<br>
+<br>
+The N. Wirth's implementation of the Hoare's algorithm
+FIND in Pascal (for the array X of integers).
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">procedure</span> FIND<span style="color:#808030; ">(</span>K<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">var</span> I<span style="color:#808030; ">,</span>J<span style="color:#808030; ">,</span>L<span style="color:#808030; ">,</span>R<span style="color:#808030; ">,</span>W<span style="color:#808030; ">,</span>X<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#800080; ">;</span>
+<span style="color:#800000; font-weight:bold; ">begin</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>N<span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">while</span> L<span style="color:#808030; ">&lt;</span>R <span style="color:#800000; font-weight:bold; ">do</span>
+  <span style="color:#800000; font-weight:bold; ">begin</span> X<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>K<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>L<span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>R<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">repeat</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">&lt;</span>X <span style="color:#800000; font-weight:bold; ">do</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> X<span style="color:#808030; ">&lt;</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span> <span style="color:#800000; font-weight:bold; ">do</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">if</span> I<span style="color:#808030; ">&lt;</span><span style="color:#808030; ">=</span>J <span style="color:#800000; font-weight:bold; ">then</span>
+        <span style="color:#800000; font-weight:bold; ">begin</span> W<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>W<span style="color:#800080; ">;</span>
+              I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+        <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">until</span> I<span style="color:#808030; ">&gt;</span>J<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> J<span style="color:#808030; ">&lt;</span>K <span style="color:#800000; font-weight:bold; ">then</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> K<span style="color:#808030; ">&lt;</span>I <span style="color:#800000; font-weight:bold; ">then</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+3) V. Zabrodsky's algorithm MODIFIND (in Pascal), the simple 
+improvement of FIND, which has lesser the number of swaps 
+than FIND.
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">procedure</span> MODIFIND<span style="color:#808030; ">(</span>K<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">var</span> I<span style="color:#808030; ">,</span>J<span style="color:#808030; ">,</span>L<span style="color:#808030; ">,</span>R<span style="color:#808030; ">,</span>W<span style="color:#808030; ">,</span>X<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#800080; ">;</span>
+<span style="color:#800000; font-weight:bold; ">begin</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>N<span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">while</span> L<span style="color:#808030; ">&lt;</span>R <span style="color:#800000; font-weight:bold; ">do</span>
+  <span style="color:#800000; font-weight:bold; ">begin</span> X<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>K<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>L<span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>R<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">repeat</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">&lt;</span>X <span style="color:#800000; font-weight:bold; ">do</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> X<span style="color:#808030; ">&lt;</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span> <span style="color:#800000; font-weight:bold; ">do</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      W<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>W<span style="color:#800080; ">;</span>
+      I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#808030; ">(</span>J<span style="color:#808030; ">&lt;</span>K<span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">or</span> <span style="color:#808030; ">(</span>K<span style="color:#808030; ">&lt;</span>I<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> J<span style="color:#808030; ">&lt;</span>K <span style="color:#800000; font-weight:bold; ">then</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> K<span style="color:#808030; ">&lt;</span>I <span style="color:#800000; font-weight:bold; ">then</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+<br>
+You can use an arbitrary part of my article 
+"Three Algorithms for Finding K-th Smallest of N Elements" as well as.
+<br>Regards
+<br>
+<br>Vladimir Zabrodsky
+</p>
+<h2>II. Why MODIFIND? Short History of my Algorithm</h2>
+<p>
+I discovered a strange behaviour of the Find algorithm in June 1989. I found the simple modification of the Find algorithm. A first
+implementation was written in the Rexx language but later I worked only with Pascal's versions. During autumn 1990 I wrote my article 
+Finding K-th Smallest of N Elements. I sent this paper to the Czech computer magazin Bajt. But my paper didn't even printed in winter 1991. 
+I revised, corrected and extended my article and I sent it again with poetic or music title Variation on the classic theme to another 
+Czech computer magazin Elektronika (with permission from Bajt). It was published in No. 6 (June) 1992 on pages 33-34 [5]. But in Bajt, 
+No. 8 1992 on pages 130-131 [6], was published the old version my paper, too! In these papers I called the Hoare's algorithm Find as P1 
+(the abbreviation from first procedure) and my modification as P2 (I resisted temptation named it QUICKFIND). In my notes 
+(three notebooks A4 every with 40 sheets of paper) I described my algorithm sometimes as Fnd. In WEB's and Rexx's version 
+I used the name Z (and H and FR). But for Dr. Black's dictionary I think Z it isn't a lifelike name for selection algorithm - I wrote MODIFIND in my mail ...
+</p><br>
+<h2>III. Notes on Proof of <i>S(N, K)</i></h2><p>
+The number of swaps made by MODIFIND in average case is:
+<br>
+<code class="wrap">
+<br><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub>N</sub> - (<i>N</i> - <i>K</i>)<i>H</i><sub>N-K+1</sub> - (<i>K</i> - 1)<i>H</i><sub>K</sub></i>)
+</code>
+<br>
+<br>
+To do the average-case analysis I used exercises 5.2.22 and following from the D. E. Knuth's book [7]. Is it the same method as for Find? Yes, it is. My explanation follows. See on this example.
+<br><br><img SRC="images/proof.gif" width=320 height=260 
+alt="average-case analysis" 
+style="max-width:100%;height:auto;">
+<br>
+In the first step Find pushs aside left all elements lesser or equal
+ 4 (i.e. four elements) and it will find in the second step 3rd 
+ smallest element in the subarray 9, 8, 7, 5, 6.
+<br>MODIFIND stops work with the number 4, when it know that 4 can't
+be 7th smallest element. It will find 5th smallest element in the 
+subarray 8, 9, 1, 2, 7, 5, 6. But the swaps the numbers 1 and 2 are
+unnecessary! This numbers don't change your position during execution
+ of the MODIFIND algorithm. We can suppose (for the average-case 
+ analysis, counting swaps) that MODIFIND finds in the second step 
+ 3rd smallest element  in the subarray 8, 9, 7, 5, 6. 
+<br>The average number of swaps that will have been made in the 
+first step is:
+<br><br>
+<code class="wrap">((K - 1) (N - K) / 2N) + (N - 1) / N</code>
+<br><br>
+We thus obtain the reccurence relation for the average number of 
+swaps in the complete MODIFIND (inspiration from D. E. Knuth):
+<br>
+<br>
+<img SRC="images/proofevl.gif" border=0 width=450 height=84 
+alt="relation for the average number of 
+swaps in the complete MODIFIND" 
+style="max-width:100%;height:auto;">
+</p><br>
+
+<h2>IV. Succint definition of selection problem</h2><p>
+
+C. A. R. Hoare wrote in [1]:
+<br><br>
+The purpose of the program Find is to find that element of an array A[1:N] whose value is fth in order of magnitude; 
+and to rearrange the array in such a way that this element is placed in A[f]; and furthermore, all elements with subscribts 
+lower than f have lesser values, and all elements with subscripts greater than f have greater values. Thus on completion of 
+the program, the following relationship will hold:
+<br><br>
+<code class="wrap">
+A[1], A[2], ... , A[f - 1] &lt;= A[f] &lt;= A[f + 1], ... , A[N]
+</code>
+<br><br>
+In [2] R. W. Floyd and R. L. Rivest wrote: The selection problem 
+can be succinctly stated as follows: given a set X of n distinct 
+numbers and an integer i, 1 &lt;= i &lt;= n, determine the ith smallest 
+element of X with as few comparisons as possible. The ith smallest 
+element, denoted by i o X, is that element which is larger than 
+exactly i - 1 other elements, so that 1 o X is the smallest, and 
+n o X the largest, element in X.
+<br><br>
+In [3] R. W. Floyd and R. L. Rivest wrote: SELECT will rearrange the
+ values of array segment X[L : R] so that X[K] (for some given K; L 
+ &lt;= K &lt;= R) will contain the (K - L + 1)-th smallest value,
+  L &lt;= I &lt;= K will imply X[I] &lt;= X[K], and K &lt;= I &lt;= R will imply X[I]
+   &gt;= X[K].
+<br><br>
+In [4] we can read: The input to our selection routine will be the
+ positive integer N, the array X[1 .. N], and the positive integer 
+ K &lt;= N. The program must permute the array so that X[1 .. K - 1]
+  &lt;= X[K] &lt;= X[K + 1 .. N]. At that point, the Kth-smallest element 
+  in the set resides in its proper position, X[K].
+  <br><br>
+  This my article FIND, SELECT, MODIFIND includes the definition: 
+  The selection problem can be stated as follows (C. A. R. Hoare in 
+  [1]): given an array A of N distinct elements and an integer 
+  K, 1 &lt;= K &lt;= N, determine the Kth smallest element of A and 
+  rearrange the array in such a way that this element is placed in 
+  A[K] and all elements with subscripts lower than K have lesser 
+  values and all elements with subscripts greater than K have 
+  greater values. Thus on completion of the program, the following
+  relationship will hold:
+<br><br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i> - 1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i> + 1], ..., <i>A</i>[<i>N</i>] 
+</code>
+</p><br>
+
+<h4>My succint definition of selection problem:</h4><p>
+
+I send to Dr. Black following definition:
+Given an array A of N elements and an the positive integer K &lt;= N, 
+determine the K-th smallest element of A and rearrange the array in 
+such a way that
+<br><br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i> - 1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i> + 1], ..., <i>A</i>[<i>N</i>] 
+</code>
+</p><br>
+In this definition Dr. Black in New CRC Dictionary of Computer Science
+(Algorithms, Data Structures, and Problems) 
+(term <b>select and partition problem</b>) mistaked the word 
+<i>rearrange</i> with the word <i>partition</i>:
+<br><br>
+The dictionary says:
+<h4 class="red">select and partition</h4><p>
+<span class="red">
+(classic problem)
+<br>
+<strong>Definition:</strong>
+Given an <em>array</em> A of <em>n</em> elements and a positive integer 
+<em>k</em> &lt;= <em>n</em>, find the <em>k<sup>th</sup></em> smallest 
+element of A and <em>partition</em> the array such that A[1], ..., A[k-1]  
+&lt;= A[k] &lt;= A[k+1], ..., A[n].</span>
+</p><br>
+<h2>Literature</h2>
+<p>
+<b>1.</b> C. A. R. HOARE: <i>Proof of a Program: FIND</i> 
+CACM, Vol 14, 
+No. 1, January 1971, pp. 39-45<br>
+<br><b>2.</b> R. W. FLOYD, R. L. RIVEST: <i>Expected Time Bounds for Selection.</i> CACM, March 1975, Vol. 18, No. 3, pp. 165-172<br>
+<br><b>3.</b> R. W. FLOYD, R. L. RIVEST: <i>Algorithm 489 The Algorithm SELECT - for Finding the i-th
+Smallest of n Elements [M1]</i> CACM, March 1975, Vol. 18, No. 3, p. 173<br>
+<br><b>4.</b> J. BENTLEY: <i>Selection (in Programming Pearls)</i>, CACM, November 1985, Vol. 28, No. 11, pp. 1121-1127<br>
+<br><b>5.</b> V. ZABRODSKY: <i>Variace na klasicke tema</i>, Elektronika, No. 6 1992, p. 33-34<br>
+<br><b>6.</b> V. ZABRODSKY: <i>Nalezeni k-teho nejmensiho prvku</i>, Bajt, No. 8 1992, p. 130-131<br>
+<br><b>7.</b>  D. E. KNUTH: <i>The Art of Computer Programming. Sorting and Searching</i>, Addison-Wesley, Reading, Mass., 1973<br>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,734 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<meta charset="utf-8" /><TITLE>ARITHMETIC OPERATIONS</TITLE>
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta name="description" content=" the complete explanation of the arithmetic operations in the Rexx language" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="index.html">REXX</a>
+    <a href="introrexx.html">Introduction</a>
+    <a href="arithmetic.html"  class="active">Arithmetics</a>
+    <a href="turing.html">Turing machine</a>
+    <a href="as400.html">AS400</a>
+    <a href="3alg.html">Modifind</a>
+	<a href="aat/index.html">Album of Algorithms</a>
+	<a href="links.html">Links</a>
+    <a href="cz_arithmetic.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- text of page -->
+<h1>ARITHMETIC OPERATIONS</h1><hr><br>
+<p>
+"How many digits has nine to the ninth to the ninth?", it is a question
+
+in the Internet's Math Forum
+
+ (Ask Dr. Math).
+
+Doctor Ken replies  (09/25/97, Subject: Re: 9 ^ 9 ^ 9) and ... 
+
+his answer isn't right. We can't imagine numbers with a gigantic
+
+ number of digits; we can't use these numbers.
+
+This article includes the complete explanation of the Rexx arithmetic. I would like to
+
+show us some unusuall facilities of the language having resulting in 
+
+ unusual
+
+reflections on solutions of tasks and in unusual algorithms and (maybe)
+
+some surprising results.
+
+<br></p><br> 
+
+         		<h2>Numbers</h2>
+<p>
+We can determine the time of an execution of a 
+
+program by the <code>TIME</code> built-in function. The program <code>DUEL</code> compares of the
+
+ time of an execution of the <code>TEXTBOOK</code> and <code>MAN</code> functions. The first call to 
+
+<code>TIME</code>, it is called as a subroutine with the argument <code>"R"</code>, resets time. This is
+
+an analogy with the pressing of a stop-watch in the start of a run. The 
+
+second
+
+call to <code>TIME</code>, it is called as a function once again with the argument <code>"R"</code>, returns 
+
+time elapsed since last 
+
+reset (an analogy with pressing of a stop-watch in the course of the crossing finish line).
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* DUEL program */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">1000</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">Error</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#800000; font-weight:bold; ">DATATYPE</span><span style="color:#808030; ">(</span>N<span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"Whole number"</span><span style="color:#808030; ">)</span> &amp; N &gt;<span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">Error</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"Enter a nonnegative whole number, please"</span>
+  <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> N
+  <span style="color:#800000; font-weight:bold; ">Error</span> <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">"["</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> N <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"] eh? "</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> Exp1 <span style="color:#808030; ">=</span> TEXTBOOK<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> Exp2 <span style="color:#808030; ">=</span>      MAN<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+<span style="color:#800000; font-weight:bold; ">exit</span>
+</pre>
+
+</div>
+
+
+The <code>DATATYPE</code> built-in function returns an indication of the 
+
+class to which the data belongs. If <code>N</code> is a whole and 
+
+nonnegative number (char <code>&amp;</code> is the
+
+operator of the operation "logical and" in Rexx) then the 
+
+<code>DATATYPE</code> function returns 1 (TRUE in Rexx) 
+
+else returns 0 (FALSE in Rexx). For example the value 200 meets this
+
+ conditions. 
+This 
+
+value can be written <code>200</code> or <code>200.0</code> or <code>2E+2</code> (i.e.
+
+ 2 . 10<SUP>2</SUP> in exponential notation) optionally with 
+
+leading or trailing blanks.
+
+<br><br></p>
+
+
+<h3 class="blue">Exercise 1</h3><p>
+Create stop-watch in Rexx.
+<br><br></p>
+<h2>Rexx computes ... as we do</h2><p>
+
+ What value is 1/0! + 1/1! + 1/2! + ... + 1/N! for N &gt;= 0?
+
+This task coheres with the calculation of the base of the natural logarithm, named in honor of Leonard Euler  
+
+<i>e</i>. The <code>TEXTBOOK</code>
+
+ function describes a recommendation from textbooks. 
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* TEXTBOOK internal function */</span>
+TEXTBOOK: <span style="color:#800000; font-weight:bold; ">procedure</span>
+Sum <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Item <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Item <span style="color:#808030; ">=</span> Item <span style="color:#808030; ">/</span> J<span style="color:#808030; ">;</span> Sum <span style="color:#808030; ">=</span> Sum <span style="color:#808030; ">+</span> Item
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Sum
+</pre>
+
+</div>
+But man doesn't compute sums as <code>TEXTBOOK</code>. The value of
+
+the fourth item (i.e. 1/(3!)) is 0.166 ... 67 with
+
+ thousand significant digits. This value can be written by the  <code>COPIES</code> built-in function as the result of the 
+
+expression <code>0.1 || COPIES(6, 998) || 7</code>. 
+<br>We usually calculate this sum using 
+
+the algorithm which the <code>MAN</code> function describes (B. Higman:
+
+<i>A comparative study of programming languages</i>, MacDonald & Co. 
+
+Ltd. 1970).
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* MAN internal function */</span>
+MAN: <span style="color:#800000; font-weight:bold; ">procedure</span>
+Numerator <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Denominator <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+  Numerator <span style="color:#808030; ">=</span> Numerator <span style="color:#808030; ">*</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+  Denominator <span style="color:#808030; ">=</span> Denominator <span style="color:#808030; ">*</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Numerator <span style="color:#808030; ">/</span> Denominator
+</pre>
+
+</div>
+For N = 100 the <code>DUEL</code> program writes (on PC, 
+
+processor 
+
+6x86MX-PR233, 32MB RAM, demo of Quercus Systems' Personal REXX for Windows
+
+ 95):
+
+<pre>
+<code>
+0.380000 sec
+0.060000 sec
+</code>
+</pre>
+
+It is a good idea to
+
+consider in the course of a solution of a numeric task that "Rexx computes in the same way as we do". It holds for the 
+basic arithmetic operators + 
+(addition), - (subtraction), * (multiplication), / (division),  % (integer
+
+division - the mnemonic: the operator of division has only one char, i.e. / or %), // (remainder, i.e. divide and return 
+only the remainder). For any  number <i>A</i> and any number <i>B</i> &lt;&gt; 0 it follows that 
+<br>
+<i>A</i> + 0 = (<i>A</i> % <i>B</i>) * <i>B</i> + (<i>A</i> // <i>B</i>).
+<br><br></p>
+
+	<h2>Numeric comparison</h2><p>
+
+
+
+The numeric comparison operators are =, &gt;, &lt;,  &lt;&gt; (synonymous with \=  and &gt;&lt;),
+
+&gt;= (synonymous with \&lt;), &lt;= (synonymous with \&gt;). Throughout the language, 
+
+the
+
+ not character,¬, is synonymous with the backslash (\). Assume a execution of the <code>numeric digit D</code>
+
+instructions  (the default value of the D expression is 9)
+
+ and the <code>numeric fuzz F</code> instruction (the
+
+default of the F expression is 0). Expressions D, F must result in a
+
+nonnegative whole number D &gt; F &gt;= 0.  A comparing of numeric values is 
+
+effected by subtracting the
+
+ two numbers under a precision of D - F and then comparing the result with
+
+0.
+
+
+
+
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">If</span> the result is   <span style="color:#800000; font-weight:bold; ">then</span> the comparison with the operators   is
+negative           &lt;<span style="color:#808030; ">,</span> &lt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;&gt;                                TRUE
+    zero           &gt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> <span style="color:#808030; ">=</span>                                TRUE
+positive           &gt;<span style="color:#808030; ">,</span> &gt;<span style="color:#808030; ">=</span><span style="color:#808030; ">,</span> &lt;&gt;                                TRUE
+</pre>
+
+</div>
+The comparison operators return the value 1 if the result of the comparison
+
+is TRUE, or 0 otherwise. <br>The values of <code>Exp1</code> and <code>Exp2</code> (see the <code>DUEL</code> program) 
+are not equal.  <br>The <code>say&nbsp;Exp1&nbsp;=&nbsp;Exp2</code> instruction displays 0 and 
+<code>say&nbsp;Exp1&nbsp;-&nbsp;Exp2</code> displays 0.000&nbsp;...&nbsp;04 (with 999 zeros). But the instructions:
+<code>
+
+numeric fuzz 1; say Exp1 = Exp2</code> displays 1.
+</code>
+<br><br><br></p>
+
+<h2>Another number system</h2><p>
+
+  Humans usually use decimal, or base 10, numbers. When dealing with computers, it is frequently convenient to use 
+  bases 2 or 16. The following expression can be used for building a trivial hexadecimal calculator:
+  <code>D2X(X2D(Hex1) + X2D(Hex2))</code>
+
+It computes the sum of two hexadecimal numbers stored in the <code>Hex1</code> and <code>Hex2</code>
+
+ variables. The <code>X2D</code> built-in function returns the decimal
+
+ representation of a given hexadecimal string and the <code>D2X</code> returns the 
+
+ representation of a decimal number in hexadecimal form. Simirally the
+
+expression
+<br><br>
+<code class="wrap">X2B(D2X(X2D(B2X(Bin1)) + X2D(B2X(Bin2))))</code>
+<br><br>
+computes the sum of two binary values in the <code>Bin1</code>, <code>Bin2</code> variables.
+
+We can want to remove leading zeros in binary numbers.
+
+The <code>STRIP</code>(<i>string</i>, <i>option</i>, <i>character</i>) built-in function returns the 
+
+input <i>string</i> with specified
+
+leading (option <code>"L"</code>), trailing (option <code>"T"</code>) or leading and trailing
+
+ (option <code>"B"</code>) <i>characters</i> removed.
+<br><br>
+
+<h3 class="blue">Exercise 2</h3><p>
+Write the function <code>R2D</code> (Roman to decimal) allowing decryption of
+
+the following enigma: Edgar Allan Poe (Born: MDCCCIX - Died: MDCCCXLIX). 
+<br><br></p>
+<h2>Power</h2><p>
+The ** (power) operator raises a number to a power, which may be positive, 
+
+   negative, or 0.  The power must be a whole number.  If negative, the 
+
+absolute value of the power is used, and 
+
+   then the result is inverted (divided into 1) -  for Z &lt; 0 and X &lt;&gt; 0,
+
+ X<sup>Z</sup> = 1 / X<SUP>ABS(Z)</SUP>.   In Rexx the power is 
+
+   calculated by the process of left-to-right binary reduction:
+
+
+
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* Algorithm of exponentation (X ** Z) */</span>
+Power <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+BinZ <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">STRIP</span><span style="color:#808030; ">(</span>X2B<span style="color:#808030; ">(</span>D2X<span style="color:#808030; ">(</span>Z<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"L"</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>BinZ<span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">1</span> by <span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>BinZ<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">then</span> Power <span style="color:#808030; ">=</span> Power <span style="color:#808030; ">*</span> X
+  X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">*</span> X
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"X ** Z ="</span> Power
+</pre>
+
+</div>
+
+I programmed the internal <code>POWER</code> function that follows. For  values: <code>X = 15; Z = 959; numeric digits 
+1128;</code> and AS/400 model 310 the interpretation of <code>POWER(X, Z)</code> was faster (13.673 sec) than 
+the interpretation of <code>X ** Z</code> (26.945000 sec).
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* POWER internal procedure */</span>
+POWER: <span style="color:#800000; font-weight:bold; ">procedure</span>
+X <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Pwr <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">forever</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> Z <span style="color:#808030; ">/</span><span style="color:#808030; ">/</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">then</span> Pwr <span style="color:#808030; ">=</span> Pwr <span style="color:#808030; ">*</span> X
+  Z <span style="color:#808030; ">=</span> Z % <span style="color:#008c00; ">2</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> Z <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> Pwr
+  X <span style="color:#808030; ">=</span> X <span style="color:#808030; ">*</span> X
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+
+</div>
+I presented this fact in my email to REXXLIST (the subject <i>Surprise for 
+
+REXXperts</i>, 98/01/16 in 
+
+<b>Archive of REXXLIST</b>). The corresponding thread 
+
+(in the form of the table) from REXXLIST and comp.lang.rexx is very 
+
+intreresting. You can compare time of
+
+the interpretation or run of the compiled programs in different 
+
+implementations of Rexx and in different environments (computers - PC, 
+
+workstation, midi and mainframe; systems - IBM, Microsoft, Sun).
+
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COMPUTER        SYSTEM	        LANGUAGE IMPLEMENT. **	    POWER	THANKS TO GO
+mainframe IBM	CMS             REXX370 compiler    0,0013  0,0017	Plungjan M.
+mainframe IBM	TSO             REXX370 compiler    0,0013  0,0018	Plungjan M.
+PC              Windows NT 4.0  Object REXX 6.0	    0,21    0,28	Stuurman J.
+mainframe IBM	CMS             REXX370 interpret   0,2349  0,1694	Plungjan M.
+mainframe IBM	TSO             REXX370 interpret   0,2884  0,152	Plungjan M.
+PC Pentium 166	OS/2 Warp 4     Classic Rexx	    0,37    0,25	Kazimirchik V.
+PC Pentium 90   Linux           REXX/imc            0,4583  0,5062	Gurski A.F.
+PC 486/33       OS/2 Warp 4     Object REXX         1,30    1,86	Vermo B.
+Sun Sparc 2     Solaris 2.5.1   REXX/imc 1.6d	    1,85    2,1000	Collier I.
+PC              Windows NT 4.0  Regina	            faster  slower	Saxton J.M.
+</code>
+</pre>
+</div>
+
+
+
+
+	<br></p><h2>Numeric giants and dwarfs</h2><p>
+
+
+The mass of the Earth is about 6E+24 kg and the mass of an atom of hydrogen is about 2E-24 g. For both large and small 
+numbers some form of exponential
+
+notation is useful, both to make numbers more readable, and to reduce execution time and
+
+storage requirements. 
+
+     Assume execution of the <code>numeric digits D</code> instruction.  If the number of places needed
+
+ before the decimal point exceeds D, or the number leading zeros after the point exceeds
+
+ D  and number of places after the point exceeds twice D,  exponential form will be used.
+<br><br><br></p>
+<H2>Note</H2><p> Ian Collier demonstrates (read <a HREF="#appendix">
+Exponential notation, with Ian Collier's reply</a>) that 
+
+there is no difference between this definition and the definition in manuals or textbooks (M. F. Cowlishaw: The REXX Language - A Practical Approach to Programming, 1985; REXX/400 Reference, SC24-5664-00, IBM Corp. 1994).
+<br><br>
+
+
+Now we return to program <code>DUEL</code> with 
+<br>
+<code class="wrap">
+<br>... 
+<br>Exp1 = TEXTBOOK(N);
+<br>... 
+<br>Exp2 = MAN(N); 
+<br>...
+</code>
+<br>
+<br>
+The value of 
+
+<code>Exp1 - Exp2</code> is 0.000 ... 04 with 999 zeros. 
+
+The <code>say Exp1 - Exp2</code> instruction displays <code>4E-999</code> after a execution of
+
+the instructions:
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;">Subtract <span style="color:#808030; ">=</span> Exp1 <span style="color:#808030; ">-</span> Exp2<span style="color:#808030; ">;</span> D <span style="color:#808030; ">=</span> <span style="color:#008c00; ">9</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> D<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> Subtract <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+</pre>
+
+</div>
+We must add zero (multiple by 1 etc.) for using new setting accuracy.
+<br><br><br>
+<h3 class="blue">Exercise 3</h3><p>
+What are values of <code>D</code> when <code>numeric digits D; say Subtract + 0</code> displays <code>4E-999</code>?
+<br><br>
+
+<br></p><h2>Bernoulli...</h2><p>
+
+The exponent of a number expressed in exponential notation
+
+may have up to nine digits only. In 1728 Daniel Bernoulli proved that <i>e</i> is equal to the limit of 
+<code>(1 + 1/N)<sup>N</sup></code>
+as N goes to infinity. The program with the maximal value of N:
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* BERNOULLI computes e, 1. version */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">50</span><span style="color:#808030; ">;</span> N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">999999999</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"e ="</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">/</span>N<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> N
+</pre>
+
+</div>
+displays <br><code>e = 2.7182818270...</code> For larger N the program is terminated with "syntax" error (<code>Invalid whole 
+number</code>).
+
+ But the program:
+ <div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* BERNOULLI computes e, 2. version */</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">50</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> <span style="color:#008000; ">1E+40</span>
+X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> Z<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"e ="</span> POWER<span style="color:#808030; ">(</span>X<span style="color:#808030; ">,</span> Z<span style="color:#808030; ">)</span><span style="color:#008c00; ">9999999</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"e ="</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">/</span>N<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> N
+</pre>
+
+</div>
+displays <br><code class="wrap">e = 2.71828182845904523560287...</code>
+<br>
+Exponential notation is useful for writing a giant number. Examples follow in exercises.
+<br><br></p>
+<h3 class="blue">Exercise 4</h3><p>
+<i>Epocha </i>(the old Czech journal, No. 3, 1905): 
+
+<i> By only three 
+
+digits we can write the giant number: nine to the ninth to the ninth.
+
+Number digits in this number is between 369 690 000 and 369 790 000. 
+
+</i> 
+
+<br>How many digits has 9 ** (9 ** 9)?
+
+
+<br><br></p>
+
+
+<h3 class="blue">Exercise 5</h3><p>
+Number of black and white photos 10 x 15 cm, created
+
+by black and white dots 0.1 x 0.1 mm 
+
+ is  2<SUP>1500000</SUP>. Well, but what things will in 
+
+the photographs?  
+
+
+<br><br>
+
+<br></p><h2>Solutions of the excercises</h2>
+
+<h3>Exercise 1</h3><p>
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* STOP-WATCH program */</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Enter = Start"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">pull</span> Enter
+<span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Go! ..."</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Enter = Stop"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">pull</span> Enter
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Time:"</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span> <span style="color:#0000e6; ">"sec"</span>
+</pre>
+
+</div>
+<br></p>
+<h3>Exercise 2</h3><p>
+
+Function R2D (Roman to Decimal) can solve this enigma. For 
+
+ <code>MDCCCIX</code> (or <code>mDccCIx</code>) returns 1809 and for <code>MDCCCXLIX</code>
+
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* R2D - Roman to Decimal - internal function */</span>
+R2D: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">upper</span> <span style="color:#800000; font-weight:bold; ">arg</span> Roman <span style="color:#808030; ">.</span>
+RtoD<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>V <span style="color:#808030; ">=</span> <span style="color:#008c00; ">5</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>X <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">50</span>
+RtoD<span style="color:#808030; ">.</span>C <span style="color:#808030; ">=</span> <span style="color:#008c00; ">100</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>D <span style="color:#808030; ">=</span> <span style="color:#008c00; ">500</span><span style="color:#808030; ">;</span> RtoD<span style="color:#808030; ">.</span>M <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1000</span>
+Decimal <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> Rdigit <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+Ddigit <span style="color:#808030; ">=</span> RtoD<span style="color:#808030; ">.</span>Rdigit
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">)</span>
+  Rdigit <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">SUBSTR</span><span style="color:#808030; ">(</span>Roman<span style="color:#808030; ">,</span> J<span style="color:#808030; ">,</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Next <span style="color:#808030; ">=</span> RtoD<span style="color:#808030; ">.</span>Rdigit
+  <span style="color:#800000; font-weight:bold; ">if</span> Next &gt; Ddigit <span style="color:#800000; font-weight:bold; ">then</span> Decimal <span style="color:#808030; ">=</span> Decimal <span style="color:#808030; ">-</span> Ddigit
+    <span style="color:#800000; font-weight:bold; ">else</span> Decimal <span style="color:#808030; ">=</span> Decimal <span style="color:#808030; ">+</span> Ddigit
+  Ddigit <span style="color:#808030; ">=</span> Next
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Decimal <span style="color:#808030; ">+</span> Ddigit
+</pre>
+
+</div>
+<br></p>
+<h3>Exercise 3</h3><p>
+From 2 * D + 1 <= 999 follows D <= 499. I.e. the minimal value of D is 1 and maximal is 499.
+<br><br></p>
+<h3>Exercise 4</h3><p>
+
+ 
+<code>say 9 ** (9 ** 9) </code> displays 
+<code>4.28124773 ... E+369693099
+
+</code> (i.e. 369693100 digits). But a predecessor of this instruction can't be the  
+
+<code>numeric digits D</code> instruction, where D &lt; 9.
+<br><br></p>
+<h3>Exercise 5</h3><p>
+
+Eduard Fuchs answers in his textbook <i>Set Theory</i> (UJEP Brno
+
+ 1974, in Czech): "There will portraits of all dead people and people who will born in 
+
+the future, their
+
+ photos during different stages of their life; all scientific works and 
+
+all art productions
+
+ and their
+
+ translations into all languages; logarithmic table and photos 
+
+which will be sent from space probes, scores of symphonies don't exist yet 
+
+ and long ago destroyed buildings, etc. The major part will a bare unknown
+
+noise."
+<br><br><br></p>
+
+
+<h2>Notes and Acknowledgments.</h2><p>
+For translation this article I used my emails in  Archive of REXXLIST
+
+(<i>Surprise for REXXperts</i> 98/01/16, <i>Exponential notation</i> 98/10/05,
+
+<i>How many digits has 9**(9**9)</i> 98/10/20 and 98/10/23) and 
+<br>
+
+<br>M. F. Cowlishaw: <i>The REXX Language - A Practical Approach to Programming</i> Prentice-Hall, inc., 
+Engelwood Cliffs, New Jersey 1985 
+
+<br>
+<br><i>REXX/400 Reference</i> SC24-5664-00, IBM Corp. 1994
+<br>
+<br>Helps from <i>Personal REXX for Windows(tm) Version 3.50, Quercus Systems</i>
+<br>
+<br>I would like to express deep appreciation to Gerard Schildberger. 
+He was especially helpful in pointing out misprints and errors.
+<br></p>
+<br><br>
+<h2 id="appendix">Exponential notation, with Ian Collier's reply</h2>
+<p>
+This is my article <i>Exponential notation</i> (98/11/05) in 
+ Archive of REXXLIST.
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* Note: This e-mail is a program too. So, you can try it.</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;Hi Rexx community,</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;As we can read in manuals of the Rexx language (for example in</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;AS/400 REXX/400 Reference; SC41-5729-00; chapter 6; 6.2.7 Exponential notation):</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;"If the number of places needed before the decimal point exceeds</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;DIGITS, or the number of places after the point exceeds twice DIGITS,</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;exponential form will be used."</span>
+<span style="color:#696969; ">&nbsp;&nbsp;&nbsp;It is not exactly true as shown in a following example:</span>
+<span style="color:#696969; ">*/</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">4</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"12345 + 0 -&gt;"</span> <span style="color:#008c00; ">12345</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.123456789 + 0 -&gt;"</span> <span style="color:#008000; ">0.123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.00000123 + 0 -&gt;"</span> <span style="color:#008000; ">0.00000123</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.000001234 + 0 -&gt;"</span> <span style="color:#008000; ">0.000001234</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.0000123456789 + 0 -&gt;"</span> <span style="color:#008000; ">0.0000123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.0000012345678 + 0 -&gt;"</span> <span style="color:#008000; ">0.0000012345678</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"0.00001234567890123456789 + 0 -&gt;"</span><span style="color:#808030; ">,</span>
+<span style="color:#008000; ">0.00001234567890123456789</span> <span style="color:#808030; ">+</span> <span style="color:#008c00; ">0</span>
+ 
+<span style="color:#696969; ">/* Results are:</span>
+<span style="color:#696969; ">&nbsp;</span>
+<span style="color:#696969; ">12345 + 0 -&gt; 1.235E+4</span>
+<span style="color:#696969; ">0.123456789 + 0 -&gt; 0.1235</span>
+<span style="color:#696969; ">0.00000123 + 0 -&gt; 0.00000123</span>
+<span style="color:#696969; ">0.000001234 + 0 -&gt; 1.234E-6</span>
+<span style="color:#696969; ">0.0000123456789 + 0 -&gt; 0.00001235</span>
+<span style="color:#696969; ">0.0000012345678 + 0 -&gt; 1.235E-6</span>
+<span style="color:#696969; ">0.00001234567890123456789 + 0 -&gt; 0.00001235</span>
+<span style="color:#696969; ">Therefore I advice you to think of this theorem:</span>
+<span style="color:#696969; ">"If the number of places needed before the decimal </span>
+<span style="color:#696969; ">point exceeds DIGITS, or the number leading zeros </span>
+<span style="color:#696969; ">after the point exceeds DIGITS and number of places</span>
+<span style="color:#696969; ">after the point exceeds twice DIGITS, exponential </span>
+<span style="color:#696969; ">form will be used."</span>
+<span style="color:#696969; ">Do you agree?</span>
+<span style="color:#696969; ">*/</span>
+</pre>
+
+</div>
+<hr>
+<br><br>
+<br></p><h2>Ian Collier´s reply</h2><p>
+the subject <i>Re: Exponential notation</i>
+
+(98/10/07) in 
+Archive of REXXLIST
+<br>
+
+<br>In article <i>Exponential notation</i> 
+
+Vladimir Zabrodsky would have us change the rules for exponential notation
+
+from:
+
+
+
+
+
+<br><cite>
+
+  "If the number of places needed before the decimal point exceeds DIGITS,
+
+   or the number of places after the point exceeds twice DIGITS, exponential
+
+   form will be used."</cite>
+
+<br>
+
+<br>to:
+
+<br>
+<br>  <cite>"If the number of places needed before the decimal point exceeds
+
+  DIGITS, or the number leading zeros after the point exceeds DIGITS
+
+   and number of places after the point exceeds twice DIGITS,
+
+   exponential form will be used."
+
+</cite>
+<br><br>
+
+There is no difference between these two statements. When you say:
+
+<br>
+
+
+
+<br><code class="wrap">0.00001234567890123456789 + 0</code>
+
+<br>
+
+<br>the first thing Rexx will do is chop off all those unnecessary digits,
+
+leaving you with <code>0.00001235</code> (since <code>numeric digits</code> is
+ <code>4</code>).  The second thing
+
+it will do is use the above rule to determine whether to write the result
+
+in exponential notation.  There are only eight digits after the decimal
+
+point, so exponential notation is not used.
+<br>
+
+<br>Once the number has been rounded there can be at most DIGITS non-zero
+
+digits after the decimal point, so the first statement above implies
+
+the second.  That is, if the number of places after the point exceeds
+
+twice DIGITS then at least DIGITS+1 of them must be zeros.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

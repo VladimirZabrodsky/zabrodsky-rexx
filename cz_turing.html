@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="cs">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
+		<meta charset="utf-8" /><TITLE>Vladimir Zabrodsky: Turingův stroj v Rexxu</TITLE>
+		<META name="DESCRIPTION" content="Jednoduchá implementace Turingova stroje v Rexxu." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="cz_index.html">REXX</a>
+    <a href="cz_introrexx.html">Úvod</a>
+    <a href="cz_arithmetic.html">Aritmetika</a>
+    <a href="cz_turing.html" class="active">Turingův stroj</a>
+    <a href="cz_as400.html">AS400</a>
+    <a href="cz_3alg.html">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="turing.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- text of page -->
+<h1>TURINGŮV
+STROJ</h1><hr><br>
+<p>Program <code>AlanMath</code> (zkratka z Alan Mathison Turing) interpretuje popisy Turingova stroje.
+ Např. Turingův stroj akceptující množinu všech řetězců
+<code>COPIES("a", N) || COPIES("b", N), for N &gt;= 0,</code>
+může být popsán takto:
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Begin End # 1
+Begin # # End R
+Begin a A 2 R
+2 B B 2 R
+2 a a 2 R
+2 b B 3 L
+3 B B 3 L
+3 A A 5 R
+3 a a 4 L
+4 a a 4 L
+4 A A Begin R
+5 B B 5 R
+5 # # End R
+</code>
+</pre>
+</div>
+
+První řádek popisu obsahuje:
+<br><code>
+Start Stop Delta Hlava [případná poznámka]
+</code>
+<br><br>
+<br><code>Start</code>	 	- jméno výchozího stavu
+<br><code>Stop</code>	 	- jméno koncového stavu
+<br><code>Delta</code>	 	- znak, užívaný jako speciální prázdný symbol
+  (ne však mezera)
+<br><code>Hlava</code>	 	- číslo, počáteční pozice hlavy na pásce
+  <br><br>
+  
+  Následuje tabulka, vlastně program, jejíž každý řádek popisuje jeden krok činnosti Turingova stroje. 
+  Řádek má obecně tvar:
+  <br><br>
+  <font color="darkblue"><code>Stav Symbol NovýSymbol NovýStav Kam [případná poznámka]</code></font>
+  <br><br>
+ <code>Stav</code>	 	 - jméno momentálního stavu
+<br><code>Symbol</code>	 	- znak, který se právě nalézá pod hlavou
+<br><code>NovýSymbol</code>	 	- znak, který se zapíše na pásku
+ <br><code>NovýStav</code>	 	- jméno následujícího stavu, do něhož stroj přechází
+ <br><code>Kam</code>	 	- směr kam se hlava přesune:
+  "R" do prava, "L" do leva
+ <br><br> Existuje mnoho definic Turingova stroje. Ta právě uvedená odpovídá knize Zohara 
+ Manny <i>Matematická teorie programů</i>, SNTL, Praha, 1981. <code>AlanMath</code>
+  bude možná nutné trochu pozměnit, budete-li jej chtít využít jako studijní pomůcku 
+  při práci s jinou učebnicí. Když ASCII soubor <code>OBRAZEK1.TXT</code> obsahuje 
+  popis z Obrázku 1 pak program <code>AlanMath</code> na Obrázku 2 s hodnotou argumentu 
+  <code>OBRAZEK1.TXT</code> zobrazí průběh výpočtu a napíše <code>"Akceptováno"</code>
+   pro vstupní řetězec <code>"aaabbb"</code>; napíše <code>"Zamítnuto"</code> pro 
+   vstupní řetězec <code>"aaabb"</code>.
+<div class="scrolling-wrapper-flexbox">
+  <pre>
+  <code>
+/* AlanMath */
+TM = ARG(1)
+parse value LINEIN(TM) with Start Stop Delta Hlava .
+T. = ""
+/* 5-tice jsou Stav Symbol NovySymbol NovyStav Kam */
+do while LINES(TM) > 0
+  parse value LINEIN(TM) with Stav Symbol T.Stav.Symbol
+end
+Paska. = Delta; Film = ""
+say "Zadej vstupní řetězec"; parse pull Vstup .
+do J = 1 to LENGTH(Vstup)
+  Paska.J = SUBSTR(Vstup, J, 1); Film = Film || Paska.J
+end
+say COPIES(" ", Hlava - 1) ||"_"; say Film "v" Stav
+Stav = Start; Symbol = Paska.Hlava
+do until Stav = Stop | T.Stav.Symbol = ""
+  parse var T.Stav.Symbol Paska.Hlava Stav Kam .
+  Film = OVERLAY(Paska.Hlava, Film, Hlava, 1)
+  if Kam = "L" then Hlava = Hlava - 1; else Hlava = Hlava + 1
+  if Hlava = 0 then leave
+  Symbol = Paska.Hlava
+  say COPIES(" ", Hlava - 1) || "_"; say Film "v" Stav
+end
+if Stav = Stop then say "Akceptováno"; else say "Zamítnuto"
+</code>
+</pre>
+</div>
+Následující příklad ukazuje průběh výpočtu v případě vstupního řetězce <code>"ab"</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Zadej vstupní řetězec
+ab
+ab in 5
+Ab in 2
+AB in 3
+AB in 5
+AB in 5
+AB# in End
+Akceptováno
+</code>
+</pre>
+</div>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

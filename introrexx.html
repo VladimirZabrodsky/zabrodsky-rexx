@@ -1,0 +1,542 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" />
+		<TITLE>AN INTRODUCTION TO THE REXX PROGRAMMING LANGUAGUE</TITLE>
+		<META name="DESCRIPTION" content="Rexx is an interesting high-level programming language. Original introduction concentrates only on features 
+		of the language which are not included, in whole, in the others programming languages. Precision of Calculation. Work with Words. The interpret instruction.
+		Associative arrays. Interpret. Multi exits." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="index.html">REXX</a>
+    <a href="introrexx.html" class="active">Introduction</a>
+    <a href="arithmetic.html">Arithmetics</a>
+    <a href="turing.html">Turing machine</a>
+    <a href="as400.html">AS400</a>
+    <a href="3alg.html">Modifind</a>
+	<a href="aat/index.html">Album of Algorithms</a>
+	<a href="links.html">Links</a>
+    <a href="cz_introrexx.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- text of page -->
+<h1>AN INTRODUCTION TO THE REXX PROGRAMMING LANGUAGUE</h1>
+<p>
+Rexx is used as a command language for operating, dialog, database management, 
+network systems, as a scripting language for automating and integrating applications in
+ these systems and as a macro language for arbitrary application programs. In this 
+ article I would like to show that Rexx is an interesting high-level programming 
+ language, too. This is an original introduction. I will concentrate only on features 
+ of the language Rexx which are not included, in whole, in the others programming 
+ languages.
+
+<br><br>
+</p><h2>Instead the chapter "Types, Constants and Variables"</h2><p>
+
+Declarations or types are missing in Rexx programs because:
+<ul>
+<li>All data are in the form of strings of characters.</li>
+<li>The meaning of a constant depends entirely on its usage. Operations are applicable on the basis of instantaneous values.</li>
+<li>A variable is a symbol that represents a value. Variables are considered to be 
+varying-length character strings allowed to hold any binary value of any length between 
+zero and an implementation maximum (the length of the evaluated result of an expression 
+is limited by the available storage). Variables are automatically initialized at their 
+first use. A variable which has not been assigned a value is not initialized. It will 
+contain the default value of the symbol, which is the symbol's own name in uppercase 
+letters.</li>
+<li>If the characters in a string form is a valid number, optionally with leading or 
+trailing blanks, that string may participate in arithmetic operations. Numbers may be 
+specified in exponential notation if desired.</li>
+<li>The <code>numeric digits</code> instruction may be used to select the arbitrary precision of calculations,
+ which, for example, may calculate with 1000 or more significant digits.</li>
+ </ul>
+<br>
+</p><h2>Precision of Calculation</h2><p>
+
+<p>How many digits are in N-factorial? And the first thirteen are? For N equals 16 we 
+compute 16-factorial, then we add of number of digits and finally we read the first 13 
+digits from the left. And for N equals 1000? The program <code>UHLER</code> displays 
+answer on a screen by the <code>say</code> instruction.
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* UHLER */</span>
+Factorial <span style="color:#808030; ">=</span> NFACT<span style="color:#808030; ">(</span><span style="color:#008c00; ">1000</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Number of digits ="</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>Factorial<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"The first thirteen ="</span> <span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Factorial<span style="color:#808030; ">,</span> <span style="color:#008c00; ">13</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+The blank character followed the constant <code>"Number of digits ="</code> is the blank 
+operator that concatenates two data strings together with a blank between them. The 
+program is so short because I used the built-in functions (a rich set of functions 
+supplied with the language) <code>LEFT</code> and <code>LENGTH</code>. But the function 
+<code>NFAKT</code> is not the built-in function. If anyone didn't write it, we had to 
+write this function ourself:
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* NFACT - computing of factorials */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3000</span>
+Nfactorial <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+  Nfactorial <span style="color:#808030; ">=</span> Nfactorial <span style="color:#808030; ">*</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Nfactorial
+</pre>
+</div>
+
+The <code>ARG(<i>number</i>)</code> built-in function returns the value of a specific argument. If the text 
+of the <code>NFACT</code> function is saved on disk, then this file is an external function. When we 
+add to the text of the <code>UHLER</code> program following rows:
+
+
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">exit</span>
+NFAKT: <span style="color:#800000; font-weight:bold; ">procedure</span>
+</pre>
+
+
+and the text of the <code>NFACT</code function, then <code>NFACT</code is an internal 
+function. The <code>exit</code> 
+instruction terminates immediately the <code>UHLER</code> program. The 
+<code>procedure</code> 
+instruction, without the keyword <code>expose</code>, prevents the subroutine from 
+knowing anything about the caller's variables and vice versa. The <code>UHLER</code> 
+program displays on a screen:
+
+
+<pre style="color:#000000;">Number of <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2568</span>
+The first thirteen <span style="color:#808030; ">=</span> <span style="color:#008c00; ">4023872600770</span>
+</pre>
+
+In the solution of the fourth exercise in the chapter 1.2.5 of <i>The Art of Computer 
+Programming</i>, Vol. 1, Donald E. Knuth notes that Horace S. Uhler was the first who 
+examined the exact value of 1000!. His result was published in the journal <i>Scripta 
+Mathematica</i> 21 (1955), pp. 266-267, it begins: 402 38 726 00 770 ...
+<br><br></p>
+<h3 class="blue">Exercise 1</h3><p>
+
+The <code>**</code> (power) operator raises a number to a whole power, which may be positive
+or negative. How many digits has nine to the ninth to the ninth, i.e. <code>9 ** (9 ** 9)</code>?
+
+ <br><br></p><h2>Work with Words</h2><p>
+
+ When a Rexx program deals with words, it always means a list of blank-delimited tokens 
+ in a string. A work with words is facilitated by built-in functions and by the  <code>parse</code> 
+ instruction. For example, the <code>WORDS(<i>string</i>)</code> function returns the 
+ number words in <i>string</i>.
+  I would like to demonstrate the <code>WORDS</code> function by the modified 
+  G. G. Berry's paradox: 
+  The phrases of a language that refer to numbers can be ordered, alphabetically and 
+  according to length. There will be a definite set of integers named by those phrases of 
+  less than any given length. In particular there will be some integer which is the least 
+  integer not namable in fewer than eleven words. The phrase "the least integer not 
+  namable in fewer than eleven words" is the definition of a natural number. If in the 
+  variable <code>Sentence</code> is stored this definition:
+
+ <code>Sentence = "the least integer not namable in fewer than eleven words"</code>
+
+then the <code>WORDS(Sentence)</code> function returns the number of words in 
+<code>Sentence</code>. Check it with the <code>say WORDS(Sentence)</code> instruction. 
+I think, that the result compels everybody to re-count carefully number of words in 
+<code>Sentence</code>!
+But what if a delimiter is a different character from blank (also called a space
+ character)? Suppose, that any character is stored in the <code>Delimiter</code> 
+ variable. This character is the delimiter of words. Then following fragment of a 
+ program writes all words of the <code>Sentence</code> variable in this common case:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">Db <span style="color:#808030; ">=</span> Delimiter <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">" "</span><span style="color:#808030; ">;</span> Bd <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">REVERSE</span><span style="color:#808030; ">(</span>Db<span style="color:#808030; ">)</span>
+Sentence <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span>Sentence<span style="color:#808030; ">,</span> Db<span style="color:#808030; ">,</span> Bd<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">WORDS</span><span style="color:#808030; ">(</span>Sentence<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">WORD</span><span style="color:#808030; ">(</span>Sentence<span style="color:#808030; ">,</span> J<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Db<span style="color:#808030; ">,</span> Bd<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+We use the <code>||</code> operator to force concatenation without a blank. The 
+<code>WORD(<i>string</i>, <i>number</i>)</code> function returns a specific blank-delimited word from a string.
+The <code>REVERSE(<i>string</i>)</code> function returns the input string with the characters reversed 
+end-for-end. Can you remember <i>A Tale Of The Ragged Mountains</i> by E.A.Poe? 
+... for Bedloe, without the e, what is it but Oldeb conversed!
+The following program <code>BEDLO</code> displays <code>OLDEB</code> on a 
+screen.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* BEDLO */</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">REVERSE</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Bedloe<span style="color:#808030; ">,</span> <span style="color:#008c00; ">5</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+The  function <code>TRANSLATE(<i>string</i>, <i>cipher_alphabet</i>, <i>plain_alphabet</i>)</code>
+ replaces every 
+occurence of a character from the <i>plain_alphabet</i> in the <i>string</i> by the 
+corresponding 
+character from the <i>cipher_alphabet</i> (i. e. simple substitution cipher). When in the 
+<code>Parchment</code> variable will stored the cryptogram of Captain Kidd starting with
+ a string 
+<code>53++!305))6*;</code> then the following instruction:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span>Parchment<span style="color:#808030; ">,</span> <span style="color:#808030; ">,</span><span style="color:#696969; ">/* to be continued */</span>
+     <span style="color:#0000e6; ">"adeghinortlsbpvwmuycf"</span><span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"5!8346*+(;0)2.']9?:-1"</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+bring us the solution of this enigma (Edgar Allan Poe - <i>The Gold-Bug</i>) starting 
+with <i>agoodglassint</i>.
+
+<br><br></p><h2>The interpret instruction</h2><p>
+
+The <code>interpret <i>expression</i></code> instruction executes one or more 
+instructions that are generated as the value of an expression. A useful instrument 
+for learning and teaching of the language Rexx is a simple variation on the program 
+REXXTRY from a manual:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* USHER */</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">forever</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">'Enter Rexx instructions:'</span>
+  <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> String_of_Instructions
+  <span style="color:#800000; font-weight:bold; ">call</span> INTERPRETATION String_of_Instructions
+<span style="color:#800000; font-weight:bold; ">end</span>
+ 
+<span style="color:#696969; ">/* INTERPRETATION subroutine */</span>
+INTERPRETATION: <span style="color:#800000; font-weight:bold; ">procedure</span>
+  <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+
+The <code>parse pull String_of_Instructions</code> instruction stores a line of input 
+read from the 
+standard input stream (assume the keyboard) to the <code>String_of_Instructions</code> 
+variable and 
+the interpret instruction this fragment executes. We can write:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">if</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Head"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Tail"</span>
+</pre>
+</div>
+
+The following fragment hepls us understand evaluating expressions and built-in 
+functions:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> Exp <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"?"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> Exp<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#0000e6; ">"say"</span> Exp<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+The example of a possible conversation follows:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">?
+<span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> <span style="color:#008c00; ">12</span><span style="color:#808030; ">)</span>
+<span style="color:#008c00; ">25</span>
+?
+<span style="color:#0000e6; ">"["</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#800000; font-weight:bold; ">SPACE</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">" Edgar  Allan     Poe "</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"]"</span>
+<span style="color:#808030; ">[</span>Edgar Allan Poe<span style="color:#808030; ">]</span>
+</pre>
+</div>
+
+
+Note, that variables, as the <code>Exp</code> variable, can come and go (using the 
+<code>drop
+ Exp</code> instruction) dynamically. Names of variables can be generated at run time, 
+ using all power of expression evaluation of the language. The procedure instruction, 
+ in the <code>INTERPRETATION</code> subroutine, creates a local environment and a name 
+ of a variable is created and existed only during an execution of the subroutine. 
+ The scope of variables is controlled by the <code>procedure</code> instruction. If a 
+ routine is declared with the <code>procedure</code> instruction, only those variables 
+ exposed using the <code>expose</code> instruction are available to the routine.
+  The first instruction of the <code>INTERPRETATION</code> subroutine
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">INTERPRETATION: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> Global
+</pre>
+</div>
+allows to see a value of the Global variable in a next subroutine call.
+
+
+Try imagine an action of an interpreter, when a string:
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* A Descent Into The Maelström */</span> <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+is stored (from a keyboard) into the <code>String_of_Instructions</code> variable.
+ 
+<br><br><h3 class="blue">Exercise 2</h3><p>
+How can be ended the infinite loop in <code>USHER</code>?
+</p>
+<br><h3 class="blue">Exercise 3</h3><p>
+F. M. Whyte's system of classification is used to describe the wheel arrangement of 
+conventional steam locomotives. In this system, the first number is the number of 
+leading wheels, and the last is the number of trailing wheels. The middle number (or 
+numbers) gives the number and arrangement of drivers. For instance the wheel arrangement 
+of the Santa Fe steam locomotive class 3700, built 1917, can be described as 4-8-2 (look 
+at the figure).
+<br>
+<img src="images/loco.gif" width=300 height=127 border=0 align=center alt="A number of wheels" 
+style="max-width:100%;height:auto;">
+<br>
+Please, write only one instruction to determine a number of wheels from the description 
+of the wheel arrangement stored in the <code>Arrangement</code> variable and to display 
+of a result on the screen.
+<br><br>
+</p><h2>Function SOURCELINE</h2><p>
+
+Ken Thompson in his paper <i>Reflection on Trusting Trust</i>, CACM, August 1984, Vol. 
+27, No 8, pp. 761-763 writes: <i>In college, before video games, we would amuse ourselves 
+by posing programming exercises. One of the favorites was to write the shortest 
+self-reproducing program... More precisely stated, the problem is to write a source 
+program that, when ... executed, will produce as output an exact copy of its source.</i> 
+The solution in Rexx follows:
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/**/</span><span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+The <code>SOURCELINE(<i>number</i>)</code> function returns the specified line of the 
+program's source code. The <code>SOURCELINE()</code> function returns number of lines in 
+the program. Assume that we need display on a screen the message:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#808030; ">+</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">+</span>
+<span style="color:#808030; ">|</span> Important message <span style="color:#808030; ">|</span>
+<span style="color:#808030; ">+</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">+</span>
+</pre>
+</div>
+We can write a program including three instructions say. An advantage of the most 
+complicated program <code>ATTENTION</code> we will appreciate after many changes of the 
+message.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* ATTENTION</span>
+<span style="color:#696969; ">+-------------------+</span>
+<span style="color:#696969; ">| Important message |</span>
+<span style="color:#696969; ">+-------------------+</span>
+<span style="color:#696969; ">*/</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">while</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span>J<span style="color:#808030; ">)</span> &lt;&gt; <span style="color:#0000e6; ">"*/"</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span>J<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+Rows of a program can be data as well.
+
+<br><br>
+</p><h2>Multiple Exits and sparse array</h2><p>
+
+
+G. V. Bochmann argued a usefulness of this kind of control flow on the example: 
+Given a vector V of n integers, and an integer I; if I is one of the integers in V, 
+print its order in V; otherwise print "non in V" (G.V. Bochmann: <i>Multiple Exits from a 
+Loop Without the GOTO</i>, CACM, July 1973, Vol. 16, No 7, pp. 443-444).
+Forteen years later F. Rubin submitted a letter-to-CACM form titled: 
+<i>'GOTO Considered Harmful' Considered Harmful</i> (CACM, March 1987, Vol. 30, No 3, 
+pp. 195-196) and reopened the discussion by showing a clearcut instance where 
+GOTOs significantly reduce program complexity. His example: 
+<i>"Let X be an N x N matrix of integers. Write a program that will print the number
+ of the first all-zero row of X, if any."</i>
+May be in the year 2001 (1987 + 14) I will read a paper dealing with advantages of a 
+miserable traveling with GOTO that will include the following example: <i>"Let X be an N
+ x N x N threedimensional array of integers. Find the number of the first all-zero matrix 
+ of X, if any."</i> The following <code>ODYSSEY</code> program shows the solution now.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* ODYSSEY */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">100</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+X<span style="color:#808030; ">.</span><span style="color:#008000; ">1.1</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">2.94</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">15</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">3.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">8</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+X<span style="color:#808030; ">.</span><span style="color:#008000; ">4.5</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">5.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">30</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">6.86</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">3</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> M
+  <span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+    <span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+      <span style="color:#800000; font-weight:bold; ">if</span> X<span style="color:#808030; ">.</span>I<span style="color:#808030; ">.</span>J<span style="color:#808030; ">.</span>K &lt;&gt; <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">iterate</span> I
+    <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">leave</span> I
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">if</span> I&lt;<span style="color:#808030; ">=</span>M <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"The first all-zero matrix in X is"</span> I
+  <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Non all-zero matrix is in X"</span>
+</pre>
+</div>
+
+The <code>iterate I</code> instruction causes control to pass to the top of an iterative 
+do-group
+ with the <code>I</code> control variable. The <code>I</code> control variable will be 
+ incremented appropriately 
+ and the terminating conditions will be tested as if the end instruction closing the 
+ do-group had been encountered. The <code>leave I</code> instruction causes control to 
+ pass to the 
+ instruction following the end of an iterative do-group with the <code>I</code> control 
+ variable. 
+ These structures and their variants conform to programs for which transfers of 
+ control 
+ can only be made to the end or beginning of an enclosing control loop (see the 
+ following 
+ figure).
+<br>
+<img src="images/dre.gif" width=380 height=190 border=0 align=center alt="Loop with iterate and leave" 
+style="max-width:100%;height:auto;">
+<br>
+<br><br></p><h2>Associative arrays</h2><p>
+
+Rexx has one easy-to-use facility for building higher-level data structures such as 
+arrays - the compound variable. A name of compound variable has two parts: a stem and a 
+tail. A stem is like any other variable name except that it ends in a period. A tail is a 
+string of one or more symbols. When the tail is made up of more than one symbol, each 
+symbol is separated from the next by a period. When Rexx retrieves the value of a 
+compound variable it first generates a derived variable name. The name is derived by 
+replacing any simple variables in the tail name by their values. The value of the 
+compound variable is then the value associated with the derived name. You can set all 
+possible compound variables derived from a given stem by assigning a value to the stem, 
+for example
+
+<code>X. = 0</code>
+
+After setting a stem variable this way, a reference to any compound variable with that 
+stem to which you do not assign another value will return the value zero. Note, that 
+<code>X</code> 
+array in the <code>ODYSSEY</code> program is a sparse array, only six elements allocate
+ memory.
+Given a document and a natural number K, display on a screen all words occur at least 
+K-times in the document. The following internal subroutine provides the answer:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* K_TIMES subroutine */</span>
+K_TIMES: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> Document K
+Times<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">WORDS</span><span style="color:#808030; ">(</span>Document<span style="color:#808030; ">)</span>
+  Oneword <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">WORD</span><span style="color:#808030; ">(</span>Document<span style="color:#808030; ">,</span> J<span style="color:#808030; ">)</span>
+  Times<span style="color:#808030; ">.</span>Oneword <span style="color:#808030; ">=</span> Times<span style="color:#808030; ">.</span>Oneword <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> Times<span style="color:#808030; ">.</span>Oneword <span style="color:#808030; ">=</span> K <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> Oneword
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+
+The <code>Times</code> array using a non-numeric subscript. Note, that it does not have to declare the
+ size of the <code>Times</code> array.
+<br><br>
+</p><h2>Why learn Rexx?</h2><p>
+
+It is a portable language across platforms.
+<br>Instructions do-(iterate, leave)-end, numeric, interpret, parse, built-in functions, 
+compound variables, recursion, allow complex algorithms to be expressed in simple 
+programs. Simple programs make useful prototypes.
+<br>I use Rexx as an environment for design and testing algorithms as in my article 
+<a href="modifind.html">MODIFIND</a>.
+<br>Compound variables can represent many data structures quite naturally (one and 
+multidimensional arrays using a numeric or non-numeric subscript, structures, stacks and
+queues, lists, symbol tables, graphs).
+<br>It is suitable for learning and teaching programming, compiler construction 
+(look at my implementation of the <a href="turing.html">Universal Turing Machine</a>) 
+etc. <a href="aat/index.html">Album of Algorithms and Techniques</a> proves that the 
+Rexx language is the suitable vehicle to writing useful, educational, and entertaining
+routines, translating from excellent texts, in clean, succint, and uniform code.
+
+All magics of the language REXX are results of a consistent application of only a few, 
+ingeniously chosen general features. Can you remember of <i>The Fall Of The House
+ Of Usher</i>?: "I have just spoken of that morbid condition of the auditory nerve which
+  rendered all music intolerable to the sufferer, with the exception of certain effects 
+  of stringed instruments. It was, perhaps, the narrow limits to which he thus confined
+  himself upon the guitar, which gave birth, in great measure, to the fantastic 
+  character of his performances."
+
+
+<br><br>
+</p><h3 class="blue">Solutions of the excercises</h3><p>
+
+<b>1.</b> The following HOWMANY program
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* HOWMANY */</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#008c00; ">9</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">9</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> <span style="color:#008c00; ">9</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+displays on a screen 4.28124773E+369693099, so 9**(9**9) has 369 693 100 digits.
+<br>
+<br><b>2.</b>. Syntax error, user interrupting, interpretation of the exit instruction.
+<br>
+<br><b>3.</b> If in the <code>Arrangement</code> variable is stored "4-8-2" then the following 
+instructrion displays the number of wheels, i.e. 14:
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#0000e6; ">"say -(-"</span> Arrangement <span style="color:#0000e6; ">")"</span>
+</pre>
+</div>
+
+</p><h2>Notes</h2><p>
+
+
+The first version of my "An Introduction ..." was published in the Czech journal 
+<i>Softwarove noviny</i>, Vol. 6, No. 12 (1995), 114-118. I used for translation my 
+emails in Archive of REXXLIST: REXX & E. A. Poe 98/10/09, Complements to 
+Words, words, words 98/10/26 and the English texts:
+<br><br>
+M. F. Cowlishaw: <i>The REXX Language - A Practical Approach to Programming</i>
+
+<br>Prentice-Hall, inc., Engelwood Cliffs, New Jersey 1985
+<br><br>
+J. Bentley: <i>Associative Arrays</i>
+<br>CACM, Vol. 28, No. 6 (June 1985), 570-576
+<br><br>
+F. Clarke: <i>Words, words, words...</i>
+<br>The RexxLA Newsletter, October 1998, Issue 199810
+<br><br>
+Helps from Personal REXX for Windows(TM)
+<br>Version 3.50, Quercus System
+<br><br>
+H. F. Ledgard, M. Marcotty: <i>A Genealogy of Control Structures</i>
+CACM, Vol. 18, No. 11 (November 1975), 629-639
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+<br></p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code class="green">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<!--Created Vladimir Zabrodsky 1998-2021 -->
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" /><TITLE>Voyage from Rexx to AS/400</TITLE>
+		<META name="description" content="From the Rexx language to AS/400 - An introductory tour for all who begin to work with AS/400 and like Rexx.
+		How write and run Rexx program. Standard Input and Output. External Data Queue. SQL statements" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="index.html">REXX</a>
+    <a href="introrexx.html">Introduction</a>
+    <a href="arithmetic.html">Arithmetics</a>
+    <a href="turing.html">Turing machine</a>
+    <a href="as400.html" class="active">AS400</a>
+    <a href="3alg.html">Modifind</a>
+	<a href="aat/index.html">Album of Algorithms</a>
+	<a href="links.html">Links</a>
+    <a href="cz_as400.html">Czech</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>VOYAGE FROM REXX TO AS/400</h1><hr><br>
+<p>
+This is Voyage from the Rexx language to AS/400 - An introductory tour
+
+for all who begin to work with AS/400 and like Rexx.
+
+Can you use AS/400 and
+
+ at the same time read my article? Don't hesitate 
+
+to try yourself possibilities of the Rexx language in this 
+
+environment. Overcome with me 
+
+<cite>Thousand Manuals Mountains</cite> (with highest mountain 
+
+<cite>Mt. CL</cite> - altitude 2000 commmands!)
+
+ and <cite>Restrictions River</cite>. 
+
+<br>
+<br>Chapter 1: <a HREF="#as4001">[How write and run Rexx program]</a>
+<br>
+<br>Chapter 2: <a HREF="#as4002">[Standard Input and Output]</a>
+<br>
+<br>Chapter 3: <a HREF="#as4003">[External Data Queue]</a>
+<br>
+<br>Chapter 4: <a HREF="#as4004">[SQL statements]</a>
+<br></p>
+<br>
+<hr>
+<h2 id="as4001">How write and run Rexx program</h2><p>
+In this chapter I will demonstrate how write and run small, simple, maybe useful program. But first you 
+have to create the source database file for texts of programs.
+<br>
+<br>Have a look at the following program DSPLIBF written in the Rexx language for the AS/400 environment.
+ It directs the output from the DSPLIB command into the INFO file in the library MYLIB. The DSPLIB 
+ (Display Library) command displays the contents of one or more specified libraries and has syntax:
+ <br>
+ <br>DSPLIB LIB(<i>library</i>) OUTPUT({*|*PRINT})
+ <br>
+<br>The parameter OUTPUT specifies whether the output from the command is shown at the requesting work 
+station (*) or printed with the job's spooled output (*PRINT); * is the default.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* DSPLIBF */
+parse arg Library
+do while Library = ""
+  say "Please, write the name of library"
+  parse linein Library
+end
+'DSPLIB' Library 'OUTPUT(*PRINT)'
+'CHKOBJ MYLIB/INFO *FILE'
+if RC <> 0 then 'CRTPF MYLIB/INFO RCDLEN(132)'
+'CPYSPLF FILE(QPDSPLIB) TOFILE(MYLIB/INFO) SPLNBR(*LAST)'
+if RC = 0 then say 'OK'; else say 'Not OK'
+</code>
+</pre>
+</div>
+The DSPLIBF program shows how CL commands are issued from a Rexx program. Commands are expressions which are passed to the current command environment. In this article comands (and later SQL statements)
+ in programs are blue coloured. By default, Rexx submits commands to the CL command environment for processing. Words as DSPLIB and CHKOBJ are CL commands. The CHKOBJ (Check Object) command checks object 
+ existence; the CRTPF (Create Physical File) command creates a physical file or a table in SQL terminology with the length of rows 132 chars; the CPYSPLF (Copy Spooled File) command copies the specified 
+ spooled file, i.e. the last spooled file created by the DSPLIB command with the parameter OUTPUT(*PRINT) in the file INFO.
+<br>
+<br>How do you write and run the DSPLIBF program? If you do not have a source file for texts of programs and library, type the Create Library (CRTLIB) command on an AS/400 command line and press Enter 
+to create a library for your source file. For example:
+<br>
+<br>CRTLIB MYLIB
+<br>
+<br>
+Note: Ask the system administrator for a name of your library. In this article I will use the name MYLIB.
+<br>
+<br>Type the Create Source Physical File (CRTSRCPF) command to create a source file for Rexx programs
+<br>
+<br>CRTSRCPF FILE(MYLIB/QREXSRC)
+<br><br></p>
+
+<h3 class="red">Step 1</h3><p>
+Now you can create your first program. 
+The <code class="wrap">WRKMBRPDM FILE(MYLIB/QREXSRC)</code> command shows:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                       Work with Members Using PDM
+File  . . . . . .   QREXSRC   
+  Library . . . .     MYLIB               Position to  . . . .  
+Type options, press Enter.
+ 2=Edit         3=Copy  4=Delete 5=Display       6=Print 
+ 8=Display description  9=Save  13=Change text  14=Compile
+Opt  Member      Type       Text
+  (No members in file)
+</code>
+</pre>
+</div>
+Press F6, i.e. Create.
+<br><br></p><h3 class="red">Step 2</h3><p>
+The following entry display requests you to enter a name of a program (DSPLIBF) 
+and its source type (REXX). You can attach a comment (Output from DSPLIB into the INFO 
+file), too. Then use the Enter key to submit information.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                  Start Source Entry Utility (STRSEU)
+Type choices, press Enter.
+Source file  . . . . . . . . . . . > QREXSRC       Name, *PRV   
+  Library  . . . . . . . . . . . . >   MYLIB       Name, *LIBL, 
+Source member  . . . . . . . . . .   DSPLIBF       Name, *PRV,  
+Source type  . . . . . . . . . . .   REXX          Name, *SAME, 
+Text 'description' . . . . . . . .   Output from DSPLIB into the INFO
+</pre>
+</code>
+</div>
+</p><h3 class="red">Step 3</h3><p>
+Rewrite the text of the program DSPLIBF. Press the F3 key to end the editing.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+Columns . . . :    1   71            Edit
+SEU==>                                                           
+FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+..
+       *************** Beginning of data *********************** 
+'''''' /* DSPLIBF */
+'''''' 
+</code>
+</pre>
+</div>
+</p><h3 class="red">Step 4</h3><p>
+Press the Enter key to confirm the saving of the source text on the Exit display. On the
+ following Work with Members Using PDM display type a 16 in the option field, i.e. Run,
+ and press the F4 key.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                       Work with Members Using PDM
+ 
+File  . . . . . .   QREXSRC   
+  Library . . . .     MYLIB               Position to  . . . . 
+ Type options, press Enter.
+ 2=Edit         3=Copy  4=Delete 5=Display       6=Print
+ 8=Display description  9=Save  13=Change text  14=Compile
+Opt  Member      Type       Text
+16   DSPLIBF     REXX       Output from DSPLIB into the INFO   
+</code>
+</pre>
+</div>
+</p><h3 class="red">Step 5</h3><p>
+
+
+Type a name of a library to the parameters field. Press the Enter key for run of the 
+program. Of course, the DSPLIBF program you can run immediately, hence press in previous 
+step instead F4 the Enter key. The program will ask for a name of a library oneself.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                  Start REXX Procedure (STRREXPRC)
+Type choices, press Enter.
+Source member  . . . . . . . . . > DSPLIBF       Name
+Source file  . . . . . . . . . . > QREXSRC       Name
+  Library  . . . . . . . . . . . >   MYLIB       Name, *LIBL 
+Parameters . . . . . . . . . . .   MYLIB                    
+</code>
+</pre>
+</div>
+Note: you can start the DSPLIBF program when you enter the STRREXSRC (Start REXX Procedure)
+ command as well as:
+ <br>
+ <br>STRREXPRC SRCMBR(DSPLIBF) SRCFILE(MYLIB/QREXSRC) PARM(MYLIB)
+ <br>
+ <br>
+ The following display shows information about the run of the program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+ 
+Start of terminal session.
+OK
+Press ENTER to end terminal session.               
+</code>
+</pre>
+</div>
+The DSPPFM (Display Physical File Member) command shows the result on the 
+screen
+<br>
+<br>DSPPFM FILE(MYLIB/INFO)
+<br>
+<br>
+And there is a fragment of the screen:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                         Display Physical File Member
+File . . . . . . :   INFO                Library  . . . . :   MYLIB 
+Member . . . . . :   INFO                Record . . . . . :   1 
+Control  . . . . .                       Column . . . . . :   1 
+Find . . . . . . .                                            
+*...+....1....+....2....+....3....+....4....+....5....+....6....+..  
+ 5763SS1 V3R2M0  960517                   Display Library
+ Library . . . . . . . . . . . . . :   MYLIB
+ Type  . . . . . . . . . . . . . . :   PROD             
+</code>
+</pre>
+</div>
+<br></p>
+<br>
+<hr>
+<br>
+<h2 id="as4002">Standard Input and Output</h2><p>
+The <code>parse linein</code> instruction reads from the only STDIN file and the 
+<code>say</code> instruction 
+writes to the only STDOUT file. You can redirect these files before the Rexx program uses 
+ones - but <i>Only this and nothing more</i>. I show you the first possibility how we can
+overcome this restriction.
+<br>
+<br>
+Programs in the Rexx language are always interpret. Either in interactive mode (see 
+the example in previous chapter) or batch mode. A Rexx program has access to two 
+files for standard input and output operations. The standard input stream STDIN 
+is available for an input; the standard output stream STDOUT is available for an 
+output. A second output file, STDERR, is used by the interpreter to write error 
+messages and trace information. The <code>parse linein</code> instruction reads from the 
+STDIN 
+file and the <code>say</code> instruction writes to the STDOUT file.
+<br>
+<br>
+Default STDIN in the interactive mode is keyboard; defalut STDOUT in interactive mode is
+ a screen. In batch mode the default STDIN is the QINLINE file and the default STDOUT 
+ is the QPRINT spool file.
+<br>
+<br>You can redirect both STDIN and STDOUT, by using the CL override commands (name of 
+this commands begins OVR...), in order to work with other than the defaults. If you use
+ an override command for this purpose, the overridden file name must be specified as 
+ STDIN or STDOUT. Override commands must be issued before the Rexx program uses these 
+ files.
+ <br>
+ <br>Now I will demonstrate as the power features of Rexx and AS/400 can join for the 
+ simple solution of a complicated task.
+ <br>
+ <br>Our goal - a program, which for given document discovers how many times each word 
+ occur, where word means a sequence of characters that do not include any blanks.
+ A document is saved into the first member of the INFO physical file in the MYLIB library.
+  The following <code>HOWMANY</code> program provides the answer:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* HOWMANY */
+Count = 0
+'RTVMBRD FILE(MYLIB/INFO) MBR(*FIRST) NBRCURRCD(&COUNT)'
+'OVRDBF FILE(STDIN) TOFILE(MYLIB/INFO)'
+Number. = 0; Various = ""
+do Count
+  parse linein Record
+  do J = 1 to WORDS(Record)
+    Oneword = WORD(Record, J)
+    if Number.Oneword = 0 then Various = Various Oneword
+    Number.Oneword = Number.Oneword + 1
+  end
+end
+do J = 1 to WORDS(Various)
+  Oneword = WORD(Various, J)
+  say Number.Oneword Oneword
+end            
+</code>
+</pre>
+</div>
+The program shows use of Rexx's associative arrays and CL commands: the RTVMBRD 
+(Retrieve Member Description) command returns in the Count variable the number of 
+records of an input file. We say this variable pseudo-CL variable. The variable 
+name must be immediately preceded by an ampersand (&). The OVRDBF (Override 
+with Data Base File) command redirects STDIN to the INFO file in the MYLIB library. 
+In interactive mode you will see a result on the screen. When you want see the result
+ on a paper you must add as a first clause the
+<br>
+<br><code>'OVRPRTF FILE(STDOUT) TOFILE(QSYSPRT)'</code>
+<br>
+<br>command. Another solution is pass the program to batch processing by the 
+help of the SBMJOB (Submit Job) command:
+ on a paper you must add as a first clause the
+<br>
+<br>
+<br><code class="wrap">SBMJOB CMD(STRREXPRC SRCMBR(HOWMANY) SRCFILE(MYLIB/QREXSRC))</code>
+<br>
+<br>The <code>HOWMANY</code> program can be usefull in practice when the result will 
+sorted. How to do it most simple? Jon Bentley wrote in his <i>Programming Pearls</i>: 
+Work with the Environment and Use the Right Tool for the job. A most simple solution in 
+OS/400 is put the result's data into a file and running a query for this file. 
+Query/400 is an easy-to-use report generator that lets extract information from database 
+files. I show you creating and using query again step by step.
+<br></p>
+<h3 class="red">Step 1</h3><p>
+First create file OUTPUT by the help of the command written at the command line:
+<br>
+<br>CRTPF MYLIB/OUTPUT RCDLEN(80)
+<br>
+<br>
+Now create a query for the OUTPUT file. You can use the WRKQRY command and press Enter.
+ Fill out the form as the following picture shows and press Enter.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                               Work with Queries 
+Type choices, press Enter.
+  Option  . . . . . .    1              1=Create, 2=Change, 3=
+                                        5=Display, 6=Print def
+                                        8=Run in batch, 9=Run   
+  Query . . . . . . .    SAYWORD        Name, F4 for list     
+    Library . . . . .      MYLIB        Name, *LIBL, F4 for li          
+</code>
+</pre>
+</div>
+</p>
+<h3 class="red">Step 2</h3><p>
+Press the Enter key on the Define the Query display with default values 1 (i.e. Select) 
+in the option column in front of Specify file selections. On the following Specify File
+ Selection display type the name of a file (OUTPUT) and the name of a library (MYLIB). 
+ Press the Enter key to confirm.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                           Specify File Selections 
+Type choices, press Enter.  Press F9 to specify an additional   
+  file selection.
+  File . . . . . . . . .   OUTPUT         Name, F4 for      
+    Library  . . . . . .     MYLIB        Name, *LIBL, F4 for
+  Member . . . . . . . .   *FIRST         Name, *FIRST, F4 for   
+  Format . . . . . . . .   *FIRST         Name, *FIRST, F4 for        
+</code>
+</pre>
+</div>
+ You return to the Define the Query display. Type 1 in the option field in front of 
+ Select sort fields and press the Enter key. On the Select Sort Fields display, as shown
+  below, you select the sort fields that you want by entering a sort priority number in 
+  the Sort Prty column. You can also specify whether you want the sort field sorted in 
+  ascending order (from lowest to highest value) or descending order (from highest to 
+  lowest value) by typing an A (for ascending) or a D (for descending) in the A/D column.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                           Select Sort Fields 
+Type sort priority (0-999) and A (Ascending) or D (Descendin   
+  the names of up to 32 fields, press Enter.
+Sort
+Prty A/D Field         Text
+ 1    D  OUTPUT          
+</code>
+</pre>
+</div>
+Press the Enter key to confirm. You go back on the Define the Query display. Press the 
+F3 key. On the following Exit this Query display move your cursor to the Run option 
+field and type 3 (Do not run). Press the Enter key to save your query definition. And 
+press F3 at the end work with query.Press the Enter key to confirm. You go back on the 
+Define the Query display. Press the F3 key. On the following Exit this Query display 
+move your cursor to the Run option field and type 3 (Do not run). Press the Enter key to 
+save your query definition. And press F3 at the end work with query. 
+<br><br></p>
+ <h3 class="red">Step 3</h3><p>
+  Change the <code>HOWMANY</code> program so, that couple the number of occurence and word will 
+ saved as the record into the OUTPUT file. For easy sorting use the instruction:
+ <br>
+ <br><code class="wrap">say FORMAT(Number.Oneword, 5) Oneword</code>
+ <br>
+ <br>Add to the <code>HOWMANY</code> program the CLRPFM (Clear Physical File Member) 
+ command 
+ and the RUNQRY command to run the SAYWORD query.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* HOWMANY */
+'CLRPFM FILE(MYLIB/OUTPUT)'
+'OVRDBF FILE(STDOUT) TOFILE(MYLIB/OUTPUT)'
+Count = 0
+'RTVMBRD FILE(MYLIB/INFO) MBR(*FIRST) NBRCURRCD(&COUNT)'
+'OVRDBF FILE(STDIN) TOFILE(MYLIB/INFO)'
+Number. = 0; Various = ""
+do Count
+  parse linein Record
+  do J = 1 to WORDS(Record)
+    Oneword = WORD(Record, J)
+    if Number.Oneword = 0 then Various = Various Oneword
+    Number.Oneword = Number.Oneword + 1
+  end
+end
+do J = 1 to WORDS(Various)
+  Oneword = WORD(Various, J)
+  say FORMAT(Number.Oneword, 5) Oneword
+end
+'RUNQRY QRY(MYLIB/SAYWORD)'       
+</code>
+</pre>
+</div>
+ If you want to change anything about the output device - the output can be displayed, 
+ printed, or stored in another database file - you must first change the query and then 
+ run it. Do you see? The output of Rexx program was redirected to the file OUTPUT by the
+  'OVRDBF FILE(STDOUT) ...' command, but you can read results on the screen!
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+
+                                Display Report
+Query . . . :   MYLIB/SAYWORD                Report width . . . 
+Position to line  . . . . .              Shift to column  . . . 
+Line   ....+....1....+....2....+....3....+....4....+....5....+.        
+       OUTPUT
+000001    66 .
+000002    10 *
+000003     7 :
+000004     2 1   
+</code>
+</pre>
+</div>
+<hr>
+<br></p>
+<h2 id="as4003">External Data Queue</h2><p>
+I introduce to you in detail external data queue (I don't suppose your knowledge about this feature of the Rexx language) - as a device for interprogram communication, 
+as an input or output device, as useful data structure: stack or queue or deque 
+(double-ended queue) ...
+<br>
+<br>The external data queue is an AS/400 object that consists of a series of entries
+ similar to database records. When a job is started (in interactive mode after login -
+  SIGN ON), the queueing services are immediately made available to the job. These services remain available until the job ends (in interactive mode by the SIGNOFF command). Similarly, entries placed on the queue will remain on the queue and be available until explicitly removed or until the job is ended. After starting a job, any program that is part of the job can continue to use any of the queuing services until the job ends. Thus, one program can place an entry on the queue and end. Another following program can then receive 
+what was placed in the queue at a later time. This can serve as a device for
+inter-program communication.
+<br>
+<br>A helpful analogy is to think of the external data queue of a hose of a vacuum
+ cleaner (see on the next picture); you can placed ping-pong balls as entries at the
+front of the hose or at the end of the hose; but you can retrieved a ball only from
+ the front of the hose.
+<br><img src="images/hose.gif"   align=center border=0 width=550 height=300 alt="like a vacuum cleaner hose">
+
+<br>The <code>queue</code> instruction places an entry at the end of the queue.
+<br>
+<br><img src="images/queue.gif"  align=center border=0 width=488 height=100 alt="queue instruction">
+<br>
+<br>The <code>push</code> instruction places an entry at the front of the external data 
+queue.
+<br>
+<br><img src="images/push.gif"  alt="push instruction" border=0 width=488 height=100>
+<br>
+<br>The <code>parse pull</code> instruction receives and removes an entry from the front 
+of the external data queue in a single step. If the external queue is empty then an entry 
+will read from the standard input stream STDIN.
+<br>
+<br><img src="images/pull.gif" alt="parse pull instruction" border=0 width=488 height=100>
+<br>
+<br>Calling of the built-in function <code>QUEUED()</code> returns the number of entries
+ contained in the external data queue.
+<br>
+<br><img src="images/queued.gif" alt="QUEUED() function" border=0 width=488 height=100>
+<br>
+<br>In addition, the Add REXX Buffer (ADDREXBUF) and the Remove REXX Buffer (RMVREXBUF) 
+commands are available to REXX programs for working with queue buffers. These commands 
+extend the flexibility of the REXX queue instructions. The command 'RMVREXBUF 0' 
+clears all existing entries from the external data queue.
+<br>
+<br>I will demonstrate use of the External data queue on an example from the area of 
+the personal programming. When you need a simulation of a lottery then you use obviously 
+the RANDOM function. I want to show you another way. Jon Bentley wrote:
+<br>
+<br><i>How can a computer deal a poker hand? If we assign each card in the deck its own 
+integer between 1 and 52, then we can make a hand from a "random sample" of 5 integers 
+in the range 1..52, for instance,</i>
+<br>
+<br><code>4  8  31  46  47</code>
+<br>
+<br>
+<i>(It is important that no number appear twice; holding more than one ace of spades can 
+jeopardize a card-player's health.) --</i>
+<br>
+<br>We will write a program to shuffle a deck of cards, then deal out the pack. We begin 
+with a deck of cards, which we will assume are labelled in increasing order with the 
+integers from 1 to 52. The following SHUFFLE program places the deck - string 1 2 ... 52 
+- at the front of the data queue (when the data queue is empty) and places the current
+ time (in the form seconds since midnight) at the front of the data queue. Who does it 
+ shuffle? - Time ...
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* SHUFFLE */
+Deck = ""
+if QUEUED() = 0 then do
+  do J = 1 to 52; Deck = Deck J; end
+  push Deck
+end
+push TIME("S") 
+</code>
+</pre>
+</div>
+When you start the following DEAL program randomly, it removes the time of starting the shuffle 
+and then it removes the deck from the data queue; executes the J value - the randomly 
+chosen card; deals this card, i.e. displays the number of the chosen card and removes 
+this card from the deck:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* DEAL */
+parse pull T; parse pull Deck
+J = ABS(TIME("S") - T) // WORDS(Deck) + 1
+say "Number:" WORD(Deck, J)
+if WORDS(Deck) > 1 then push DELWORD(Deck, J, 1)
+</code>
+</pre>
+</div>
+By the help of alternating executions of the <code>SHUFFLE</code> and <code>DEAL</code>
+ programs (<code>SHUFFLE</code> - <code>DEAL</code> - <code>SHUFFLE</code> - <code>DEAL</code>
+ - ...) you can shuffle and deal cards. Between the ending the <code>SHUFFLE</code> 
+ program and 
+ starting the <code>DEAL</code> program you can do anything except the SIGNOFF command or actions 
+ changing a content of the external data queue.
+<br>
+<br>Out of using the external data queue to the interprocess comunication you can use it 
+as data structures. For instance: You can eliminate the recursion call by using of 
+stack (exactly by the push, parse pull instructions and the <code>QUEUED()</code> function); you can 
+easy program the topological sort by using of queue (exactly by queue, parse pull
+ instructions and the <code>QUEUED()</code> function).
+ <br>
+ <br>When you use the external data queue you must always be aware of what is in the
+ queue. Write a program, which writes on the screen the content of the external data 
+ queue and according to the answer on the question <code>Erase the external data queue?
+  (Y/N)</code> the queue either erases or keeps without change. A solution follows:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* XAMINE */
+do QUEUED()
+  parse pull Entry; say Entry; queue Entry
+end
+do until Answer = "Y" | Answer = "N"
+  say "Erase the external data queue? (Y/N)"
+  parse upper linein Answer
+end
+if Answer = "Y" then 'RMVREXBUF 0'
+</code>
+</pre>
+</div>
+<hr>
+<br></p>
+<h2 id="as4004">SQL statements</h2><p>
+IBM DB2 is the data base management system which implements the relational model of data. 
+Data are represented in the form of tables (physical files). Each row (record) of a table
+ consists of a set of columns (fields). All rows of a given table are of the same form.
+ <br>
+ <br>Operations on data are performed using Structured Query Language - SQL. SQL is a 
+ standardized language for defining and manipulating data in a relational database.
+  Statements in this language may be specified within Rexx application programs. With 
+  SQL, you do not have to code a sequence of statements explaining how to get to the 
+  data. With a single SQL statement, you can access and manipulate the data in a 
+  database - i.e. you can retrieve, insert, update, and delete data and control access 
+  to data. This possibility overcomes all limitation of Standard Input & Output.
+  <br>
+<br>We can easy create an English-Czech-English dictionary:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* COMPILE compiles English-Czech-English dictionary */
+address EXECSQL
+EXECSQL 'SET OPTION COMMIT = *NONE'
+EXECSQL 'CREATE TABLE MYLIB/DICTIONARY',
+  ' (E_WORD CHAR(20) NOT NULL,',
+  '  C_WORD CHAR(20) NOT NULL)'
+INS = 'INSERT INTO MYLIB/DICTIONARY VALUES(?, ?)'
+EXECSQL 'PREPARE I1 FROM :INS'
+say "Insert couples of words: English-Czech"
+do forever
+  say "English-Czech"
+  parse linein E "-" C
+  if E = "" then leave
+  EXECSQL 'EXECUTE I1 USING :E, :C'
+  if RC = 0 then say "OK"; else say "Error, RC =" RC
+end
+</code>
+</pre>
+</div>
+The SQL environment, called EXECSQL, lets you use SQL. In the program the instruction 
+address EXECSQL changed default external environment to SQL.
+<br>
+<br>In Rexx programs is the default set option COMMIT = *CHG. When the table is not
+ journaled file, you have to use the explicit statement 'SET OPTION COMMIT = *NONE'. 
+ The statement 'CREATE TABLE MYLIB/DICTIONARY (E_WORD CHAR(20) NOT NULL, C_WORD CHAR(20)
+  NOT NULL)' creates the database file with two columns: first for English words and 
+  second for their Czech equivalent.
+<br>
+<br>The PREPARE statement 'PREPARE I1 FROM :INS' prepares the statement 
+'INSERT INTO MYLIB/DICTIONARY VALUES(?, ?)' in the INS variables. All executable SQL
+ statements must be prepared before they can be executed. The result of preparation is
+  the executable or operational form of the statement. To issue a dynamic SQL statement,
+   you must use the EXECUTE statement
+ <br>
+ <br><code>'EXECUTE I1 USING :E, :C'</code>
+ <br>
+ <br>In SQL statements the names with colon prefixes are host (program) variable names.
+  The values of E and C variables are stored as fields of one row into the DICTIONARY
+   table.
+   <br>
+   <br>The Rexx variable RC indicates either a successful call to the SQL interface or a 
+   failure to call the SQL interface. If the call completes successfully, RC is set 
+   to zero.
+<br>
+<br>An example of a dialog with the <code>COMPILE</code> and man follows:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Start of terminal session.
+Insert couples of words: English-Czech
+abandon-opustit
+OK
+abandon-vzdát se
+OK
+abandon-oddávat se
+OK
+abbey-opatství
+OK
+abbreviation-zkratka
+OK
+abdicate-vzdát se
+OK
+ 
+Press ENTER to end terminal session.
+</code>
+</pre>
+</div>
+The program for using our bidirectional dictionary is shown below.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* CONSULT consults the English-Czech-English dictionary */
+address EXECSQL
+EXECSQL 'SET OPTION COMMIT = *NONE'
+do until Answer = "E" | Answer = "C"
+  say "English->Czech or Czech->English? (E/C)"
+  parse upper linein Answer
+end
+Prompt.E = "Word to translate"; Prompt.C = "Napiš slovo"
+if Answer = "E" then
+  SEL = 'SELECT C_WORD FROM MYLIB/DICTIONARY WHERE E_WORD = ?'
+  else
+  SEL = 'SELECT E_WORD FROM MYLIB/DICTIONARY WHERE C_WORD = ?'
+EXECSQL 'PREPARE S1 FROM :SEL'
+EXECSQL 'DECLARE C1 CURSOR FOR S1'
+do forever
+  say Prompt.Answer; parse linein Oneword
+  if Oneword = "" then leave
+  EXECSQL 'OPEN C1 USING :ONEWORD'
+  do forever
+    EXECSQL 'FETCH C1 INTO :TRANSLATED'
+    if SQLCODE <> 0 then leave
+    say COPIES(" ", 10) Translated
+  end
+  say COPIES(" ", 10) ".."; EXECSQL 'CLOSE C1'
+end
+</code>
+</pre>
+</div>
+In the <code>CONSULT</code> program we use the SQL cursor. If you want to select multiple
+ rows of a table, a cursor must be defined. The main programming steps in using cursor 
+ are: declare the cursor, open the cursor, fetch rows from the cursor, optionally update 
+ or delete the most recently fetched row, close the cursor. When the cursor is opened, 
+ it is positioned before the first row in the result table. That row is then the current 
+ row. If host variables are specified (with the INTO clause on the FETCH statement), SQL 
+ moves the contents of the current row into your program's host variables. This sequence 
+ is repeated each time a FETCH statement is issued until the end-of-data (SQLCODE = 100) 
+ is reached. When you reach the end-of-data, close the cursor. To use the cursor again, 
+ you must first close the cursor and then re-issue the OPEN statement.
+ <br>
+ <br>The example of <code>CONSULT</code> - man dialogue follows.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Start of terminal session.
+English->Czech or Czech->English (E/C)?
+E
+Word to translate:
+abandon
+           opustit
+           vzdát se
+           oddávat se
+           ..
+Word to translate:
+robot
+           ..
+Word to translate:
+abbreviation
+           zkratka
+           ..
+Word to translate:
+ 
+Press ENTER to end terminal session.
+</code>
+</pre>
+</div><br>
+</p><h2 class="red">Conclusion</h2><p>
+
+A peculiarity of the Rexx language in the AS/400 environment is Input and Output. But it
+ isn't the restriction. You can build applications that access standard input and output 
+ files, use the external data queue, the AS/400 faeries as Query/400 and also DB2/400's 
+ robust relational database capabilities.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+last modified 15th August 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko, Czech Republic
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>  

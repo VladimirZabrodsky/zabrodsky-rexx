@@ -1,0 +1,733 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="cs">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico" />
+		<meta charset="utf-8" /><title>FIND, SELECT, MODIFIND</title>
+		<META name="DESCRIPTION" content="Algoritmy nalezení K.tého nejmenšího prvku FIND,SELECT,MODIFIND,median,kvantil" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="vzstyle.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="cz_index.html">REXX</a>
+    <a href="cz_introrexx.html">Úvod</a>
+    <a href="cz_arithmetic.html">Aritmetika</a>
+    <a href="cz_turing.html">Turingův stroj</a>
+    <a href="cz_as400.html">AS400</a>
+    <a href="cz_3alg.html"  class="active">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="3alg.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+<div class="mylink">
+<!-- text of page -->
+<h1>FIND, SELECT, MODIFIND</h1><hr>
+<br><p>
+Studie porovnává tři algoritmy nalezení <i>K</i>-tého nejmenšího z <i>N</i> prvků: Hoarův FIND [1], moji modifikaci programu FIND [3] 
+(nazval jsem jej MODIFIND v <i>Algorithms, Data Structures, and Problems Terms and Definitions</i>
+ 
+of the
+
+CRC Dictionary of Computer Science, Engineering and 
+
+Technology, version February 4, 1999) a Floydův a Rivestův SELECT [4], [5].
+
+Pro měření doby výpočtu, počtu porovnání a výměn prvků jsem využil implementace algoritmů v jazyce Rexx
+ (Quercus Systems' Personal REXX for Windows) na počítači PC s procesorem 6x86MX-PR233, 32MB RAM v 
+ prostředí Windows 98.
+<br>
+<br>Problém nalezení <i>K</i>-tého nejmenšího z <i>N</i> prvků definoval C. A. R. Hoare v [1] takto: Je dáno 
+pole <i>A</i> obsahující <i>N</i> navzájem různých prvků a celé čílo <i>K</i>, 1 &lt;= <i>K</i> &lt;= 
+<i>N</i>, má se určit <i>K</i>-tý nejmenší prvek <i>A</i> a pole se má přerovnat tak, aby prvek 
+<i>A</i>[<i>K</i>] výsledného pole byl <i>K</i>-tým nejmenším prvkem a všechny prvky s indexem menším než 
+<i>K</i>  měly menší hodnotu a všechny prvky s indexem větším než <i>K</i> měly větší hodnotu. 
+Musí tedy platit:
+<br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i>-1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i>+1], ..., 
+<i>A</i>[<i>N</i>]
+</code>
+<br>
+<br>
+Řešení tohoto problému můžeme využít v praxi pro nalezení mediánu nebo jiného kvantilu stejně jako pro
+určení nejmenšího, největšího nebo druhého největšího atd. prvku. Přímočaré řešení - pole nejdříve 
+vytřídit - by mohlo být časově náročné při velkém počtu prvků. Rychlejší algoritmus publikoval poprvé 
+C. A. R. Hoare a nazval jej FIND. V této práci jej budu označovat jako H. Určí
+ <i>K</i>-tý nejmenší prvek v čase <i>O</i>(<i>N</i>.
+<br><br></p>
+<h2>Algoritmus H</h2><p>
+Hoarův algoritmus je založen na zřejmém důsledku známé definice:
+<br><br></p>
+<h3>Definice</h3><p>
+<i>K</i>-tý nejmenší z <i>N</i> prvků je ten prvek pole, který je menší než
+<i>K</i> - 1 jiných prvků ale větší než <i>N</i> - <i>K</i> prvků.
+</p>
+<br>
+<h3>Důsledek</h3><p>
+Prvek nemůže být <i>K</i>-tým nejmenším prvkem pole, je-li větší než <i>K</i> (a více) jiných 
+prvků nebo menší než  <i>N</i> - <i>K</i> + 1 (a více) jiných prvků.
+<br><br>
+Při výpočtu vyjdeme z předpokladu, že
+<i>A</i>[<i>K</i>] je <i>K</i>-tým nejmenším prvkem a pokusíme se to dokázat následujícím postupem:<br>
+Pole se prohlíží zleva (tj. zkoumají se prvky s indexy <i>I</i> = 1, 2, ...) až se nalezne
+prvek <i>A</i>[<i>I</i>] &gt;= <i>A</i>[<i>K</i>], pak se prohlíží pole zprava (tj. zkoumají se prvky s
+ indexy <i>J</i> = <i>N</i>, <i>N</i> - 1, ... ) až se nalezne prvek
+<i>A</i>[<i>J</i>] &lt;= <i>A</i>[<i>K</i>], oba prvky se vymění, v procesu zkoumání a výměn se pokračuje
+ tak dlouho, dokud se ukazatelé <i>I</i> a <i>J</i> nestřetnou. Pak může nastat jeden ze tří možných případů:
+</p>
+<br>
+<h3>Případ 1 (<i>J</i> &lt; 
+<i><font color="#ff3333">K</font></i> &lt; <i>I</i>)</h3><p>
+Tvrzení je dokázáno. <i>K</i>-tý nejmenší prvek je na 
+správném místě a program končí. Příklad:
+<br>
+<img src="images/case1.gif" width=380 height=220 border=0 
+alt="Případ 1: J < K < I" 
+style="max-width:100%;height:auto;">
+</p>
+<br>
+<h3>Případ 2 (<i>J</i> &lt; <i>I</i> &lt;= <i>
+<font color="#ff3333">K</font></i>)</h3>
+<p>Prvky
+
+<i>A</i>[1] ... <i>A</i>[<i>J</i>] jsou menší než <i>N</i> - <i>K</i> + 1 jiných prvků, 
+přesně řečeno jsou menší než <i>N</i> - <i>I</i> + 1 &gt;= <i>N</i> - <i>K</i> + 1 prvků, žádný z nich tedy 
+nemůže být  <i>K</i>-tým nejmenším prvkem. Pokračovat ve výpočtu proto budeme hledáním prvku, který je 
+(<i>K</i> - <i>I</i> + 1)-ním nejmenším prvkem v poli <i>A</i>[<i>I</i>] ... <i>A</i>[<i>N</i>].
+
+Příklad:
+<br><img src="images/case2.gif" width=380 height=220 border=0 
+alt="Případ 2: J < I <= K" 
+style="max-width:100%;height:auto;">
+</p>
+<br>
+<h3>Případ 3 (<i><font color="#ff3333">K</font></i> &lt;= <i>J</i> &lt; 
+<i>I</i>)</h3><p>
+Prvky <i>A</i>[<i>I</i>] ... <i>A</i>[<i>N</i>] jsou větší než <i>K</i> jiných prvků, přesně řečeno 
+jsou větší než <i>J</i> &gt;= <i>K</i> prvků. Žádný z nich tedy nemůže být <i>K</i>-tým nejmenším prvkem. 
+Pokračovat budeme v řešení úlohy redukovaného rozsahu: Nalézt <i>K</i>-tý nejmenší prvek pole
+ <i>A</i>[1] ... <i>A</i>[<i>J</i>].
+
+Příklad:
+<br><img src="images/case3.gif" width=380 height=220 border=0 
+alt="Případ 3: K <= J <= I" 
+style="max-width:100%;height:auto;">
+<br>
+<br>
+<br>Popsaný algoritmus ilustruje program H, který je mým překladem programu Niklause Wirtha 
+z [6] do jazyka Rexx.
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">H: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> N<span style="color:#808030; ">,</span> K
+L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> L &lt; R
+  X <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> I &gt; J
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; X<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &lt; A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> I &lt;<span style="color:#808030; ">=</span> J <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+      W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+      I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt; K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> I
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt; I <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+</p>
+<h2>Analýza algoritmu H</h2><p>Složitost algoritmu budeme posuzovat z počtu
+ porovnání, jako je <code>A.I &lt; X</code> 
+a z počtu výměn <code>W = A.I; A.I = A.J; A.J = W</code>. Nechť
+<i>C</i>(<i>N</i>, <i>K</i>) označuje počet porovnání a <i>S</i>(<i>N</i>, <i>K</i>) počet výměn nutných 
+při provádění programu H k nalezení <i>K</i>-tého nejmenšího z <i>N</i> prvků.
+<br>
+<br>
+V nejhorším případě je:
+<br><br>
+<code class="wrap">
+<i>C</i><sub>max</sub>(<i>N</i>, 1) = 
+<i>C</i><sub>max</sub>(<i>N</i>, <i>N</i>) = (<i>N</i><sup>2</sup> 
++  5<i>N</i> -  8) / 2<br><i>C</i><sub>max</sub>(<i>N</i>, <i>K</i>) = (<i>N</i><sup>2</sup> + 5<i>N</i> - 12) / 2,
+for <i>K</i> = 2, 3, ..., <i>N</i> - 1
+</code>
+<br><br>
+V [3] ukazuji příklady polí, které vedou k nejhoršímu případu 
+(prvek v <i>K</i>-té pozici je označen červeně):
+<br><br>
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+for K = 1: <span class="red">N</span>  2  1  3  ...  N-1
+for K = 2: 1  <span class="red">N</span>  2  3  ...  N-1
+for K = 3: 3  2  <span class="red">N</span>  1  4  5  ...  N-1
+for 3 &lt; K &lt; N-1: 2  ...  K-2  K  K-1  <span class="red">N</span>  1  K+1  ...  N-1
+for K = N-1: 2  ...  N-1  <span class="red">1</span>  N
+for K = N: 2  ...  N-2  N  N-1  <span class="red">1</span> 
+</code>
+</pre>
+</div>
+<br>V průměrném případě platí podle D. E. Knutha [2]:
+<br>
+<br>
+<code class="wrap">
+<i>C</i>(<i>N</i>, <i>K</i>) = 2((<i>N</i> + 1)<i>H</i><sub>N</sub> -  (<i>N</i> - <i>K</i> + 3)<i>H</i><sub><i>N</i> - <i>K</i> + 1</sub> - (<i>K</i> + 2)<i>H</i><sub><i>K</i></sub> + <i>N</i> + 3)
+</code>
+<br>
+<br>
+kde
+<br>
+<br>
+<code class="wrap">
+<i>H</i><sub>N</sub> = 1 + 1/2 + ... + 1/<i>N</i>
+</code>
+<br>
+<br> Ve speciálních případech tedy platí:
+<br>
+<br>
+<code class="wrap">
+<br><i>C</i>(<i>N</i>, 1) = <i>C</i>(<i>N</i>,<i>N</i>) = 2<i>N</i> + o(<i>N</i>)
+<br>
+<br><i>C</i>(<i>N</i>, <i>median</i>)= 2<i>N</i>(1 + ln2) + o(<i>N</i>) = 3.39<i>N</i> + o(<i>N</i>)
+</code>
+<br>
+<br>
+Já jsem odvodil vzorec pro určení průměrného počtu výměn:
+<br>
+<br>
+<code class="wrap">
+<i>S</i>(<i>N</i>, 
+<i>K</i>) = (1 / 3)((<i>N</i> + 1)<i>H</i><sub>N</sub> - 
+(<i>N</i> - <i>K</i> + 2.5)<i>H</i><sub>N-K+1</sub> - (<i>K</i> + 1.5)<i>H</i><sub>K</sub> + <i>N</i> + 2)
+</code>
+<br></p>
+<h3>Důsledek</h3><p>
+<br>
+
+<code class="wrap">
+<i>S</i>(<i>N</i>, 1) = <i>S</i>(<i>N</i>, <i>N</i>) =<i>H</i><sub>N</sub>
+<br>
+<br><i>S</i>(<i>N</i>, <i>median</i>) = (1 / 3)((ln2 + 1)<i>N</i> - 3ln<i>N</i>) = 0.56<i>N</i> + o(<i>N</i>)
+</code>
+<br>
+</p>
+<br>
+<h2>Algoritmus Z</h2><p>
+Uvažme pole 1, 10, 2, 3, 4, 5, 6, 7, 8, 9, a <i>K</i> = 2. Pole se rozdělí výše uvedeným postupem na dvě části <i>A</i>[1], ..., <i>A</i>[9] a
+<i>A</i>[10]: 1, 9, 2, 3, 4, 5, 6, 7, 8, 10 pomocí jedné výměny a 12-ti porovnání. Zjistím-li však, že 10 
+je větší než dva prvky (1 a 9), pak už přece vím, že nemůže být druhým nejmenším prvkem, a další porovnání 
+jsou tedy zbytečná. Stejného výsledku (1, 9, 2, 3, 4, 5, 6, 7, 8, 10) dosáhnu jen s pomocí jedné výměny a 
+třech porovnání.  A pak mohu hned přejít na řešení redukované úlohy najít v poli <i>A</i>[1], ..., <i>A</i>
+[9]  druhý nejmenší prvek. Modifikaci algoritmu H, pracující tímto způsobem, popisuje následující program Z. 
+Je překladem mého programu z [3] do jazyka Rexx.
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">Z: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> N<span style="color:#808030; ">,</span> K
+L <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> R <span style="color:#808030; ">=</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> L &lt; R
+  X <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> J &lt; K <span style="color:#808030; ">|</span> K &lt; I
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; X<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> X &lt; A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+    I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt; K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> I
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt; I <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+</p>
+<h2>Analýza algoritmu Z</h2>
+<h3>V nejhorším případě</h3>
+<p>
+<code class="wrap">
+<i>C</i><sub>max</sub>(<i>N</i>, <i>K</i>) = 
+<i>NK</i> + <i>N</i> + <i>K</i> - <i>K</i><sup>2</font></sup> - 1, for 
+<i>K</i> = 1, 2, ..., <i>N</i>
+</code>
+<br>
+<br>U algoritmu Z  maximální počet porovnání závisí na <i>K</i>. Následující graf ukazuje naměřenou dobu 
+výpočtu H a Z v nejhorším případě.
+<br>
+<br>
+<img SRC="images/cz_wh.gif" border=1 width=439 height=316 
+alt="dobu výpočtu H a Z v nejhorším případě" 
+style="max-width:100%;height:auto;">
+</p><br>
+<h3>V průměrném případě</h3><p>
+
+V [3] jsem uvedl jen odhady pro
+
+průměrnou hodnotu <i>C</i>(<i>N</i>, 1), <i>C</i>(<i>N</i>, <i>N</i>)
+
+a <i>S</i>(<i>N</i>, <i>K</i>):
+<br>
+<br>
+<code class="wrap">
+<i>C</i>(<i>N</i>, 1) = <i>C</i>(<i>N</i>, <i>N</i>) = <i>N</i> + <i>H</i><sub>N</font></sub>
+<br>
+<br><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub>N</sub> - (<i>N</i> - <i>K</i>)<i>H</i><sub>N-K+1</sub> - (<i>K</i> - 1)<i>H</i><sub>K</sub></i>)
+</code>
+<br><br>
+<h3>Ve zvláštních případech</h3><p>
+<code class="wrap">
+<i>S</i>(<i>N</i>, 1) = <i>S</i>(<i>N</i>, <i>N</i>) = ln<i>N</i> + o(<i>N</i>)
+<br><i>S</i>(<i>N</i>, <i>medián</i>) = 0.5(<i>N</i>ln2 + 2ln<i>N</i>) + o(<i>N</i>) = 0.35<i>N</i> + o(<i>N</i>)
+</code>
+</p>
+<br>
+<h2>Algoritmus FR</h2><p>
+Ve svém článku <i>Expected Time Bounds for Selection</i> [4] R. W. Floyd a R. L. Rivest popsali 
+nový, efektivní algoritmus. Počet porovnání je v průměrném případě roven <i>N</i> + min(<i>K</i>, <i>N</i> -
+ <i>K</i>) + o(<i>N</i>).
+Následující program FR je mým překladem původního programu z [5] do jazyka Rexx.
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">FR: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> L<span style="color:#808030; ">,</span> R<span style="color:#808030; ">,</span> K
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> R &gt; L
+  <span style="color:#800000; font-weight:bold; ">if</span> R <span style="color:#808030; ">-</span> L &gt; <span style="color:#008c00; ">600</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+    N <span style="color:#808030; ">=</span> R <span style="color:#808030; ">-</span> L <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> K <span style="color:#808030; ">-</span> L <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> Z <span style="color:#808030; ">=</span> LN<span style="color:#808030; ">(</span>N<span style="color:#808030; ">)</span>
+    S <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#008000; ">0.5</span> <span style="color:#808030; ">*</span> EXP<span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> Z <span style="color:#808030; ">/</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+    SD <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#008000; ">0.5</span> <span style="color:#808030; ">*</span> SQRT<span style="color:#808030; ">(</span>Z <span style="color:#808030; ">*</span> S <span style="color:#808030; ">*</span> <span style="color:#808030; ">(</span>N <span style="color:#808030; ">-</span> S<span style="color:#808030; ">)</span><span style="color:#808030; ">/</span>N<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> <span style="color:#800000; font-weight:bold; ">SIGN</span><span style="color:#808030; ">(</span>I <span style="color:#808030; ">-</span> N<span style="color:#808030; ">/</span><span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+    LL <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">MAX</span><span style="color:#808030; ">(</span>L<span style="color:#808030; ">,</span> K <span style="color:#808030; ">-</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span>I <span style="color:#808030; ">*</span> S <span style="color:#808030; ">/</span> N<span style="color:#808030; ">)</span> <span style="color:#808030; ">+</span> SD<span style="color:#808030; ">)</span>
+    RR <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">MIN</span><span style="color:#808030; ">(</span>R<span style="color:#808030; ">,</span> K <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TRUNC</span><span style="color:#808030; ">(</span><span style="color:#808030; ">(</span>N <span style="color:#808030; ">-</span> I<span style="color:#808030; ">)</span> <span style="color:#808030; ">*</span> S <span style="color:#808030; ">/</span> N<span style="color:#808030; ">)</span> <span style="color:#808030; ">+</span> SD<span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> FR LL<span style="color:#808030; ">,</span> RR<span style="color:#808030; ">,</span> K
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  T <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> L<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> R
+  W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>K<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>K <span style="color:#808030; ">=</span> W
+   <span style="color:#800000; font-weight:bold; ">if</span> A<span style="color:#808030; ">.</span>R &gt; T <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>R<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>R <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+   <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> I &lt; J
+     W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>I<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>I <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W
+    I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>I &lt; T<span style="color:#808030; ">;</span> I <span style="color:#808030; ">=</span> I <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">.</span>J &gt; T<span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> T <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>L<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>L <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">do</span><span style="color:#808030; ">;</span> J <span style="color:#808030; ">=</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> W <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> A<span style="color:#808030; ">.</span>R<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>R <span style="color:#808030; ">=</span> W<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> J &lt;<span style="color:#808030; ">=</span> K <span style="color:#800000; font-weight:bold; ">then</span> L <span style="color:#808030; ">=</span> J <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> K &lt;<span style="color:#808030; ">=</span> J <span style="color:#800000; font-weight:bold; ">then</span> R <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+Floyd a Rivest v [5] píší: <i>Konstanty 600, 0.5, 0.5, vykytující se v popisu algoritmu, 
+minimizovaly dobu výpočtu na používaném počítači.</i> Ověřil jsem experimentálně, že hodnoty 
+600, 0.5, 0.5 jsou dobrým výběrem. <br>U klasického Rexxu je tu problém s funkcemi LN, EXP a
+SQRT, protože nejsou součástí jazyka. Stovky experimentů ukázaly, že pro <i>N</i> = 10000 vystačíme s 
+přesností výpočtu určenou příkazem <code>numeric digits 6</code>. Proto jsem použil  algoritmy známé 
+z učebnic: 
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">EXP: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> Tr<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">;</span> Sr <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X <span style="color:#808030; ">=</span> Tr
+<span style="color:#800000; font-weight:bold; ">do</span> R <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">until</span> Tr &lt; <span style="color:#008000; ">5E-3</span>
+  Sr <span style="color:#808030; ">=</span> Sr <span style="color:#808030; ">+</span> Tr<span style="color:#808030; ">;</span> Tr <span style="color:#808030; ">=</span> Tr <span style="color:#808030; ">*</span> X <span style="color:#808030; ">/</span> R
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Sr
+
+SQRT: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span>
+<span style="color:#800000; font-weight:bold; ">if</span> X &lt; <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">if</span> X<span style="color:#808030; ">=</span><span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">0</span>
+Y <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#800000; font-weight:bold; ">ABS</span><span style="color:#808030; ">(</span>Yp <span style="color:#808030; ">-</span> Y<span style="color:#808030; ">)</span> &lt;<span style="color:#808030; ">=</span> <span style="color:#008000; ">5E-3</span>
+  Yp <span style="color:#808030; ">=</span> Y<span style="color:#808030; ">;</span> Y <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">/</span> Yp <span style="color:#808030; ">+</span> Yp<span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> <span style="color:#008c00; ">2</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Y
+ 
+LN: <span style="color:#800000; font-weight:bold; ">procedure</span>
+<span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> X<span style="color:#808030; ">;</span> numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3</span>
+M <span style="color:#808030; ">=</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">/</span> <span style="color:#808030; ">(</span>X <span style="color:#808030; ">-</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> Ln <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> M
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">3</span> by <span style="color:#008c00; ">2</span>
+  T <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#808030; ">/</span> <span style="color:#808030; ">(</span>J <span style="color:#808030; ">*</span> M <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> J<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">if</span> T &lt; <span style="color:#008000; ">5E-3</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">leave</span>
+  Ln <span style="color:#808030; ">=</span> Ln <span style="color:#808030; ">+</span> T
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> <span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> Ln
+</pre>
+</div>
+Experimentálně jsem zjistil, že nejrychleji výpočet proběhne, vydáme-li ve výše uvedených procedurách příkaz
+ <code>numeric digits 3</code> a srovnáváme-li hodnotu právě vypočteného členu s hodnotou 5E-3. Pro určení 
+ co nejmenšího počtu porovnání jsem ale jednoznačně nejlepší hodnoty těchto konstant nenašel. Někdy byla 
+ nejúspěšnější volba konstant 3 a 5E-3, jindy 4 a 5E-3, jindy zase 5 a 5E-5 nebo 6 a 6E-6. Nakonec jsem 
+ použill hodnoty 3 a 3E-5, s kterými byl výpočet zároveň nejrychlejší. Výsledek průměrného počtu porovnání
+   při nalezení mediánu, 1.5<i>N</i> v dále uvedeném grafu, ukazuje, že program FR s těmito hodnotami 
+   pracuje podle očekávání.
+   </p><br>
+<h2>Porovnání algoritmů</h2><p>Pro porovnání jsem použil program <code>COMPARISON</code>. Dále uvedený zjednodušený příklad tohoto programu měří jen 
+dobu výpočtu pro hodnoty <i>K</i> &gt;= 500.
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* COMPARISON */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">10000</span>
+<span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">500</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">5000</span> by <span style="color:#008c00; ">500</span>
+  TH <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> TZ <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> TFR <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> Trial <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#008c00; ">100</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> RANDARRAY<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> H N<span style="color:#808030; ">,</span> K<span style="color:#808030; ">;</span> TH <span style="color:#808030; ">=</span> TH <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">TIME</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> Z N<span style="color:#808030; ">,</span> K
+    TZ <span style="color:#808030; ">=</span> TZ <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> INITIALIZE
+    <span style="color:#800000; font-weight:bold; ">call</span> <span style="color:#800000; font-weight:bold; ">time</span> <span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">call</span> FR <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> N<span style="color:#808030; ">,</span> K
+    TFR <span style="color:#808030; ">=</span> TFR <span style="color:#808030; ">+</span> <span style="color:#800000; font-weight:bold; ">TIME</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">"R"</span><span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">end</span> Trial
+  <span style="color:#800000; font-weight:bold; ">say</span> K TH<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span> TZ<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span> TFR<span style="color:#808030; ">/</span><span style="color:#008c00; ">100</span>
+<span style="color:#800000; font-weight:bold; ">end</span> K
+<span style="color:#800000; font-weight:bold; ">exit</span>
+
+RANDARRAY: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> B<span style="color:#808030; ">.</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N<span style="color:#808030; ">;</span> B<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">100000</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+
+INITIALIZE: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> A<span style="color:#808030; ">.</span> B<span style="color:#808030; ">.</span> N
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N<span style="color:#808030; ">;</span> A<span style="color:#808030; ">.</span>J <span style="color:#808030; ">=</span> B<span style="color:#808030; ">.</span>J<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+První graf ukazuje, že Z je rychlejší než FR jen pro <i>K</i> = 1. 
+Mnohokrát jsem opakoval měření, abych si potvrdil, že algoritmus FR vyžaduje méně operací porovnání pro 
+nalezení mediánu, a spotřebuje proto i méně času, než pro nalezení prvku, který je v pořadí podle velikosti 
+3000. nebo 4000. 
+<br>
+<br>
+<img SRC="images/cz_time.gif" border=1 width=466 height=266  
+alt="Průměrný čas výpočtu H, Z, FR" 
+style="max-width:100%;height:auto;">
+<br>
+<br>Druhý graf porovnává počet porovnání (povšimněte si anomálie týkající se nižšího počtu operací porovnání u 
+mediánu). Graf zároveň ukazuje, že Knuthův odhad pro průměrný počet operací porovnání u algoritmu H je 
+správný.  Algoritmus Z je nejlepší pro <i>K</i> = 1 a je o něco lepší než H; ale jasným vítězem v této 
+kategorii je FR. Graf konečně dokazuje, že implementace v jazyce Rexx SELECTu neublížila - pro výpočet 
+mediánu je opravdu v průměru zapotřebí jen 1.5<i>N</i> porovnání.
+<br>
+<br>
+<img SRC="images/cz_c.gif" border=1 width=510 height=350  
+alt="H, Z, FR - počet porovnání v průměrném případě" 
+style="max-width100%;height:auto;">
+<br>
+<br>Poslední graf ukazuje, že Z potřebuje v průměru nejméně výměn. Navíc ukazuje, že můj odhad hodnoty 
+<i>S</i>(<i>N</i>,<i>K</i>) pro Z je přesný.
+<br>
+<br>
+<img SRC="images/cz_s.gif" border=1 width=502 height=264 
+alt="H, Z, FR - počet výměn v průměrném případě" 
+style="max-width:100%;height:auto;">
+</p><br>
+<h2>ZÁVĚR</h2><p>
+
+Algoritmy Z a FR jsou vždy lepší než H; FR provede v průměru méně operací porovnání než Z; Z provede v 
+průměru méně výměn než FR. 
+</p><br>
+<h2 class="red">Komentář Richarda Hartera v <i>comp.programming</i></h2>
+<p>
+To je zajímavé. K přitažlivým vlastnostem algoritmu Z patří jeho jednoduchost. To není maličkost. Při výběru 
+algoritmu často srovnáváme jeho časovou složitost s dobou strávenou na jeho kódování a ladění. V každém 
+případě je hezké mít tyto algoritmy k dispozici on-line.
+<br>&nbsp;<br>Richard Harter, cri@tiac.net, The Concord Research Institute 
+<i>What is the difference between Mechanical Engineers and Civil Engineers?
+<br>Mechanical Engineers build weapons, Civil Engineers build targets.</i>
+</p><br>
+<h2>Literatura</h2><p>
+<b>1.</b>. C. A. R. HOARE: <i>Proof of a Program: FIND</i> 
+CACM, Vol 14, 
+No. 1, January 1971, pp. 39-45<br>
+<br><b>2.</b> R. W. FLOYD, R. L. RIVEST: <i>Expected Time Bounds for Selection.</i> CACM, 
+March 1975, Vol. 18, No. 3, pp. 165-172<br>
+<br><b>3.</b>. R. W. FLOYD, R. L. RIVEST: <i>Algorithm 489 The Algorithm SELECT - for Finding the i-th
+Smallest of n Elements [M1]</i> CACM, March 1975, Vol. 18, No. 3, p. 173<br>
+<br><b>4.</b> J. BENTLEY: <i>Selection (in Programming Pearls)</i>, CACM, November 1985, Vol. 28, No. 11, pp. 1121-1127<br>
+<br><b>5.</b> V. ZABRODSKY: <i>Variace na klasicke tema</i>, Elektronika, No. 6 1992, p. 33-34<br>
+<br><b>6.</b> V. ZABRODSKY: <i>Nalezeni k-teho nejmensiho prvku</i>, Bajt, No. 8 1992, p. 130-131<br>
+<br><b>7.</b>  D. E. KNUTH: <i>The Art of Computer Programming. Sorting and Searching</i>, Addison-Wesley, Reading, Mass., 1973<br>
+</p>
+<hr>
+<br>
+<h1>Appendix: O algoritmu Modifind</h1>
+<h2>I. Korespondence s Paulem E. Blackem</h2><p>
+2. dubna 1999
+
+ jsem poslal do fóra comp.programming a comp.theory mail
+  <i>Three Selection Algorithms</i>:
+  <br>
+<br>
+Dobrý den,
+
+<br>mohli byste si přečíst můj článek FIND, SELECT, MODIFIND? 
+
+<br><br>
+
+Abstrakt:<br>
+
+Porovnávací studie tří algoritmů pro nalezení K-tého nejmenšího z N prvků:
+
+<br><br>
+
+Hoarova FINDu (H algoritmus);<br>
+
+mé modifikace FINDu (Z algoritmus);<br>
+
+Floydova a Rivestova SELECTu (FR algoritmus).
+
+<br><br>
+Závěr:
+Algorithmy Z a FR jsou vždy lepší než H; FR provádí v průměru menší počet porovnání než Z; 
+
+Z provádí menší počet výměn než FR. Když počet výměn není kritický, je lepší FR než Z - 
+
+a naopak. 
+<br>
+<br>
+Paul E. Black mi napsal 6 dubna 1999:
+<br><br>
+
+Vážený dr. Zábrodský:
+<br>
+Četl jsem váš mail v comp.theory a váš článek "FIND, SELECT, MODIFIND" na mě udělal velký dojem. Byl jsem 
+zvolen redaktorem Nového slovníku informatiky pro oblast algoritmy, datové struktury a problémy
+(Algorithms, Data Structures, and Problems of the new CRC Dictionary of Computer Science, Engineering and 
+Technology). 
+<br>
+Chtěl bych, aby tento sajt byl online referencí pro všechny, kdo se informatikou zabývají. 
+<br>
+Hledám lidi, kteří by mi pomohli přidat hesla a definice do slovníku nebo je alespoň zkontrolovat. 
+Mohl byste přispět?
+<br>
+S úctou,<br>
+-paul-<br>
+-- <br>
+Paul E. Black 
+<br><br>
+Odepsal jsem mu 12 dubna 1999:
+<br>
+<br>
+Vážený dr. Blacku,
+<br>
+Mohu vám nabídnout:
+<br><br>
+<b>1) Stručnou definici problému nalezení k-tého prvku:</b>
+
+Je dáno pole A obsahující N prvků a kladné celé číslo K &lt;= N, 
+
+určete K-tý nejmenší prvek pole A a přerovnejte prvky pole tak, aby platilo: 
+<br>
+<br>
+A[1], A[2], ..., A[K-1] &lt;= A[K] &lt;= A[K+1], ..., A[N] 
+<br>
+<br>
+<br>
+<b>2) Implementaci N. Wirtha Hoarova FINDu v Pascalu (pro celočíselné pole X).</b>
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">procedure</span> FIND<span style="color:#808030; ">(</span>K<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">var</span> I<span style="color:#808030; ">,</span>J<span style="color:#808030; ">,</span>L<span style="color:#808030; ">,</span>R<span style="color:#808030; ">,</span>W<span style="color:#808030; ">,</span>X<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#800080; ">;</span>
+<span style="color:#800000; font-weight:bold; ">begin</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>N<span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">while</span> L<span style="color:#808030; ">&lt;</span>R <span style="color:#800000; font-weight:bold; ">do</span>
+  <span style="color:#800000; font-weight:bold; ">begin</span> X<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>K<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>L<span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>R<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">repeat</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">&lt;</span>X <span style="color:#800000; font-weight:bold; ">do</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> X<span style="color:#808030; ">&lt;</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span> <span style="color:#800000; font-weight:bold; ">do</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">if</span> I<span style="color:#808030; ">&lt;</span><span style="color:#808030; ">=</span>J <span style="color:#800000; font-weight:bold; ">then</span>
+        <span style="color:#800000; font-weight:bold; ">begin</span> W<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>W<span style="color:#800080; ">;</span>
+              I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+        <span style="color:#800000; font-weight:bold; ">end</span>
+    <span style="color:#800000; font-weight:bold; ">until</span> I<span style="color:#808030; ">&gt;</span>J<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> J<span style="color:#808030; ">&lt;</span>K <span style="color:#800000; font-weight:bold; ">then</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> K<span style="color:#808030; ">&lt;</span>I <span style="color:#800000; font-weight:bold; ">then</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+<b>3) Moji implementaci algoritmu MODIFIND v Pascalu.</b><br> Jde o jednoduché vylepšení 
+
+FINDu, které provádí menší počet výměn než FIND.
+<br>
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">procedure</span> MODIFIND<span style="color:#808030; ">(</span>K<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">var</span> I<span style="color:#808030; ">,</span>J<span style="color:#808030; ">,</span>L<span style="color:#808030; ">,</span>R<span style="color:#808030; ">,</span>W<span style="color:#808030; ">,</span>X<span style="color:#808030; ">:</span><span style="color:#bb7977; ">integer</span><span style="color:#800080; ">;</span>
+<span style="color:#800000; font-weight:bold; ">begin</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>N<span style="color:#800080; ">;</span>
+  <span style="color:#800000; font-weight:bold; ">while</span> L<span style="color:#808030; ">&lt;</span>R <span style="color:#800000; font-weight:bold; ">do</span>
+  <span style="color:#800000; font-weight:bold; ">begin</span> X<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>K<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>L<span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>R<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">repeat</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">&lt;</span>X <span style="color:#800000; font-weight:bold; ">do</span> I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      <span style="color:#800000; font-weight:bold; ">while</span> X<span style="color:#808030; ">&lt;</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span> <span style="color:#800000; font-weight:bold; ">do</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span>
+      W<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>I<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#800080; ">;</span> A<span style="color:#808030; ">[</span>J<span style="color:#808030; ">]</span><span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>W<span style="color:#800080; ">;</span>
+      I<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#808030; ">+</span><span style="color:#008c00; ">1</span><span style="color:#800080; ">;</span> J<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J<span style="color:#808030; ">-</span><span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">until</span> <span style="color:#808030; ">(</span>J<span style="color:#808030; ">&lt;</span>K<span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">or</span> <span style="color:#808030; ">(</span>K<span style="color:#808030; ">&lt;</span>I<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> J<span style="color:#808030; ">&lt;</span>K <span style="color:#800000; font-weight:bold; ">then</span> L<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>I<span style="color:#800080; ">;</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> K<span style="color:#808030; ">&lt;</span>I <span style="color:#800000; font-weight:bold; ">then</span> R<span style="color:#808030; ">:</span><span style="color:#808030; ">=</span>J
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+<br>
+Dále můžete použít kteroukoliv část mého článku  "FIND, SELECT, MODIFIND".
+<br>S pozdravem
+<br>Vladimir Zabrodsky
+</p>
+<h2>II. Proč název MODIFIND? Krátká historie mého algoritmu</h2>
+<p>S podivným chováním algoritmu FIND jsem se setkal poprvé v červnu roku 1989. Eliminoval jsem 
+je jednoduchou úpravou algoritmu FIND. První program jsem napsal v Rexxu (měl 30 řádek), ale další průzkum 
+jsem už prováděl pouze s implementací v Pascalu.  V průběhu podzimu 1990 jsem napsal svůj článek
+<i>Nalezení K-tého nejmenšího z N prvků</i>, s pascalovskými verzemi programů, a poslal jsem jej do 
+časopisu Bajt. Nebyl však ani po roce uveřejněn. Přepracoval jsem jej (rozšířil o nejhorší případ) a se 
+svolením redakce časopisu Bajt jsem jej zaslal do časopisu Elektronika. V něm totiž od října 1991 vyšly už 
+dva nebo tři příspěvky čtenářů právě na toto téma. Novou verzi článku jsem nazval <i>Variace na klasické 
+téma</i>. Publikována byla  v červnu, v 6. čísle za rok 1992. Ale v prosinci téhož roku, v 8. čísle Bajtu, 
+vyšla překvapivě i moje původní verze.  V obou článcích jsem Hoarův FIND nazýval P1 (zkratka 
+<i>první procedura v Pascalu</i>) a moji modifikaci P2 (odolal jsem pokušení nazvat ji QUICKFIND). 
+V mých poznámkách (tři školní sešity formátu A4, každý s 40-ti listy) označuji svůj algoritmus několikrát 
+jako <i>Fnd</i>. V internetové (a Rexxové) verzi je prostě Z (Find je tam H a Select FR). Ovšem Z se mi 
+nezdálo vhodné jméno pro slovník dr. Blacka a tak jsem ve svém mailu použil název MODIFIND ...
+</p><br>
+
+<h2>III. Poznámky k důkazu <i>S(N, K)</i></h2><p>
+
+Pro průměrný počet výměn u algoritmu MODIFIND uvádím odhad:
+<br>
+<code class="wrap">
+<br><i>S</i>(<i>N</i>, <i>K</i>) = 0.5((<i>N</i> + 1)<i>H</i><sub>N</sub> - (<i>N</i> - <i>K</i>)<i>H</i><sub>N-K+1</sub> - (<i>K</i> - 1)<i>H</i><sub>K</sub></i>)
+</code>
+<br>
+<br>
+Při výpočtu tohoto vzorce jsem postupoval stejně jako D. E. Knuth ve cvičeních 5.2.22 a dalších v [7]. 
+Jak to, že jsem ale mohl použít stejný postup, když MODIFIND se chová jinak než Find? Podívejme se na 
+následující příklad. 
+<br><br><img SRC="images/proof.gif" width=320 height=260 
+alt="Analýza v průměrném případě" 
+style="max-width:100%;height:auto;">
+<br>
+V prvním kroku Find odsune nalevo všechny prvky menší nebo rovny 4 a pokračuje v druhém kroku hledáním 
+třetího nejmenšího prvku z pěti prvků 9, 8, 7, 5, 6.
+<br><br>MODIFIND přestane pracovat z číslem 4 v okamžiku, když zjistí, že to nemůže být sedmý nejmenší prvek. 
+V druhém kroku bude hledat pátý nejmenší prvek v poli 8, 9, 1, 2, 7, 5, 6. Ale podívejte se dobře, přesun
+čísel 1 a 2 u Findu byl zbytečný. Tato čísla u MODIFINDu už v dalších krocích svou pozici nezmění! Z 
+hlediska odhadu počtu výměn tedy můžeme u algoritmu MODIFIND předpokládat, že, stejně jako Find, v
+ druhém kroku hledá třetí prvek v poli 8, 9, 7, 5, 6. 
+<br>Průměrný počet výměn v prvním kroku jsem určil (na 17-ti stranách svých poznámek) jako:
+<br><br>
+<code class="wrap">((K - 1) (N - K) / 2N) + (N - 1) / N</code>
+<br><br>
+Průměrný počet výměn pak je, s využitím návodu D. E. Knutha, dán vztahem:
+<br>
+<br>
+<img SRC="images/proofevl.gif" border=0 width=450 height=84 
+alt="Průměrný počet výměn v MODIFINDu" 
+style="max-width:100%;height:auto;">
+</p><br>
+<h1>IV. Stručná definice problému nalezení <i>K</i>-tého nejmenšího z
+<i>N</i> prvků</h1><p>
+C. A. R. Hoare v [1] napsal:
+<br>
+Účelem programu Find je nalézt prvek pole A[1:N], jehož
+ hodnota je podle velikosti f-tá  v pořadí a přerovnat pole tak, aby tato hodnota 
+ byla v A[f] a dále, aby platilo, že všechny prvky s nižším 
+ indexem než f mají menší hodnotu a všechny prvky s vyšším indexem mají vyšší 
+ hoddnotu. Po skončení programu musí platit: 
+<br><br>
+<code class="wrap">
+A[1], A[2], ... , A[f - 1] &lt;= A[f] &lt;= A[f + 1], ... , A[N]
+</code>
+<br><br>
+V [2] R. W. Floyd a R. L. Rivest uvádí: <br>Problém výběru 
+může být stručně definován takto: je dána množina X of n různých čísel a celé číslo 
+ i, 1 &lt;= i &lt;= n, , má se určit i-tý nejmenší prvek  
+X s co nejmenším možným počtem porovnání. Přitom i-tý nejmenší prvek, označme ho i_o_X, je 
+takový prvek, který je větší než přesně i - 1 jiných prvků, takže  1_o_X je nejmenší a 
+n_o_X největší prvek v X.
+<br><br>
+V [3]  R. W. Floyd a R. L. Rivest napsali: <br>SELECT přerovná hodnoty prvků v segmentu 
+pole X[L : R] tak, že X[K] (pro dané K; L &lt;= K &lt;= R) bude obsahovat (K - L + 1) 
+nejmenší hodnotu, z L &lt;= I &lt;= K vyplývá X[I] &lt;= X[K], a z K &lt;= I &lt;= R vyplývá X[I] >= X[K].
+<br><br>
+J.Bentley popsal problém nalezení K-tého nejmenšího prvku v článku [4] takto:
+ <br>Vstupem pro program SELECT 
+je kladné celé číslo N, pole X[1 .. N], a kladné celé číslo K &lt;= N. Program musí přerovnat prvky tak, aby 
+platilo X[1 .. K - 1] &lt;= X[K] &lt;= X[K + 1 .. N]. Pak bude K-tý nejmenší prvek na pravém místě X[K].
+  <br><br>
+  Tento můj článek (FIND, SELECT, MODIFIND) obsahuje definici (cituji):
+Problém nalezení K-tého nejmenšího z N prvků definoval C. A. R. Hoare v [1] takto: Je dáno pole A 
+obsahující N navzájem různých prvků a celé čílo K, 1 &lt;= K &lt;= N, má se určit K-tý nejmenší prvek A a pole se 
+má přerovnat tak, aby prvek A[K] výsledného pole byl K-tým nejmenším prvkem a všechny prvky s indexem 
+menším než K měly menší hodnotu a všechny prvky s indexem větším než
+ K měly větší hodnotu. Musí tedy 
+platit:
+<br><br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i> - 1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i> + 1], ..., <i>A</i>[<i>N</i>] 
+</code>
+</p><br>
+
+<h2>Stručná definice problému výběru</h2><p>
+Nejstručnější definice, která zohledňuje všechny dříve uvedené, zní:
+Je dáno pole A obsahující N prvků a kladné celé číslo K &lt;= N, určete K-tý nejmenší prvek pole A a 
+přerovnejte prvky pole tak, aby platilo:
+<br><br>
+<code class="wrap">
+<i>A</i>[1], <i>A</i>[2], ..., <i>A</i>[<i>K</i> - 1] &lt;= <i>A</i>[<i>K</i>] &lt;= <i>A</i>[<i>K</i> + 1], ..., <i>A</i>[<i>N</i>] 
+</code>
+</p><br>
+<h2>Literatura</h2><p>  
+<br><b>1.</b> C. A. R. HOARE: <i>Proof of a Program: FIND</i> 
+CACM, Vol 14, 
+No. 1, January 1971, pp. 39-45<br>
+<br><b>2.</b> R. W. FLOYD, R. L. RIVEST: <i>Expected Time Bounds for Selection.</i> CACM, March 1975, Vol. 18, No. 3, pp. 165-172<br>
+<br><b>3.</b> R. W. FLOYD, R. L. RIVEST: <i>Algorithm 489 The Algorithm SELECT - for Finding the i-th
+Smallest of n Elements [M1]</i> CACM, March 1975, Vol. 18, No. 3, p. 173<br>
+<br><b>4.</b> J. BENTLEY: <i>Selection (in Programming Pearls)</i>, CACM, November 1985, Vol. 28, No. 11, pp. 1121-1127<br>
+<br><b>5.</b> V. ZABRODSKY: <i>Variace na klasicke tema</i>, Elektronika, No. 6 1992, p. 33-34<br>
+<br><b>6.</b> V. ZABRODSKY: <i>Nalezeni k-teho nejmensiho prvku</i>, Bajt, No. 8 1992, p. 130-131<br>
+<br><b>7.</b>  D. E. KNUTH: <i>The Art of Computer Programming. Sorting and Searching</i>, Addison-Wesley, Reading, Mass., 1973<br>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

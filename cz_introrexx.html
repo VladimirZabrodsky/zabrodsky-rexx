@@ -1,0 +1,535 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="cs">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-F7CECBPHXJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F7CECBPHXJ');
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
+		<meta charset="utf-8" /><TITLE>ÚVOD DO PROGRAMOVACÍHO JAZYKA REXX</TITLE>
+		<META name="DESCRIPTION" content="Originální úvod do jazyka. Uvádím jen rysy, které nejsou obzařeny v jiných jazycích. Práce se slovy, přesnost výpočtu. 
+		Interpret. Sourceline. Cyklus s více výstupy. Asociativní pole." />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="vzstyle.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="cz_index.html">REXX</a>
+    <a href="cz_introrexx.html"  class="active">Úvod</a>
+    <a href="cz_arithmetic.html">Aritmetika</a>
+    <a href="cz_turing.html">Turingův stroj</a>
+    <a href="cz_as400.html">AS400</a>
+    <a href="cz_3alg.html">Modifind</a>
+	<a href="cz_aat/index.html">Album algoritmů</a>
+	<a href="cz_links.html">Odkazy</a>
+    <a href="introrexx.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- text of page -->
+<h1>ÚVOD DO JAZYKA REXX</h1><hr><br>
+<p>
+Rexx se používá  jako makrojazyk editorů a textových procesorů; jako povelový jazyk 
+databázových, dialogových, operačních systémů a systémů řízení počítačové sítě; jako 
+jazyk pro tvorbu skriptů umožňujících automatizovat a integrovat aplikace. V tomto článku
+ bych ale chtěl ukázat, že Rexx je také zajímavý programovací jazyk. Jako formu výkladu 
+ jsem zvolil svérázný úvod do jazyka, ve kterém se soustředím především na neobvyklé 
+ výrazové prostředky, nevyskytující se ve svém souhrnu v jiném programovacím jazyce.
+<br><br>
+
+</p><h2>Místo kapitoly "Typy, konstanty a proměnné"</h2><p>
+
+V programech napsaných v jazyce Rexx chybí deklarace a typy, protože:
+<ul>
+<li>veškeré údaje jsou znakové řetězce proměnné délky;</li>
+<li>symbol je vyhlášen za jméno proměnné, až když je mu přiřazena hodnota při provádění programu;</li>
+<li>operandem aritmetické operace je řetězec znaků, který je zápisem desítkového čísla s případnými mezerami na začátku a na konci;</li>
+<li>přesnost výpočtu - počet platných číslic výsledku aritmetické operace - lze zadat 
+příkazem <code>numeric digits</code>.</li>
+</ul>
+<br>
+</p><h2>Přesnost výpočtu</h2><p>
+Kolik číslic má  číslo N-faktoriál a jak vypadá  prvních třináct číslic? Pro N rovno 
+16 nejprve vypočteme číslo 16!, pak sečteme počet znaků v zápise čísla a nakonec přečteme 
+prvních třináct znaků zleva. Ale co když je N rovno 1000? Odpověď vypíše na obrazovku 
+následující program příkazy <code>say</code>.
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx program UHLER */</span>
+Vysledek <span style="color:#808030; ">=</span> NFAKT<span style="color:#808030; ">(</span><span style="color:#008c00; ">1000</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Počet číslic ="</span> <span style="color:#800000; font-weight:bold; ">LENGTH</span><span style="color:#808030; ">(</span>Vysledek<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Prvních třináct číslic ="</span> <span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Vysledek<span style="color:#808030; ">,</span> <span style="color:#008c00; ">13</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+V zápise programu je mezera, například za konstantou "Počet číslic =", operátorem operace
+ zřetězení s vložením jedné mezery. Program je tak krátký, protože jsem využil funkce 
+ <code>LEFT</code> a <code>LENGTH</code>, které jsou součástí jazyka a nazývají se proto vestavěné (built-in).
+ Ale funkce <code>NFAKT</code> není vestavěná   a pokud tuto funkci nenapsal už někdo před 
+ námi a není při provádění programu <code>UHLER</code> dostupná, musíme si ji napsat sami.
+
+ <div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx funkce NFAKT - výpočet faktoriálu */</span>
+N <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+numeric <span style="color:#800000; font-weight:bold; ">digits</span> <span style="color:#008c00; ">3000</span>
+Nfaktorial <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+  Nfaktorial <span style="color:#808030; ">=</span> Nfaktorial <span style="color:#808030; ">*</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Nfaktorial
+</pre>
+</div>
+
+Funkce uložená  na disku jako samostatný soubor, se nazývá  vnější. Připojíme-li za 
+poslední řádek programu <code>UHLER</code> následující dva řádky:
+
+
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">exit</span>
+NFAKT: <span style="color:#800000; font-weight:bold; ">procedure</span>
+</pre>
+
+
+a dále text funkce <code>NFAKT</code>, bude <code>NFAKT</code> funkcí vnitřní. Příkaz <code>exit</code>
+ explicitně ukončuje 
+provádění hlavního programu, které by jinak pokračovalo chybným vykonáním příkazu 
+procedure s návěštím <code>NFAKT</code>; příkaz <code>procedure</code> bez klíčového slova <code>expose</code> určuje, že 
+volající program a volaná  funkce nesdílí žádné proměnné. Spustíme-li program <code>UHLER</code>, 
+objeví se na obrazovce:
+
+
+
+<pre style="color:#000000;">Počet číslic <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2568</span>
+Prvních třináct číslic <span style="color:#808030; ">=</span> <span style="color:#008c00; ">4023872500770</span>
+</pre>
+
+
+
+V řešení čtvrtého cvičení v odstavci 1.2.5 knihy D. E. Knutha <i>The Art of Computer Programming</i>, díl 1., čteme: 
+"Přesnou hodnotu 1000! určil jako první H. S. Uhler po mnohaletých trpělivých výpočtech 
+na kalkulátoru. Výsledek uveřejnil v časopise <i>Scripta Mathematica</i> 21 (1955), ss. 266-267 
+a začíná: 402 38 726 00 770 ..."
+<br><br></p>
+<h3 class="blue">Cvičení 1</h3><p>
+
+Operátorem operace umocnění je <code>**</code>. Kolik číslic má číslo devět na devátou na devátou, tj.
+ <code>9 ** (9 ** 9)</code>?
+<br><br>
+ </p><h2>Zpracování slov</h2><p>
+
+ Rexx definuje slovo jako neprázdný řetězec znaků, který neobsahuje mezeru. Práci se 
+ slovy usnadňují vestavěné funkce a příkaz <code>parse</code>. Například funkce
+ <code>WORDS(<i>řetězec</i>)</code>
+ vrací počet slov řetězce. Můžeme si to ověřit, zadáme-li jako argument větu, 
+ jednoznačně definující číslo K takto: Buď K nejmenší přirozené číslo, které 
+ nelze definovat méně než čtrnácti českými slovy. Výsledek - pointa Berryho antinomie 
+ ze skript E. Fuchse <i>Teorie množin</i> (UJEP Brno, 1974) - nás donutí slova ve větě opravdu 
+ spočítat. Ale co když oddělovačem slov bude jiný znak než mezera? Předpokládejme, že 
+ oddělovač (právě jeden znak) je uložen v proměnné <code>Oddelovac</code>. Pak následující fragment 
+ programu vypíše všechna slova zadaného textu v tomto obecném případě.
+ 
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">Om <span style="color:#808030; ">=</span> Oddelovac <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">" "</span><span style="color:#808030; ">;</span> Mo <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">REVERSE</span><span style="color:#808030; ">(</span>Om<span style="color:#808030; ">)</span>
+Text <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">,</span> Om<span style="color:#808030; ">,</span> Mo<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">WORDS</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">)</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">WORD</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">,</span> J<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span> Om<span style="color:#808030; ">,</span> Mo<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+Vestavěná  funkce <code>WORD(<i>řetězec</i>, <i>n</i>)</code> vrací n-té slovo řetězce. Symbol <code>||</code> je 
+operátor 
+operace zřetězení bez vložení mezery. A funkce <code>REVERSE</code>? Vzpomeňte si na <i>Příběh z 
+Rozeklaných hor</i> od Edgara Allana Poa; "... - vždyť Bedlo bez e - co to je jiného než 
+Oldeb obráceně?" Následující program zobrazí na displeji <code>OLDEB</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* BEDLO */</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">REVERSE</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">LEFT</span><span style="color:#808030; ">(</span>Bedloe<span style="color:#808030; ">,</span> <span style="color:#008c00; ">5</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+Funkce <code>TRANSLATE(<i>řetěze</i>, <i>šifrovaná_abeceda</i>, <i>abeceda</i>)</code> zamění každý v řetězci se 
+vyskytující znak z abecedy odpovídajícím znakem z šifrovací_abecedy (jde o jednoduché 
+substituční šifrování). Když bude v proměnné <code>Pergamen</code> uložen kryptogram kapitána Kidda, 
+ze slavné povídky <i>Zlatý brouk</i> Edgara Allana Poa, začínající řetězcem znaků: 
+<code>53++!305))6*;</code> pak následující příkaz
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">TRANSLATE</span><span style="color:#808030; ">(</span>Pergamen<span style="color:#808030; ">,</span> <span style="color:#808030; ">,</span><span style="color:#696969; ">/* pokračování příště */</span>
+    <span style="color:#0000e6; ">"adeghinortlsbpvwmuycf"</span><span style="color:#808030; ">,</span> <span style="color:#0000e6; ">"5!8346*+(;0)2.']9?:-1"</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+nám odkryje záhadu pergamenu. Řešení začíná: <code>agoodglassint</code>.
+<br><br>
+</p><h2>Příkaz interpret</h2><p>
+
+Příkaz <code>interpret <i>výraz</i></code> nejprve vyhodnotí <i>výraz</i> a výsledný 
+řetězec znaků provede jako 
+příkaz nebo fragment programu. Program <code>USHER</code> vytváří prostředí, ve kterém 
+můžeme zadat 
+interpretu jazyka Rexx k provedení příkazy (i příkazy operačního systému) nebo 
+jednořádkové programy.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx program USHER */</span>
+<span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">forever</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">'Zadej fragment Rexx programu:'</span>
+  <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> Fragment
+  <span style="color:#800000; font-weight:bold; ">call</span> INTERPRETUJ Fragment
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#696969; ">/* Subroutine INTERPRETUJ */</span>
+INTERPRETUJ: <span style="color:#800000; font-weight:bold; ">procedure</span>
+  <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">return</span>
+</pre>
+</div>
+
+Příkaz <code>parse pull</code> přijme řádek textu odeslaný z klávesnice a příkaz 
+<code>interpret</code> jej vykoná.
+Můžeme tedy například napsat:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">if</span> <span style="color:#800000; font-weight:bold; ">RANDOM</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Hlava"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Orel"</span>
+</pre>
+</div>
+
+Totéž je v manuálu uvedeno jako samostatný program. <code>USHER</code> nás naučí spoustu věcí aniž 
+bychom museli použít editor. Při vyhodnocování výrazů a studiu vestavěných funkcí nám 
+pomůže následující program, zapsaný na jednom řádku jako vstup pro program <code>USHER</code>:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">until</span> Exp <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"?"</span><span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">pull</span> Exp<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#0000e6; ">"say"</span> Exp<span style="color:#808030; ">;</span> <span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+Uveďme si příklad možné konverzace:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">?
+<span style="color:#008c00; ">1</span> <span style="color:#808030; ">+</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">*</span> <span style="color:#008c00; ">12</span><span style="color:#808030; ">)</span>
+<span style="color:#008c00; ">25</span>
+?
+<span style="color:#0000e6; ">"["</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#800000; font-weight:bold; ">SPACE</span><span style="color:#808030; ">(</span><span style="color:#0000e6; ">" Edgar  Allan     Poe "</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">"]"</span>
+<span style="color:#808030; ">[</span>Edgar Allan Poe<span style="color:#808030; ">]</span>
+</pre>
+</div>
+
+Povšimněte si, že jméno proměnné, v tomto případě <code>Exp</code>, může být vytvořeno až 
+za běhu programu. Příkaz procedure v programu <code>USHER</code> zajistí, aby dynamicky 
+vytvořené jméno proměnné existovalo jen po dobu provádění podprogramu <code>INTERPRETUJ</code>.
+ Chceme-li, aby hodnota určité proměnné, nazvěme ji třeba <code>Global</code>, byla 
+ dostupná i při dalším volání podprogramu, musíme změnit jeho první řádek na:
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">INTERPRETUJ: <span style="color:#800000; font-weight:bold; ">procedure</span> <span style="color:#800000; font-weight:bold; ">expose</span> Global
+</pre>
+</div>
+<i>... i dospělý člověk je schopen hypnoticky poslechnout návod na podivně vyhlížející 
+věcičce "Malý kouzelný vyrážeč pojistek: Vlož do zásuvky a ZASUŇ!"</i>, napsal B. Higman 
+v knize <i>Porovnávací studie programovacích jazyků</i>. Nejprve si zjistěte, jakým 
+způsobem můžete přerušit aktivní proces ve vámi používaném systému, potom zadejte:
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Pád do Malströmu */</span> <span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+a pak si zkuste představit, co vlastně prováděl interpret jazyka, který 
+"hypnoticky poslechl" vás. V programu <code>USHER</code> je použit "nekonečný" cyklus se 
+záhlavím <code>do forever</code>. Jak se vlastně ukončí jeho provádění? Zadáme-li příkaz 
+<code>exit</code> nebo dopustíme-li se například syntaktické chyby. Druhé "řešení" ukazuje,
+ že program <code>USHER</code> je nutné ještě rozšířit. Pro ošetření chyb je v jazyce Rexx
+  k dispozici příkaz <code>signal</code>. Při rozšiřování programu <code>USHER</code> se 
+  můžete inspirovat programem <code>REXXTRY</code> v systému OS/2. Využitím interpretace 
+  v programování (pro zkrácení textu programu) se zabývá J. Bentley v knize 
+  <i>Perly programování</i>.
+<br><br>
+
+<h3 class="blue">Cvičení 2</h3><p>
+Podle F. M. Whyta se typ podvozku parní lokomotivy označoval trojčíslím. Například u 
+lokomotivy Santa Fe třídy 3700 z roku 1917:
+<br>
+<img src="images/loco.gif" width=300 height=127 border=0 align=center alt="Kolik kol má lokomotiva?" 
+style="max-width:100%;height:auto;">
+<br>
+bylo uspořádání kol popsáno jako 4 - 8 - 2. První a poslední číslo ukazovalo počet 
+nespřažených předních a zadních kol, prostřední číslo ukazovalo počet spřažených neboli 
+hnacích kol. Napište příkaz, který pro správně zadanou hodnotu typu podvozku, uloženou 
+v proměnné <code>Typ</code>, určí, kolik měla lokomotiva celkem kol a výsledek zobrazí.
+<br><br>
+</p><h2>Funkce SOURCELINE</h2><p>
+V článku <i>Reflections on Trusting Trust</i> (CACM, č. 8 1984) se K. Thompson zmiňuje o 
+úloze napsat co nejkratší program, který by na výstupu produkoval svou věrnou kopii. 
+Nejkratší program v jazyce Rexx, který splňuje zadání, je (v prostředí TSO/E by musela 
+být úvodní poznámka <code>/*Rexx*/</code>):
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/**/</span><span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+
+
+Funkce <code>SOURCELINE(<i>n</i>)</code> vrací hodnotu <i>n</i>-tého řádku programu. Předpokládejme, že máme 
+zobrazit zprávu:
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#808030; ">+</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">+</span>
+<span style="color:#808030; ">|</span> Zvýrazněná zpráva <span style="color:#808030; ">|</span>
+<span style="color:#808030; ">+</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">-</span><span style="color:#808030; ">+</span>
+</pre>
+</div>
+Můžeme napsat program se třemi příkazy <code>say</code>. Výhodu složitějšího programu 
+<code>POZOR</code> poznáme při opakovaných změnách zprávy.
+
+<div class="scrolling-wrapper-flexbox">
+
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx program POZOR</span>
+<span style="color:#696969; ">+-------------------+</span>
+<span style="color:#696969; ">| Zvýrazněná zpráva |</span>
+<span style="color:#696969; ">+-------------------+</span>
+<span style="color:#696969; ">*/</span>
+<span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span> <span style="color:#800000; font-weight:bold; ">while</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span>J<span style="color:#808030; ">)</span> &lt;&gt; <span style="color:#0000e6; ">"*/"</span>
+  <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">SOURCELINE</span><span style="color:#808030; ">(</span>J<span style="color:#808030; ">)</span>
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+
+</div>
+
+V jazyce Rexx je i řádek programu znakovým řetězcem přístupným k zpracování.
+<br><br>
+</p><h2>Cyklus s více výstupy</h2><p>
+
+Užitečnost takového cyklu dokazoval G. V. Bochmann v práci <i>Multiple Exits from a Loop 
+Without the GOTO</i> (CACM, č. 7 1973) na řešení úlohy: Je dán vektor N čísel, najděte index 
+prvního, například nulového, prvku.
+O čtrnáct let později byl publikován dopis F. Rubina redakci časopisu CACM (č. 3, 1987), 
+ve kterém je, jako příklad efektivního použití příkazu goto, uvedeno řešení úlohy: Je dána
+ matice typu NxN, najděte index prvního nulového řádku.
+Je možné, že v roce 2001 (1987 + 14) vyjde příspěvek o výhodách strastiplného putování 
+programem s příkazy goto, obsahující úlohu: Je dáno trojrozměrné pole M matic typu NxN, 
+najděte index první nulové matice.
+Program <code>ODYSEA</code> ukazuje řešení v jazyce Rexx už nyní.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx program ODYSEA */</span>
+M <span style="color:#808030; ">=</span> <span style="color:#008c00; ">6</span><span style="color:#808030; ">;</span> N <span style="color:#808030; ">=</span> <span style="color:#008c00; ">100</span>
+X<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+X<span style="color:#808030; ">.</span><span style="color:#008000; ">1.1</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">1</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">2.94</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">15</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">3.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">8</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+X<span style="color:#808030; ">.</span><span style="color:#008000; ">4.5</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">2</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">5.16</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">30</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span><span style="color:#808030; ">;</span> X<span style="color:#808030; ">.</span><span style="color:#008000; ">6.86</span><span style="color:#808030; ">.</span><span style="color:#008c00; ">3</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+<span style="color:#800000; font-weight:bold; ">do</span> I <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> M
+  <span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+    <span style="color:#800000; font-weight:bold; ">do</span> K <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> N
+      <span style="color:#800000; font-weight:bold; ">if</span> X<span style="color:#808030; ">.</span>I<span style="color:#808030; ">.</span>J<span style="color:#808030; ">.</span>K &lt;&gt; <span style="color:#008c00; ">0</span> <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">iterate</span> I
+    <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">end</span>
+  <span style="color:#800000; font-weight:bold; ">leave</span> I
+<span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">if</span> I&lt;<span style="color:#808030; ">=</span>M <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> I <span style="color:#808030; ">|</span><span style="color:#808030; ">|</span> <span style="color:#0000e6; ">". matice je nulová"</span>
+  <span style="color:#800000; font-weight:bold; ">else</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#0000e6; ">"Nulová matice neexistuje"</span>
+</pre>
+</div>
+
+Příkaz <code>iterate I</code> ukončuje provádění vnitřních cyklů a výpočet pak pokračuje
+ další iterací hlavního cyklu s řídicí proměnnou <code>I</code>. Příkaz <code>leave I</code>
+  ukončuje provádění hlavního cyklu s řídicí proměnnou <code>I</code>.
+Příkaz cyklu v kombinaci s příkazy <code>iterate</code> a <code>leave</code> umožňuje 
+přehledně zapsat i neobvyklé řídicí struktury (viz obrázek), jinak známé jen z teorie, 
+například z dodatku J. Hořejše ke knize Z. Manny <i>Matematická teorie programů</i>.
+<br>
+<img src="images/dre.gif" width=380 height=190 border=0 align=center alt="Cyklus s iterate a leave" 
+style="max-width:100%;height:auto;">
+<br>
+Zápis <code>X.I.J.K</code> označuje prvek pole <code>X</code> (obdoba zápisu 
+<code>X(I, J, K)</code> ve 
+FORTRANu nebo <code>X[I, J, K]</code> v Pascalu). Tak jako kterákoliv jiná proměnná i prvek pole 
+alokuje paměť, až když je mu přiřazena hodnota. V případě programu <code>ODYSEA</code> alokuje 
+paměť pouze 6 prvků.
+Zajímavý je případ, když se hodnota přiřadí přímo jménu pole:
+
+<code>X. = 0</code>
+
+V dalším průběhu provádění programu pak bude každý prvek pole, kterému nebyla explicitně 
+přiřazena hodnota, považován za nulový.
+<br><br>
+</p><h2>Asociativní pole</h2><p>
+<p>Vnitřní funkce <code>SLOVA</code> určí všechna slova, která se v zadaném textu vyskytují 
+alespoň K-krát.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx funkce SLOVA */</span>
+SLOVA: <span style="color:#800000; font-weight:bold; ">procedure</span>
+   Text <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">)</span><span style="color:#808030; ">;</span> K <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">ARG</span><span style="color:#808030; ">(</span><span style="color:#008c00; ">2</span><span style="color:#808030; ">)</span>
+   Seznam<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+   Vysledek <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">""</span>
+   <span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">WORDS</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">)</span>
+    Slovo <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">WORD</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">,</span> J<span style="color:#808030; ">)</span>
+    Seznam<span style="color:#808030; ">.</span>Slovo <span style="color:#808030; ">=</span> Seznam<span style="color:#808030; ">.</span>Slovo <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+    <span style="color:#800000; font-weight:bold; ">if</span> Seznam<span style="color:#808030; ">.</span>Slovo <span style="color:#808030; ">=</span> K <span style="color:#800000; font-weight:bold; ">then</span> Vysledek <span style="color:#808030; ">=</span> Vysledek Slovo
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> Vysledek
+</pre>
+</div>
+Hodnotou proměnné <code>Slovo</code> může být obecně libovolný řetězec znaků. 
+<code>Seznam.Slovo</code> pak označuje prvek pole určený touto hodnotou jako indexem.
+M. F. Cowlishaw, autor jazyka Rexx, uvedl v článku <i>The design of the Rexx language</i>. 
+    IBM Systems Journal, r. 23, č. 4 1984, ss. 326-335, příklad vnitřní funkce, která 
+    vypustí duplicitní slova v posloupnosti slov. Jde o speciální případ funkce 
+    <code>SLOVA</code> pro 
+    <code>K = 1</code>.
+
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;">jen1: <span style="color:#800000; font-weight:bold; ">procedure</span>
+  <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">arg</span> text
+  seznam<span style="color:#808030; ">.</span> <span style="color:#808030; ">=</span> <span style="color:#008c00; ">0</span>
+  vysledek <span style="color:#808030; ">=</span> <span style="color:#0000e6; ">''</span>
+  <span style="color:#800000; font-weight:bold; ">do</span> <span style="color:#800000; font-weight:bold; ">while</span> text &lt;&gt; <span style="color:#0000e6; ">''</span>
+    <span style="color:#800000; font-weight:bold; ">parse</span> <span style="color:#800000; font-weight:bold; ">var</span> text slovo text
+    <span style="color:#800000; font-weight:bold; ">if</span> seznam<span style="color:#808030; ">.</span>slovo <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">iterate</span>
+    seznam<span style="color:#808030; ">.</span>slovo <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span>
+    vysledek <span style="color:#808030; ">=</span> vysledek slovo
+  <span style="color:#800000; font-weight:bold; ">end</span>
+<span style="color:#800000; font-weight:bold; ">return</span> vysledek
+</pre>
+</div>
+
+Jak vidíte, jedno a totéž je možné v jazyce Rexx vyjádřit různými prostředky a sami si 
+můžete zvolit konvenci pro zápis textu programu. Při provádění programu se malá písmena 
+abecedy převedou na velká. Výjimku tvoří text uzavřený do apostrofů nebo uvozovek - 
+zápis řetězcové konstanty - a text poznámky.
+<br><br>
+</p></p><h3 class="blue">Cvičení 3</h3><p>
+
+Práce na textu článku zahrnuje rušení, přesuny a doplňování vět. Často se mi stává, že 
+stejná formulace je nakonec uvedena v téměř sousedících větách. Upravte funkci 
+<code>SLOVA</code> na podprogram, který zobrazí všechny posloupnosti slov začínající a 
+končící týmž slovem a obsahující zadaný počet K nebo méně slov. Využijte vestavěnou 
+funkci <code>SUBWORD(<i>řetězec</i>, <i>n</i>, <i>d</i>)</code>, která vrací podřetězec 
+řětězce obsahující <i>d</i> slov řetězce počínaje jeho <i>n</i>-tým slovem.
+<br><br>
+</p><h2>Co je až tak zajímavého na jazyku Rexx ...</h2><p>
+... aby stálo za to se jej učit?
+
+Programy v jazyce Rexx jsou snadno přenositelné do prostředí jiných operačních systémů.
+Výrazovými prostředky jazyka lze zapsat i složitý algoritmus krátkým programem.
+Krátké programy mohou být užitečné jako prototypy.
+
+Rexx umožňuje vytvářet různá prostředí. Příkladem může být program USHER - prostředí pro 
+výuku a studium jazyka a interakci s operačním systémem.
+
+Je vhodný pro výuku programování. Domnívám se, že by mohl být vynikajícím pomocníkem při 
+studiu základů kybernetiky, matematické teorie programů nebo konstrukce kompilátorů 
+(viz implementace univerzálního <a href="cz_turing.html">Turingova stroje)</a>. Pokusem o ucelený důkaz možností 
+jazyka při popisu, definici a kódování algoritmů je 
+<a href="cz_aat/index.html">Album algoritmů a technik</a>.
+Je ideálním nástrojem pro vývoj a testování algoritmů. Praktickou ukázkou je můj článek 
+o algoritmu <a href="modifind.html">MODIFIND</a>.
+
+Začínající programátor(ka) bude považovat asociativní pole a interpretaci za přirozené 
+prostředky, i když J. Bentley zahrnul jejich využití mezi perly programování.
+B. W. Kernighan a P. J. Plauger radí v knize <i>The Elements of Programming Style</i>
+(ve druhém vydání je to dvacáté první přikázání): <i>Program napište nejprve v 
+jednoduchém pseudojazyce a teprve potom jej převeďte do jazyka, který používáte</i>. 
+Pro mě je jazyk Rexx ideálním "pseudojazykem": vyhovuje mi jeho syntaxe a správnost i 
+fragmentů programů může otestovat počítač.¨
+
+Přitom všechna kouzla jazyka vyplývají z důsledného uplatňování jen několika málo 
+obecných výrazových prostředků. V povídce Zánik domu Usherů napsal E. A. Poe: 
+<i>... nesnášel žádnou hudbu kromě jistých akordů hraných na strunné nástroje. Snad právě 
+z tohoto úzkého výběru, kterým se také omezoval při hře na kytaru, vznikl do značné míry 
+fantastický styl jeho přednesu</i>.
+<br><br>
+</p><h3 class="blue">Řešení cvičení</h3><p>
+
+<b>1.</b> cvičení
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#696969; ">/* Rexx program KOLIK */</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#008c00; ">9</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> <span style="color:#808030; ">(</span><span style="color:#008c00; ">9</span> <span style="color:#808030; ">*</span><span style="color:#808030; ">*</span> <span style="color:#008c00; ">9</span><span style="color:#808030; ">)</span>
+</pre>
+</div>
+<br>
+<b>2.</b> cvičení 
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">interpret</span> <span style="color:#0000e6; ">"say -(-"</span> Typ<span style="color:#0000e6; ">")"</span>
+</pre>
+</div>
+<br>
+<b>3.</b> cvičení
+<div class="scrolling-wrapper-flexbox">
+<pre style="color:#000000;"><span style="color:#800000; font-weight:bold; ">do</span> J <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span> <span style="color:#800000; font-weight:bold; ">to</span> <span style="color:#800000; font-weight:bold; ">WORDS</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">)</span>
+  Slovo <span style="color:#808030; ">=</span> <span style="color:#800000; font-weight:bold; ">WORD</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">,</span> J<span style="color:#808030; ">)</span>
+  L <span style="color:#808030; ">=</span> Seznam<span style="color:#808030; ">.</span>Slovo
+  <span style="color:#800000; font-weight:bold; ">if</span> L &lt;&gt; <span style="color:#008c00; ">0</span>
+    <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">do</span>
+      V <span style="color:#808030; ">=</span> J <span style="color:#808030; ">-</span> L <span style="color:#808030; ">+</span> <span style="color:#008c00; ">1</span>
+      <span style="color:#800000; font-weight:bold; ">if</span> V &lt;<span style="color:#808030; ">=</span> K <span style="color:#800000; font-weight:bold; ">then</span> <span style="color:#800000; font-weight:bold; ">say</span> <span style="color:#800000; font-weight:bold; ">SUBWORD</span><span style="color:#808030; ">(</span>Text<span style="color:#808030; ">,</span> L<span style="color:#808030; ">,</span> V<span style="color:#808030; ">)</span>
+    <span style="color:#800000; font-weight:bold; ">end</span>
+    Seznam<span style="color:#808030; ">.</span>Slovo <span style="color:#808030; ">=</span> J
+<span style="color:#800000; font-weight:bold; ">end</span>
+</pre>
+</div>
+
+
+</p><h2>Poznámky</h2><p>
+První verze "Úvodu ..." byla publikována v časopise <i>Softwarove noviny</i>, r. 
+6, č. 12 (1995), 114-118. Některé informace jsem převzal ze svých příspěvků 
+uveřejněných v Archive of REXXLIST: REXX & E. A. Poe 98/10/09, 
+Complements to Words, words, words 98/10/26. Dále jsem použil tuto literaturu:
+<br><br>
+
+M. F. Cowlishaw: <i>The REXX Language - A Practical Approach to Programming</i>
+
+<br>Prentice-Hall, inc., Engelwood Cliffs, New Jersey 1985
+<br><br>
+J. Bentley: <i>Associative Arrays</i>
+<br>CACM, Vol. 28, No. 6 (June 1985), 570-576
+
+<br><br>
+F. Clarke: <i>Words, words, words...</i>
+<br>The RexxLA Newsletter, October 1998, Issue 199810
+
+<br><br>
+Helpy z Personal REXX for Windows(TM)
+<br>Version 3.50, Quercus System
+<br><br>
+H. F. Ledgard, M. Marcotty: <i>A Genealogy of Control Structures</i>
+CACM, Vol. 18, No. 11 (November 1975), 629-639
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 15. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
