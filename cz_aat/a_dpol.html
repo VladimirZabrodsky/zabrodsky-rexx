@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Dělení polynomů</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Polynomy, dělení, koeficienty podílu a zbytku.">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_dpol.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_dpol.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DĚLENÍ POLYNOMŮ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Je dáno <code>N + 1</code> koeficientů polynomu <code>A.</code> řádu 
+<code>N</code> (tj.  
+ <code>A.0, A.1, ..., A.N</code>), a <code>M + 1</code> koeficientů polynomu 
+ <code>B.</code> řádu <code>M</code> (<code>B.0, B.1, ..., B.M</code>). 
+ Určete podíl polynomu  <code>A.</code>  polynomem <code>B.</code> se zbytkem,
+ jehož výsledkem je podíl s koeficienty v <code>Q.1, Q.2, ..., Q.NmM</code>,
+ kde <code>NmM = N - M</code> a zbytek s koeficienty v  
+ <code>R.1, R.2, ..., R.Mm1</code>, kde <code>Mm1 = M - 1</code>.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: vstupní pole <code>A.</code>, <code>B.</code>;
+ výstupní pole <code>Q.</code>,<code>R.</code>
+koeficientů
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code>, <code>M</code>; 
+<code>N &gt;= M &gt;= 0</code>
+<br>&nbsp;
+<br>Výsledek: koeficienty podílu jsou v 
+<code>Q.1, Q.2, ..., Q.NmM</code>, kde <code>NmM = N - M</code>;
+koeficienty zbytku jsou v 
+<code>R.1, R.2, ..., R.Mm1</code>, kde <code>Mm1 = M - 1</code>
+
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+<a name="poldiv">&nbsp;</a>
+POLDIV: procedure expose A. B. R. Q.
+parse arg N, M
+Q. = 0
+do J = 0 to N; R.J = A.J; end
+do K = N - M to 0 by -1
+  MpK = M + K; Q.K = R.MpK / B.M
+  do J = M + K - 1 to K by -1
+    JmK = J - K; R.J = R.J - Q.K * B.JmK
+  end
+end
+return
+</code>
+</pre>
+</div>
+<h4>Příklad</h4><p>
+Následující program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 4; M = 2
+A.0 = 6; A.1 = -5; A.2 = 4; A.3 = -3; A.4 = 2
+B.0 = 1; B.1 = -3; B.2 = 1
+call POLDIV N, M
+Quo = ""
+do J = N - M to 0 by -1; Quo = Quo Q.J"*X**"J; end
+Rem = ""
+do J = M - 1 to 0 by -1; Rem = Rem R.J"*X**"J; end
+say "quotient" Quo || "; remainder" Rem
+exit
+
+POLDIV: procedure expose A. B. R. Q.
+...
+</code>
+</pre>
+</div>
+vypíše na obrazovku:<br> 
+<code>podíl 2*X**2 3*X**1 11*X**0; zbytek 25*X**1 -5*X**0</code>
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_horn.html">Hodnota polynomu</a>
+<br>
+<br><a href="a_ddpo.html">Hodnota polynomu a jeho derivací</a>
+<br>
+<br><a href="a_apol.html">Součet polynomů</a>
+<br>
+<br><a href="a_apol.html#sparse_poly">Součet "řídkých" polynomů</a>
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical 
+Recipes in C : the art of scientific computing</i> - 2nd ed. University 
+Press, Cambridge, 1992
+<br>
+<br>Faddejev A.K., Sominskij J.S. <i>Sbornik zadač po vyššej algebre</i>
+ Nauka, Moskva 1964
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

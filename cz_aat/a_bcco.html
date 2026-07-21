@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Předem vypočtené konstanty</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Čstao užívané konstanty stojí zato 
+	vypočítat jen jednou a výslednou hodnotu uložit do funkce" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_bcco.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_bcco.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: PŘEDEM VYPOČTENÉ KONSTANTY</h1>
+<hr>
+<br>
+<p>Často užívané konstanty, tak třeba 
+<code><a href="a_log.html#ln2">LN(2)</a></code>, číslo <code><a href="a_pi.html#piconst">Pi</a></code>, číslo 
+<code><a href="a_e.html#econst">e</a></code>, stojí zato vypočítat jenom 
+jednou a uschovat jejich hodnotu do programového kódu vnější nebo vnitřní
+ funkce. Ukáži vám jednoduchý program, který automaticky vytvoří vnější 
+ funkci. Takovou, která pak bude vracet hodnotu požadované konstanty s 
+ maximálním počtem platných číslic pro danou aplikaci. 
+<br><br>
+Příklad: Při výpočtu <a href="a_fibo.html">Fibonacciho čísel</a> pomocí 
+explicitního vzorce  se používá konstanta <code>SQRT(5)</code>. 
+Následující program nejprve vypočte hodnotu <code>SQRT(5)</code> s 
+maximálním počtem (řekněme <code>2100</code>) platných číslic a pak vytvoří 
+externí funkci <code>SQRT5</code> vracející právě tuto hodnotu.  
+
+
+<a name="create_constant">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Constant = SQRT(5, 2100)
+Output = "C:\REGINA\SQRT5.REX"
+call LINEOUT Output, "SQRT5: procedure; V = '' "
+do while Constant > 0
+  parse var Constant String 60 Constant
+  call LINEOUT Output, "V = V ||" String
+end
+call LINEOUT Output, "return V"
+exit
+SQRT: procedure
+...
+</code>
+</pre>
+</div>
+Výsledkem programu je soubor <code>C:\REGINA\SQRT5.REX</code>, který uvádím dále. Můžeme jej použít jako vnitřní nebo vnější funkci.
+ Ušetří nám okolo půl minuty výpočtů. Upravená část zápisu funkce <code>SQRT5</code> následuje.
+
+<a name="sqrt5">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SQRT5: procedure; V = ''
+V = V || 2.2360679774997896964091736687
+V = V || 31276235440618359611525724270
+V = V || 89724541052092563780489941441
+V = V || 44083787822749695081761507737
+V = V || 83504253267724447073863586360
+V = V || 12153345270886677817319187916
+V = V || 58112766453226398565805357613
+V = V || 50417533785003423392414064442
+V = V || 08643253909725259262722887629
+V = V || 95174024406816117759089094984
+V = V || 92371390729728898482088641542
+V = V || 68989409913169357701974867888
+V = V || 54420897541329561831769214999
+V = V || 77424801530434115035957668332
+V = V || 51249881517813940800056242085
+V = V || 52435422355561063063428202340
+V = V || 93331982933959746352271201341
+V = V || 74961420263590473788550438968
+...
+return V
+</code>
+</pre>
+</div>
+Následující program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+P = 25
+numeric digits P
+say SQRT(5, P)
+say SQRT5() + 0
+exit
+...
+</code>
+</pre>
+</div>
+zobrazí na displeji
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+2.236067977499789696409174
+2.236067977499789696409174
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+
+<a href="a_e.html">Eulerovo číslo e</a>
+<br>
+<br><a href="a_gamma.html">Eulerova konstanta gama</a>
+<br>
+<br><a href="a_exp.html">Exponenciální funkce</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_pi.html">Číslo Pi</a>
+<br>
+<br><a href="a_sqrt.html">Odmocnina z kladného reálného čísla</a>
+<br>
+<br><a href="a_log.html">Logaritmy s jiným základem než e</a>
+<br>
+<br><a href="a_recu.html">Technika: Odtranění rekurze</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

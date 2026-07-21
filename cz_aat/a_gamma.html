@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Eulerova konstanta gama</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Výpočet Eulerovy konstanty gama s 
+	přesností desítky platných číslic" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_gamma.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_gamma.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>EULEROVA KONSTANTA <span class="serif lowercase">&#947;</span></h1><hr>
+<br>
+<p>Eulerova konstanta <code>&#947;</code> je definována vzorcem:
+<code>&#947; = H.N - <a href="a_ln.html#ln">LN</a>(N)</code> 
+pro 
+<code>N</code> jdoucímu k nekonečnu; <code>H.N</code> je tzv. 
+<code>N</code>-té harmonické číslo:
+<br>
+<br><code>H.N = 1 + (1/2) + (1/3) + ... + (1/N)</code>
+
+</p><br>
+<h3>Algoritmus</h3><p>
+Použijeme vzorec 
+<br>
+<br><code><a href="a_ln.html#ln">LN</a>(N) + &#947; + chyba = 
+X/FACT(1) - X**2/(2*FACT(2)) + X**3/(3*FACT(3)) ...</code>
+<br><br>
+
+kde <code><a href="a_fact.html#fact">FACT</a></code> je funkce pro 
+výpočet <a href="a_fact.html">faktoriálu</a> a, jak dokázal sám L. Euler, 
+<code>chyba = <i>O</i>(<a href="a_exp.html#exp">EXP</a>(-X)/X)</code>.
+</p><br>
+<h3>Implementace</h3><p>
+
+Jednotka: program
+<br>&nbsp;
+<br>Vazba: <code><a href="a_ln.html#ln">LN</a></code> funkce</a>
+<br>&nbsp;
+<br>Výsledek: program zobrazí prvních 60 platných desítkových číslic 
+konstanty <code>&#947;</code>
+
+
+<a name="compute_gamma">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 130; W=500; P = 130
+numeric digits P
+N = X; F = 1; D = 1; S = X
+do K = 2 to W
+  N = - N * X; F = F * K; D = F * K
+  S = S + N / D
+end
+say S - LN(X, P)
+</code>
+</pre>
+</div>
+Výpočet trvá asi jednu minutu. Hodnotu konstanty <code>&#947;</code> stačí 
+vypočítat jen jednou s dostatečnou přesností. Uložíme-li ji do souboru na 
+disku, pak lze vytvořit funkci, která "vypočte" hodnotu konstanty 
+<code>&#947;</code> s požadovanou přesností mnohem rychleji než výše uvedený 
+program. Příkladem je následující funkce <code>GAMMA_CONST</code>, kterou 
+lze "vypočítat" prvních <code>P</code> platných číslic konstanty 
+<code>&#947;</code>, pro <code>P=1, ..., 60</code>.
+
+<a name="gamma_const">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GAMMA_CONST: return,
+"0.5772156649015328606065120900" ||,
+"824024310421593359399235988058"
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_e.html">Eulerovo číslo e</a>
+<br>
+<br><a href="a_fact.html">Faktoriál</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_exp.html">Exponenciální funkce</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+</p><br>
+<h3>Literatura</h3><p>
+Brent R. P. <i>Ramanujan and Euler's Constant</i> 
+Computer Sciences Laboratory, Australian 
+National University, August 1993
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

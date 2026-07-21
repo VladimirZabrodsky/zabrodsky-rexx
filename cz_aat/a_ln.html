@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Přirozený logaritmus</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Vypocet funkce LN(X)">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_ln.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_ln.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>PŘIROZENÝ LOGARITMUS</h1>
+<hr>
+<p>
+Logaritmus se základem <i>e</i>, kde <i>e</i> je 
+<a href="a_e.html">Eulerovo číslo</a>, se nazývá přirozený logaritmus. 
+Přirozený logaritmus čísla <code>X</code> označujeme <code>LN(X)</code>. 
+
+</p><br><h3>Algoritmus</h3><p>
+Pro <code>0 &lt; X &lt; 1</code> je 
+<code>LN(X)=-LN(1/X)</code>
+ <br><br>Pro <code>X &gt; 1</code> vyjádříme <code>X</code> ve tvaru 
+ <code>X=(2**M)*Z</code> <br>Označíme-li  <code>Zeta=(1-Z)/(1+Z)</code>, 
+ <br>pak platí 
+<br>
+<br> <code>LN(X) = M*LN(2) - 2*(Zeta/1 + Zeta**3/3 + Zeta**5/5 + ...)</code>
+<br><br>
+
+</p><br><h3>Implementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější, ale pak bez <code>procedure</code> 
+příkazu
+<br>&nbsp;
+<br>Parametry: reálné číslo <code>X &gt; 0</code>, přirozené číslo 
+<code>P</code> - počet platných číslic <code>LN(X)</code>, implicitně 
+<code>9</code>
+<br>&nbsp;
+<br>>Vazba: funkce <a href="a_log.html#ln2"><code>LN2</code></a>. 
+Pro <code>P &lt;= 200</code> můžeme použít místo uvedené funkce 
+<code>LN2P</code> samotnou funkci 
+<code><a href="a_log.html#ln2">LN2</a></code>
+<br>&nbsp;
+<br>Vrací:
+prvních <code>P</code> platných číslic hodnoty <code>LN(X)</code>
+
+<a name="ln">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LN: procedure
+parse arg X, P
+if P = "" then P = 9; numeric digits P
+if X &lt; 1 then return - LN(1 / X, P)
+do M = 0 until (2 ** M) > X; end
+M = M - 1
+Z = X / (2 ** M)
+Zeta = (1 - Z) / (1 + Z)
+N = Zeta; Ln = Zeta; Zetasup2 = Zeta * Zeta
+do J = 1
+  N = N * Zetasup2; NewLn = Ln + N / (2 * J + 1)
+  if NewLn = Ln then return M * LN2P(P) - 2 * Ln
+  Ln = NewLn
+end
+
+<a name="ln2p">&nbsp;</a>
+LN2P: procedure
+parse arg P
+if P &lt;= 200 then return LN2()
+N = 1 / 3; Ln = N; Zetasup2 = 1 / 9
+do J = 1
+  N = N * Zetasup2; NewLn = Ln + N / (2 * J + 1)
+  if NewLn = Ln then return 2 * Ln
+  Ln = NewLn
+end
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_e.html">Eulerovo číslo e</a>
+<br><a href="a_gamma.html">Eulerova konstanta gamma</a>
+<br>
+<br><a href="a_log.html">Logaritmy s jiným základem než e
+</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trik Waltera Pachla</a> v refle<span class="reflexio">XX</span>io
+
+</p><br>
+<h3>Literatura</h3><p>
+Jarník V. <i>Diferenciální počet I</i> Nakladatelství České Akademie Věd, 
+Praha, 1963
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

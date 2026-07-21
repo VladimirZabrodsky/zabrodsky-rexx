@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Eulerovo číslo e</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Výpočet Eulerova čísla e s vysokou
+	přesností" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_e.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_e.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>EULEROVO ČÍSLO <span class="serif lowercase"><i>e</i></span></h1><hr>
+<br>
+<p>Číslo je definováno jako součet nekonečné řady:
+<br>
+<br><code>E = 1 + 1/FACT(1) + 1/FACT(2) + 1/FACT(3) + ... + 1/FACT(N) + ...</code>
+<br>
+<br>, kde <code><a href="a_fact.html#fact">FACT</a></code> je funkce pro výpočet 
+<a href="a_fact.html">faktoriálu</a>.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější, ale pak bez <code>procedure</code> příkazu
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>P</code> - počet platných číslic 
+vypočteného čísla  <i>e</i>, implicitně <code>P = 9</code>
+<br>&nbsp;
+<br>Vrací: prvních <code>P</code> platných desítkových číslic čísla
+ <i>e</i>
+<a name="e">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+E: procedure
+parse arg P
+if P = "" then P = 9
+Eps = 0.5 * 10 ** P
+numeric digits P + 1
+N = 1; D = 1
+do J = 1
+  N = J * N + 1; D = J * D
+  if D &gt;= Eps then return N / D
+end
+</code>
+</pre>
+</div>
+Hodnotu čísla <i>e</i> stačí vypočítat jen jednou s dostatečnou přesností. 
+Uložíme-li ji do souboru na disku, pak lze vytvořit funkci, která "vypočte" 
+číslo <i>e</i> s požadovanou přesností mnohem rychleji než funkce 
+<code>E</code>. Jak se to dělá je popsáno v 
+<a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>. 
+Příkladem je následující funkce <code>ECONST</code>, kterou lze "vypočítat" 
+prvních <code>P</code> platných číslic čísla <i>e</i>, pro 
+<code>P = 1, ..., 200</code>.
+<a name="econst">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ECONST: procedure; V = ''
+V = V || 2.718281828459045235360287471
+V = V || 35266249775724709369995957496
+V = V || 69676277240766303535475945713
+V = V || 82178525166427427466391932003
+V = V || 05992181741359662904357290033
+V = V || 42952605956307381323286279434
+V = V || 90763233829880753195251019012
+return V
+</code>
+</pre>
+</div>
+Příkaz <code>Euler = E(1000)</code> vede na 450 provedení hlavního cyklu ve
+ funkci <code>E</code>; trvá <code>1.28</code> sekundy 
+ (Windows 2000 Professional, 132MB RAM, procesor x86Family 6 Mode 6 Stepping 5).
+</p>
+<h3>Souvislosti</h3><p>
+<div class=t><a href="a_exp.html">Exponenciální funkce</a>
+<br>
+<br><a href="a_fact.html">Faktoriál</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_log.html">Logaritmus s jiným základem než e</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trik Waltera Pachla</a> v 
+refle<span class="reflexio">XX</span>io
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

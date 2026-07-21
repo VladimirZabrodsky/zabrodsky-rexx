@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Faktoriál</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Vypocet faktorialu a jeho aproximace podle Stirlingova vzorce">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_fact.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_fact.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>FAKTORIÁL</h1><hr>
+<h3>Implementace</h3><p>
+Jednotka:  vnitřní funkce nebo vnější, ale pak bez <code>procedure</code> 
+příkazu
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N &gt;= 0</code> 
+
+<br>&nbsp;
+<br>Vrací:</code> 
+ hodnotu <code>FACT(N) = 1 * 2 * ... * N</code>
+
+<a name="fact">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FACT: procedure
+parse arg N
+F = 1
+do J = 2 to N; F = F * J; end
+return F
+</code>
+</pre>
+</div>
+Vynikající aproximaci hodnoty <code>FACT(N)</code> objevil James Stirling v 
+18. století. Program <code>STIRLING</code> využívá právě jeho slavný vzorec.
+<a name="stirling">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+STIRLING: procedure
+parse arg N, P
+Pi = PI(P); E = E(P)
+Sqrt2pin = SQRT(2 * Pi * N, P)
+return,
+   Sqrt2pin * (N / E)**N * (1 + 1 / (12 * N))
+</code>
+</pre>
+</div>   
+Používané funkce: <code> 
+<br><a href="a_pi.html#pi">PI</a>  
+<br> 
+<br><a href="a_e.html#e">E</a>  
+<br>
+<br><a href="a_sqrt.html#sqrt">SQRT</a></code>
+</p><br>  
+<h3>Příklad</h3><p>
+Funkce <code>FACT(10)</code> vypočte hodnotu <code> 3628800</code>, 
+zatímco <code>STIRLING(10)</code> vrací přibližnou hodnotu 
+<code>3628684.7</code>
+<br>&nbsp;
+<br>Čím je číslo  <code>N</code> větší, tím je odhad daný Stirlingovým 
+vzorcem  přesnější.
+<br>&nbsp;
+<br><code>FACT(108001)</code> vrací (v <code>numeric digits 32</code> 
+nastavení)<br><code>8.1428599075279953478037134061743E+496713</code> po 
+1.56 sekundách<br>&nbsp;<br><code>STIRLING(108001,32)</code> vrací 
+
+<br><code>8.14285990752<span class="red">55713876213611726275</span>E+496713</code> po 0.02 
+sekundách (Windows 2000 Professional, 132MB RAM, procesor x86Family 6 Mode 6 Stepping 5).
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_e.html">Eulerovo číslo e</a>
+<br>
+<br><a href="a_pi.html">Číslo Pi</a>
+<br>
+<br><a href="a_ncom.html">Počet kombinací</a>
+<br>
+<br><a href="a_sqrt.html">Druhá odmocnina z kladného reálného čísla</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

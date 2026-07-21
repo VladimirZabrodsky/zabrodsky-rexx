@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Do ktereho intervalu patri?</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Hledani v poli intervalů. Do ktereho intervalu patri. Press,Teukolsky,Vetterling,Flannery.
+	Metodou puleni intervalu nalezneme reseni po lg N krocich" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_absc.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_absc.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DO KTERÉHO INTERVALU PATŘÍ?</h1><hr>
+<h3>Problém</h3>
+<p>
+Je dáno číselné pole
+ <code>A.J</code>, <code>J=1,...,N</code>, s prvky, které tvoří buď roztoucí nebo klesající posloupnost, a číslo <code>V</code>. 
+ Určete přirozené číslo <code>J</code> takové, že hodnota <code>V</code> patří do intervalu [<code>A.J,&nbsp;A.Jp1</code>], kde 
+ <code>Jp1=J+1</code>. 
+ </p><br>
+ <h3>Algoritmus</h3>
+<p>
+Použijeme-li metodu půlení intervalu (vlastně <a href="a_bins.html">dichotomické vyhledávání</a>), získáme odpověď v průměru po <code>lgN</code> 
+porovnáních.
+</p>
+<br>
+<h3>Implementace</h3>
+<p>
+Jednotka: vnitřní funkce
+<br>
+<br>Globální proměnné: roztoucí nebo klesající posloupnost 
+<code>A.1,&nbsp;...,&nbsp;A.N</code>
+<br>
+<br>Parametry: přirozené číslo <code>N</code>, číslo <code>V</code>
+<br>
+<br>Vrací: číslo <code>J</code> takové, že <code>V</code> patří do intervalu [<code>A.J, A.Jp1]</code>, kde <code>Jp1=J+1</code>. Je-li
+ <code>J=0</code> nebo <code>J=N</code>, pak  <code>V</code> neleží v žádném ze zadaných intervalů.  
+<a name="locate">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LOCATE: procedure expose A.
+parse arg N, V
+L = 0; U = N + 1; Ascnd = (A.N &gt;= A.1)
+do while (U - L) &gt; 1
+  M = (U + L) % 2
+  if (V &gt; A.M) = Ascnd then L = M
+    else U = M
+end
+if V = A.1 then return 1
+if V = A.N then return N - 1
+return L
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3>
+<p>
+<a href="a_bins.html">Dichotomické vyhledávání</a>
+<br>
+<br><a href="a_seqs.html">Sekvenční vyhledávání</a>
+<br>
+<br><a href="a_sent.html#sequential_search_without_sentinel">Sekvenční vyhledávání bez zarážky</a>
+<br>
+<br><a href="a_inte.html">Interpolační vyhledávání</a>
+<br>
+<br><a href="a_asoc.html">Vyhledávání v asociativním poli</a>
+<br><br>
+</p>
+<h3>Literatura</h3>
+<p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical Recipes in C the art of scientific computing</i> 2nd ed. University Press, Cambridge, 1992</div>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

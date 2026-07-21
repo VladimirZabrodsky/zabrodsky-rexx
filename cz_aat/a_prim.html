@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Prvočísla</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Prvnich K prvocisel, test 
+	prvočíselnosti, prvnich 24 Mersenneho prvocisel">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_prim.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_prim.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>PRVOČÍSLA</h1><hr>
+<br><p>
+Prvočíslo je celé číslo větší než <code>1</code>, které nemá jiného dělitele 
+než jedničku a sebe sama. 
+</p>
+<h2>Prvních K prvočísel</h2><p>
+Pole <code>P.</code> máme naplnit prvními <code>K</code>
+ prvočísly.
+
+
+</p><br><h3>Imlementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: pole <code>P.</code>
+<br>&nbsp;
+<br>Parametr: <code>K</code> - počet požadovaných prvočísel
+<br>&nbsp;
+<br>Výsledek: V poli <code>P.</code> je uloženo prvních <code>K</code> 
+prvočísel
+
+
+<a name="first_m_primes">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PRIMES: procedure expose P.
+parse arg K
+P.1 = 2; N = 3
+do J = 2 to K
+  P.J = N
+  do forever
+    N = N + 2
+    do L = 2 until R = 0
+      Q = N % P.L; R = N // P.L
+      if Q &lt;= P.L &amp; R &lt;&gt; 0 then iterate J
+    end
+  end
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h2>Test prvočíselnosti</h2><p>
+Ve cvičení třetím, v kapitole 4.5.4, D. E. Knuth píše: Je-li 
+<code>1000 &lt;= K &lt;= 1000000</code>, pak <code>K</code> je prvočíslo 
+tehdy a jen tehdy, když <code>
+<a href="a_eucl.html#euclid">NSD</a>(K,N) = 1</code>; <code>N</code> 
+je tu součinem prvních <code>168</code> prvočísel. Můžeme napsat jednoduchou 
+funkci, vracející hodnotu <code>1</code> nebo <code>0</code> v závislosti na 
+tom, je-li <code>K</code>, <code>1000 &lt;= K &lt;= 1000000</code>, 
+prvočíslo, nebo není.
+
+<a name="primality_test">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PRIMALITY_TEST: procedure
+parse arg K
+call PRIMES(168)
+numeric digits 416
+N = 1
+do J = 1 to 168; N = N * P.J; end
+if NSD(K, N) = 1 then return 1
+return 0
+</code>
+</pre>
+</div>
+
+Odkaz: <a href="a_eucl.html#euclid"><code>NSD</code></a>
+</p>
+<h2>Prvních 24 Mersenneho čísel</h2><p>
+Někdy se nám může hodit nějaké opravdu velké prvočíslo. 
+Čísla <code>2**P-1</code>, kde <code>P</code> je prvočíslo, se nazývají 
+Mersenneho čísla, podle Marina Mersenneho. Prvních <code>24</code> 
+Mersenneho prvočísel získáme pro <code>P</code> rovno 
+<code>2, 3, 5, 7, ... , 19937</code>. 
+Následující program zobrazí jen délku, tj. počet číslic těchto prvočísel. 
+
+<a name="first_24_mersenne">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* Prvních 24 Mersenneho prvočísel
+2 3 5 7 13 17 19 31 61 89 107
+127 521 607 1279 2203 2281 3217
+4253 4423 9689 9941 11213 19937
+*/
+numeric digits 6002
+do I = 2 while SOURCELINE(I) <> "*/"
+  Row = SOURCELINE(I)
+  do while Row <> ""
+    parse var Row Num Row
+    P = 2 ** Num - 1; say "P =" LENGTH(P)
+  end
+end
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_eucl.html">Euklidův algoritmus pro výpočet NSD (a NSN)</a>
+<br>
+<br><a href="a_memfis.html#mertest">Test prvočíselnosti Mersenneho čísla</a>
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E. <i>Seminumerical Algorithms, 
+vol. 2 of The Art of Computer Programming</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

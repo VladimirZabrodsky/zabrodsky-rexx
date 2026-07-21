@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Lineární kongruenční generator</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Lineární kongruenční metoda, 
+	Generovat pseudonáhodná čísla ze zadaného intervalu, D.H. Lehmer" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_lehm.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_lehmp.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>LINEÁRNÍ KONGRUENČNÍ GENERÁTOR</h1><hr>
+<h3>Problém</h3><p>
+Generovat pseudonáhodná čísla ze zadaného intervalu. V standardním Rexxu 
+můžeme užít vestavěnou funkci <code>RANDOM</code>, která vrací pseudonáhodné 
+celé číslo z intervalu [<code>Min, Max</code>], kde <code>Min &gt;= 0</code>.
+ V konkrétní implementaci, např. Regina, musí být 
+ <code>Max &lt;= 100000</code>. 
+</p><br>
+<h3>Algoritmus</h3><p>
+Standardní postup pro generování pseudonáhodných čísel je použít lineární 
+kongruenční metodu, kterou porpvé uvedl v roce 1948 D. H. Lehmer. Při ní 
+jsou členy posloupnosti určeny rekurentním vztahem 
+<br>
+<br><code>Im1 = I - 1; X.I = (X.Im1 * A + C) // M</code>  
+<br><br>
+kde konstanty <code>A</code>, <code>C</code>, a  <code>M</code> 
+určují statistickou kvalitu generátoru. Mají-li <code>A</code> a 
+<code>M</code> společného dělitele většího než jedna, a nejsou tedy 
+nesoudělná, pak generovaná posloupnost čísel pravděpodobně nebude příliš 
+náhodná. Volba <code>A=16807</code>, <code>C=0</code> a 
+<code>M=2**31-1</code>  (<code>M=2147483647</code>) definuje generátor, 
+který má úplnou periodu a výsledná posloupnost dostatečně věrně realizuje 
+rovnoměrnou náhodnou posloupnost čísel z intervalu
+ <code>1, 2, ..., M-1</code>. Byl testován mnohonásobným a dlouholetým 
+ používáním v praxi. <code>16807</code> a <code>2**31-1</code> jsou 
+ nesoudělná čísla, 
+ <code><a href="a_eucl.html#euclid">NSD</a>(16807,2**31-1)=1</code>.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější, ale pak bez <code>procedure</code> příkazu
+<br>&nbsp;
+<br>Parametr: <code>X</code> z intervalu <code>1</code> až <code>M-1</code>
+<br>&nbsp;
+<br>Vrací: pseudonáhodné číslo z intervalu <code>1</code> až <code>M-1</code>
+
+
+<a name="lcg">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LCG: procedure
+parse arg X
+numeric digits 14
+A = 16807; M = 2147483647
+return A * X // M
+</code>
+</pre>
+</div>
+</p>
+<h3>Příklad použití</h3><p>
+
+Viz <a href="a_test.html">Technika: Testovací data</a>
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_shuf.html">Náhodná permutace</a>
+<br>
+<br><a href="a_samp.html">Náhodný výběr</a><p>
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E. <i>Seminumerical Algorithms, vol. 2 of 
+The Art of Computer Programming</i> Addison-Wesley, 1973
+<br>
+<br>Park S. K., Miller K. W. <i>Random Number Generators: 
+Good ones are hard to find</i> CACM October 1988 Vol. 31 No. 10, pp. 1192-1201
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

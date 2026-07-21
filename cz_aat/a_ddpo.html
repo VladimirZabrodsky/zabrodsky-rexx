@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Hodnota polynomu a jeho derivací</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Soucasne vyhodnoceni hodnoty polynomu 
+	a jeho  derivací v zadaném bodě, první derivace" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_ddpo.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_ddpo.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>HODNOTA POLYNOMU A JEHO DERIVACÍ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Vypočítat hodnotu polynomu <code>A.N*X**N + ... + A.1*X + A.0</code> stupně <code>N</code> 
+a jeho první 
+derivace v bodě <code>V</code>.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: nerekurzívní vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: vektor <code>A.0,A.1,...,A.N</code>  reálných koeficientů
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - stupeň polynomu, reálné číslo <code>V</code> - zadaný bod
+<br>&nbsp;
+<br>Vrací: Dvojice hodnot oddělených mezerou: hodnota polynomu a jeho první derivace
+<a name="ddpoly1">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DDPOLY1: procedure expose A.
+parse arg N, V
+P = A.N; D = 0
+do J = N - 1 to 0 by -1
+  D = D * V + P; P = P * V + A.J
+end
+P = A.N; D = 0; J = N
+do J = N - 1 to 0 by -1
+  D = D * V + P; P = P * V + A.J
+end
+return P D
+</code>
+</pre>
+</div>
+</p>
+<h3>Problém</h3>
+<p>
+Vypočítat hodnotu polynomu <code>A.N*X**N + ... + A.1*X + A.0</code> stupně 
+<code>N</code> a 
+<code>D</code> jeho derivací v bodě <code>V</code>.
+<br><br></p><h3>Implementace</h3><p>
+Jednotka: nerekurzívní vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: vektor <code>A.0, A.1, ..., A.N</code>  reálných koeficientů, 
+výstupní vektor <code>Pd.0, Pd.1, ..., Pd.D</code> hodnot derivací
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - stupeň polynomu, přirozené číslo 
+<code>D</code> - počítat se bude hodnota 1. až <code>D</code>-té derivace, 
+reálné číslo <code>V</code> - zadaný bod
+<br>&nbsp;
+<br>Výsledek: Hodnota polynomu v bodě <code>V</code> je uložena v 
+<code>Pd.0</code> a hodnoty <code>D</code> derivací jsou uloženy v 
+<code>Pd.1, ..., Pd.D</code>
+
+<a name="ddpoly">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DDPOLY: procedure expose A. Pd.
+parse arg N, D, V
+Const = 1; Pd. = 0; Pd.0 = A.N
+do I = N - 1 to 0 by -1
+  if D &lt; N - I then Nd = D; else Nd = N - I
+  do J = Nd to 1 by -1
+    Jm1 = J - 1; Pd.J = Pd.J * V + Pd.Jm1
+  end
+  Pd.0 = Pd.0 * V + A.I
+end
+do I = 2 to D
+  Const = Const * I; Pd.I = Pd.I * Const
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>Pro dané hodnoty
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 5; D = 5; V = 2
+A. = 0
+A.5 = 1; A.3 = -4; A.2 = 6
+A.1 = -8; A.0 = 10
+</code>
+</pre>
+</div>
+bude pole <code>Pd.</code> obsahovat v prvních prvcích (s indexy 0 až 5) hodnoty 
+<code>18, 48, 124, 216, 240, 120</code> po 
+provedení příkazu <code>call DDPOLY N, D, V</code>.
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_horn.html">Hodnota polynomu</a>
+<br>
+<br><a href="a_apol.html">Součet polynomů</a>
+<br>
+<br><a href="a_apol.html#sparse_poly">Součet "řídkých" polynomů</a>
+<br>
+<br><a href="a_dpol.html">Dělení polynomů</a></div>
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

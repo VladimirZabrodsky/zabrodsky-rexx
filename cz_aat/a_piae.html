@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Interpolace a extrapolace polynomy</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Interpolace a extrapolace funkce 
+	zadané N vstupními body pomocí polynomů" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_piae.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_piae.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>INTERPOLACE A EXTRAPOLACE POLYNOMY</h1><hr>
+<h3>Problém</h3><p>
+Jsou dány hodnoty funkce v bodech 
+<code>A.1 &lt; A.2 &lt; ... &lt; A.N</code>.  
+Odhadněte hodnotu funkce v libovolném bodě <code>V</code>. 
+</p><br>
+<h3>Algoritmus</h3><p>
+Je dáno pole <code>A.1, ..., A.N</code> a odpovídající funkční hodnoty 
+<code>B.1, ..., B.N</code>, je dána hodnota <code>V</code>. Pro polynom 
+<code>P.</code> stupně <code>N-1</code> takový, že 
+<code>AI = A.I; P.AI = B.I</code>, pro <code>I = 1, ..., N</code>,
+určíme hodnotu <code>Y = P.V</code>
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: rostoucí posloupnost <code>A.1, ..., A.N</code>, 
+pole funkčních hodnot <code>B.</code>
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code>, reálné číslo <code>V</code>
+<br>&nbsp;
+<br>Vrací: dvojici hodnot oddělených mezerou - <code>Y</code> a odhad chyby 
+<code>Dy</code>
+
+
+
+<a name="polint">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POLINT: procedure expose A. B.
+parse arg N, V
+Ns = 1; Dif = ABS(V - A.1)
+do I = 1 to N
+  Dift = ABS(V - A.I)
+  if Dift &lt; Dif
+    then do; Ns = I; Dif = Dift; end
+  C.I = B.I; D.I = B.I
+end
+Y = B.Ns; Ns = Ns - 1;
+do M = 1 to N - 1
+  do I = 1 to N - M
+    Ho = A.I - V
+    IpM = I + M; Hp = A.IpM - V
+    Ip1 = I + 1; W = C.Ip1 - D.I
+    Den = Ho - Hp
+    if Den = 0 then
+      call ERROR "POLINT: Chyba - dvě po sobě",
+        "následující hodnoty pole A.",
+        "jsou shodné"
+    Den = W / Den; D.I = Hp * Den
+    C.I = Ho * Den
+  end
+  if 2 * Ns &lt; (N - M)
+    then do; Nsp1 = Ns + 1; Dy = C.Nsp1; end
+    else do; Dy = D.Ns; Ns = Ns - 1; end
+  Y = Y + Dy
+end
+return Y Dy
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+
+
+<h4>Příklad</h4>
+
+<p>Následující program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 5
+do J = 1 to 5; A.J = J; end
+B.1 = 1.8;  B.2 = 2.27; B.3 = 3.18
+B.4 = 4.01; B.5 = 4.91
+say POLINT(N, 2.25)
+exit
+POLINT: procedure expose A. B.
+...
+</code>
+</pre>
+</div>
+zobrazí <code>2.48801270 0.0114501953</code>.
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_rfie.html">Interpolace a extrapolace racionální funkcí</a>
+<br>
+<br><a href="a_spli.html">Interpolace kubickými spliny</a>
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

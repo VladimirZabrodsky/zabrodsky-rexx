@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Diofantova rovnice</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Řešení Diofantovy lineární rovnice s 
+	exponenciální časovou složitostí" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_diop.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_diop.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DIOFANTOVA LINEÁRNÍ ROVNICE</h1><hr>
+<h3>Problém</h3><p>
+Vyřešit Diofantovu lineární rovnici znamená najít podmnožinu množiny
+ přirozených čísel {<code>A.1, ..., A.N</code>}, jejíž součet je roven 
+ <code>T</code>.
+</p><br>
+<h3>Algoritmus</h3><p>
+Algoritmus <code>DIOPHANT</code> najde řešení Diofantovy 
+lineární rovnice téměř vždy pro <code>N &lt;= 500</code> a 
+<code>A.I &lt;= 2*10**9</code>
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné:
+ pole <code>A.1, ..., A.N</code> přirozených čísel
+<br>&nbsp;
+<br>Parametry:
+ přirozená čísla <code>N</code> a <code>T</code>
+<br>&nbsp;
+<br>Výsledek:
+ zobrazí řešení Diofantovy lineární rovnice, tedy podmnožinu množiny 
+ <code>A.</code>, jejíž součet je roven <code>T</code>. Po nalezení řešení
+ je výpočet okamžitě ukončen příkazem <code>exit</code>
+<br>&nbsp;
+<br>Vazby:
+ vnitřní procedura <a href="a_quic.html"><code>QUICKSORT</code></a>
+
+<a name="diophant">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DIOPHANT: procedure expose A.
+parse arg N, T
+call QUICKSORT N
+Ls.1 = A.1
+do I = 2 to N
+  Im1 = I - 1; Ls.I = A.I + Ls.Im1
+end
+if A.1 &lt;= T &amp; T &lt;= Ls.N then do
+  S = 1; Stack.1 = N T
+  do while S &gt; 0
+    parse var Stack.S R T V; S = S - 1
+    do K = 1 while Ls.K &lt; T; end
+    if Ls.K = T then call EXIST V, K, 1
+    do while A.R &gt; T; R = R - 1; end
+    if A.R = T then call EXIST V, R, R
+    do L = K to R while A.1 &lt;= T - A.L
+      D = V A.L; S = S + 1
+      Stack.S = (L - 1) (T - A.L) D
+    end
+  end
+end
+say "Řešení neexistuje"
+exit
+ 
+EXIST: procedure expose A.
+parse arg V, B, E
+do J = B to E by -1; V = V A.J; end
+say "Řešení:" V
+exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Porovnání</h3><p>
+Pro <code>N = 100; T = 25557</code> a pole <code>A.</code> vytvořené příkazy:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Seed = RANDOM(1, 1, 481989)
+do J = 1 to N
+  A.J = RANDOM(1, 1000)
+end
+</code>
+</pre>
+</div>
+jsem porovnal algoritmy pro řešení problému součtu podmnožin a můj 
+algoritmus <code><a href="a_diop.html#diophant">DIOPHANT</a></code> pro řešení Diofantovy rovnice.
+<br><br>
+Poznámky:Provádění <code>
+<a href="a_sube.html#exact_subset_sum">EXACT_SUBSET_SUM</a></code> jsem 
+násilně ukončil po půl hodině.  Pro běh 
+<code><a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a></code> 
+jsem zvolil hodnotu <code>Epsilon = 0.5</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PROBLÉM SOUČTU PODMNOŽIN - POROVNÁNÍ ALGORITMŮ
+Algoritmus     Suma prvků              Sekund
+<a href="a_greed.html#gs">GS</a>                25554                  0.05 
+<a href="a_dyna.html#dps">DPS</a>               25557                240.24 
+<a href="a_suba.html#approx_subset_sum">APPROX_SUBSET_SUM</a> 25436                 12.31 
+<a href="a_diop.html#diophant">DIOPHANT</a>          25557                  0.82
+</code>
+</pre>
+</div>
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5.
+</p><br>
+<h3>Souvislosti</h3><p>
+PROBLÉM SOUČTU PODMNOŽIN
+<br><a href="a_sube.html">Přesné řešení s exponenciální složitostí</a>
+<br>
+<br><a href="a_dyna.html">Přesné řešení - Dynamické programování</a>
+<br>
+<br><a href="a_suba.html">Aproximační algoritmus s polynomiální složitostí</a>
+<br>
+<br><a href="a_greed.html">Řešení "na hrubo"</a>
+</p><br>
+<h3>Literatura</h3><p>
+Zábrodský V. <i>Problém dvou loupežníků</i> BAJT, říjen 1993 (36), 
+s. 134-136
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

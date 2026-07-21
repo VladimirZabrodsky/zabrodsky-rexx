@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Určení modu pole</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Elegantní algoritmus pro určení modu 
+	pole,  Griffits" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_mode.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_mode.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>URČENÍ MODU POLE</h1><hr>
+<h3>Problém</h3><p>
+Určete nejčastěji se vyskytující hodnotu ve vzestupně utříděném poli.
+ Tato hodnota se nazývá modus.
+</p><br>
+<h3>Algoritmus</h3><p>
+Elegantní algoritmus pro výpočet modu pole objevil Griffits.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: vzestupně utříděné pole <code>A.</code> libovolných prvků
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>N</code> - počet prvků pole <code>A.</code>
+<br>&nbsp;
+<br>Vrací: Dvojici hodnot <code>Modus</code> a <code>Frekvence_výskytu</code> oddělených mezerou
+
+
+</div><a name="mode">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MODE: procedure expose A.
+parse arg N
+Mode = A.1; Frequence = 1
+do J = 2 to N
+  JmFrequence = J - Frequence
+  if A.J = A.JmFrequence
+    then do
+      Frequence = Frequence + 1; Mode = A.J
+    end
+end
+return Mode Frequence
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 5
+A.1 = 1; A.2 = 2; A.3 = 2; A.4 = 3; A.5 = 5
+say MODE(N)
+exit
+MODE: procedure expose A.
+...
+</code>
+</pre>
+</div>
+<p>zobrazí <code>2 2</code>
+</p><br>
+<h3>Literatura</h3><p>
+Gehani N., <i>Ada - An Advanced Introduction</i> 
+Prentice-Hall, Inc. Englewood Cliffs, New Jersey 1983
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

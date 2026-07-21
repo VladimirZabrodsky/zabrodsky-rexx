@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technika: Bitove operace</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Bitove operace v jazyce Rexx, 
+	AND, OR, XOR, posuv vlevo a vpravo, praktické využití,
+	Vernamova šifra, Grayův kód, dekomresní procedura" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_bitw.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_bitw.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: BITOVÉ OPERACE</h1><hr><br>
+<p>Přiřazením <code>V="A"</code> je do proměnné <code>V</code> uložen znak 
+<code>"A"</code>. O tom se můžeme jednoduše přesvědčit příkazem 
+<code>say V</code>. V počítači je hodnota <code>"A"</code> uložena do 
+jednoho bytu jako bitový řetězec. Uvidíme ho příkazem 
+<code>say X2B(C2X(V))</code>. Přitom samotný příkaz <code>say C2X(V)</code>
+ zobrazí hexadecimální reprezentaci znaku <code>"A"</code>. 
+ Funkce  <code>C2D(V)</code> vrátí hodnotu <code>V</code> interpretovanou 
+ jako desítkové číslo. V ASCII má <code>"A"</code> hodnotu, zapsáno 
+ hexadecimálně, <code>41</code>. Tj. v desítkové reprezentaci <code>4*16+1=65</code>. 
+ </p><br>
+<h2>Seznam implementací bitových operací</h2><p>
+<span class="green">AND</span> - Funkce <code>BITAND</code> 
+vrací bitový součin operandů.
+<br>
+<br><span class="green">OR</span> - Funkce <code>BITOR</code> 
+¨vrací bitový součet operandů. 
+<br>
+<br><span class="green">XOR</span> - Funkce <code>BITXOR</code> vrací 
+ výsledek operace eXclusive OR (XOR) 
+prováděné po bitech.
+<br>
+<br><span class="green">POSUN VLEVO</span> - Posun operandu 
+<code>N</code> o <code>B</code> bitů doleva se provede pomocí výrazu 
+<code>D2C(C2D(N)*(2**B))</code>, kde <code>B</code> musí být nezáporné celé číslo.
+<br>
+<br><span class="green">POSUN VPRAVO</span> - Posun operandu <code>N</code> o <code>B</code> 
+bitů doprava se 
+provede pomocí výrazu  <code>D2C(C2D(N)%(2**B))</code>, kde <code>B</code> 
+musí být nezáporné celé číslo.</p><br><br>
+<h3>Příklad 1 - Vernamova metoda</h3><p>
+<code>BITXOR</code> funkce je vlastně slavná Vernamova metoda šifrování a 
+dešifrování dat. Chceme-li zašifrovat zprávu <code>Text</code>, vytvoříme 
+nejdříve náhodný řetězec bitů <code>Klic</code> stejné délky jako je zpráva. 
+Pak <code>Text</code> zašifrujeme příkazem  <code>Sifra=BITXOR(Text,Klic)</code>. 
+Dešifrování provedeme příkazem 
+<code>Puvodni_text=BITXOR(Sifra,Klic)</code>. Pak platí: <code>Text==Puvodni_Text</code>. 
+Zkuste následující program.
+
+<a name="vernam">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* VERNAM */
+parse arg Text
+L = LENGTH(Text) * 8; Key = ""
+do J = 1 to L
+  Key = Key || RANDOM(0, 1)
+end
+Key = X2C(B2X(Key))
+Ciphertext = BITXOR(Text, Key)
+Plaintext  = BITXOR(Ciphertext, Key)
+if Plaintext == Text
+  then say "Vernamova metoda pracuje"
+  else say "Eh?"
+</code>
+</pre>
+</div></p>
+<h3>Příklad 2 - Grayův kód</h3><p>
+ Grayův kód je nazván podle autora Franka Graye. Je to celočíselná funkce
+ <code>G(I)</code>, která je bijekcí pro každé celé  číslo 
+ <code>N&gt;=0,  0&lt;=I&lt;=2**(N-1)</code>a má vlastnost: Binární 
+ reprezentace <code>G(I)</code> a <code>G(Ip1)</code>, pro 
+ <code>Ip1=I+1</code>, se liší pouze v jediném bitu. 
+<br>Algoritmus generující Grayův kód využívá operace exclusive or 
+(<code>BITXOR</code>) operandů <code>I</code> a <code>I%2</code> 
+(celá část po dělení <code>I/2</code>), což je bitový posun doprava o jeden 
+bit. 
+<br>Program  <code>GRAY</code> zobrazí, pro hodnotu vstupního argumentu 
+<code>15</code><br>
+<br><code>00000000 00000001 00000011 00000010 00000110 00000111 00000101 00000100 00001100 
+00001101 00001111 00001110 00001010 00001011 00001001 00001000</code>
+<br><br>Pro výpočet potřebujeme znát počet bitů kódu zaokrouhlený nahoru na 
+hranici bytu. Zjistíme tedy počet bitů nutných k zápisu čísla <code>N</code> 
+pomocí  <code>LENGTH(X2B(D2X(N)))</code>. 
+Funkce <code>BYTES</code> vrací potřebný počet bytů pro zadaný počet bitů.
+
+<a name="gray_code">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* GRAY_CODE */
+parse arg N
+S = BYTES(LENGTH(X2B(D2X(N))))
+Gray_code = ""
+do I = 0 to N
+  Ibrs1 = I % 2
+  A = D2C(I, S); B = D2C(Ibrs1, S)
+  C = BITXOR(A, B)
+  Gray_code = Gray_code X2B(C2X(C))
+end
+say Gray_code
+exit
+ 
+BYTES: procedure
+parse arg B
+R = B // 8
+if R &lt;&gt; 0 then B = B + 8 - R
+return B % 8
+</code>
+</pre>
+</div>
+</p>
+<h3>Příklad 3 - Dekompresní funkce</h3><p>
+
+Vstupem pro tuto funkci je kompresovaný text <code>C</code>. 
+Obsahuje dva typy kódových slov  (příkazů) - <code>LITERAL X</code> and 
+<code>COPY X,-Y</code>.</p>
+<h4>LITERAL X</h4><p> znamená: připoj beze změny následujících <code>X</code> znaků v 
+kompresovaném textu <code>C</code> na konec dekompresovaného textu 
+<code>D</code>. </p>
+<h4>COPY X,-Y</h4><p> znamená: vrať se zpět v <code>D</code> o <code>Y</code> znaků a zkopíruj <code>X</code> následujících znaků na konec <code>D</code>.
+<br>Pro kódování příkazu <code>LITERAL</code> použijeme <code>8</code> bitů a pro kódování příkazu <code>COPY</code> <code>16</code> bitů. 
+Pokud v dalším příkazu jsou první <code>4</code> bity nulové,  pak je to <code>LITERAL</code> a další <code>4</code> bity určují jeho délku <code>X</code> 
+v intervalu <code>1</code> až <code>16</code> (ale kóduje se <code>0</code> až <code>15</code>). Následujících <code>X</code> znaků je literál. 
+<br>Jinak jde o příkaz <code>COPY</code>. V prvních <code>4</code> bitech je délka <code>X</code>. Ta může být <code>3</code> až <code>17</code>, 
+ale kóduje se <code>1</code> až <code>15</code>. V dalších <code>12</code>-ti bitech je posunutí <code>Y</code>, hodnota <code>1</code> až <code>4096</code>, 
+ale kóduje se <code>0</code> až <code>4095</code>. <p>Tak třeba vstupní řetězec  <code>AAAAAABBBBCCCAABBBBC</code> s <code>20</code>-ti znaky může být 
+kompresován na řetězec 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+'00'X || "A" ||,     /* literal */
+'3000'X || ,         /* copy    */
+'00'X || "B" || ,    /* literal */
+'1000'X || ,         /* copy    */
+'02'X || "CCC" || ,  /* literal */
+'5008'X
+</code>
+</pre>
+</div>
+se <code>14</code>-ti znaky.
+
+<a name="decompress">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DECOMPRESS: procedure
+parse arg C
+D = ""; LengthC = LENGTH(C); Pc = 1; Pd = 1
+do while Pc &lt; LengthC
+  Byte = SUBSTR(C, Pc, 1)
+  if BITOR(Byte, '0F'X) = '0F'X
+  then call LITERAL Byte
+  else call COPY Byte
+end
+return D
+
+LITERAL: procedure expose C D Pc Pd
+parse arg L
+L = C2D(L) + 1
+D = D || SUBSTR(C, Pc + 1, L)
+Pc = Pc + L + 1
+Pd = Pd + L
+return
+ 
+COPY: procedure expose C D Pc Pd
+parse arg L
+L1 = C2D(L) % 16 + 2; L = L1
+X = C2D(BITAND('0FFF'X, SUBSTR(C, Pc, 2))) + 1
+Y = Pd - X
+do while L &gt; X
+  D = D || SUBSTR(D, Y, X)
+  L = L - X
+  X = 2 * X
+end
+if L &gt; 0 then D = D || SUBSTR(D, Y, L)
+Pc = Pc + 2; Pd = Pd + L1
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Literatura</h3><p>
+Fiala E.R., Greene D.H., <i>Data Compression with Finite Windows</i> CACM, April 1989, Vol. 32, No. 4, pp. 490-505
+<br>
+<br>Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P., <i>Numerical Recipes in C : the art of scientific computing</i> 
+- 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

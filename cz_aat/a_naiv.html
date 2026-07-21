@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Naivní algoritmus porovnani</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="V nejhorším případě je časová 
+	složitost naivního algoritmu porovnání rovna O(N**2)" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_naiv.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_naiv.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>NAIVNÍ ALGORITMUS POROVNÁNÍ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Text je pole <code>T.1, T.2,..., T.N</code> a vzorek je pole 
+<code>P.1, P.2, ..., P.M</code>. Prvky <code>P.</code> a <code>T.</code> 
+jsou znaky konečné abecedy <code>Sigma.</code>, <code>Sigma.</code> je 
+pole <code>R</code> prvků. Řekneme, že vzorek <code>P.</code> se nachází 
+v textu <code>T.</code> s posunutím <code>S</code>, jestliže 
+<code>0 &lt;= S &lt;= N - M</code> a <code>T.SpJ=P.J</code>, kde 
+<code>SpJ</code> označuje <code>S + J</code>, pro <code>J = 1, ..., M</code>.
+ Problém porovnání řetězců spočívá v nalezení všech těchto posunutí. 
+ 
+</p><br><h3>Algoritmus</h3><p>
+V nejhorším případě je časová složitost naivního porovnávacího algoritmu 
+<i>O</i><code>(N**2)</code>.
+ 
+</p><br><h3>Praxe</h3><p>
+Jsou-li text  i vzorek skutečné řetězce znaků, pak nejrychlejší řešení 
+nabízí <code><a href="a_simp.html">REAL_STRING_MATCHER</a></code>. V obecném 
+případě tu není jednoznačný vítěz a nejlépe uděláme, když si podprogramy 
+otestujeme na typických datech (testovací prostředí: Windows 2000 Professional,  
+132MB RAM, procesor x86Family 6 Mode 6 Stepping 5). 
+Uveďme si příklad, ve kterém <code>M</code> označuje počet prvků 
+<code>P.</code>, <code>R</code> označuje počet prvků <code>Sigma.</code> 
+a <code>S</code> označuje počet objevených posunutí:
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DOBA BĚHU V SEKUNDÁCH PRO N=100000
+
+Algorithm      M=10,R=1999,S=50     M=10,R=4,S=10000     M=100,R=4,S=10000
+Naivní               16                    25                    150 
+KMP                  21                    22                     23 
+Boyer-Moore           4                    15                    138 
+</code>
+</pre>
+</div>
+Kde:
+<br><a href="a_kmp.html#kmp_matcher">KMP algoritmus</a>
+<br><a href="a_boye.html#boyer_moore_matcher">Boyer-Moore algoritmus</a>
+</p><br><h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: pole <code>T.1, ..., T.N</code> řetězců, pole 
+<code>P.1, ..., P.M</code> řetězců
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - počet prvků <code>T.</code>, 
+přirozené číslo <code>M</code> - počet prvků <code>P.</code>
+<br>&nbsp;
+<br>Výstup: Pro všechna nalezená posunutí zobrazí <code>Vzorek se nachází 
+s posunutím</code> <i>S</i>
+
+
+<a name="naive_string_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NAIVE_STRING_MATCHER:
+procedure expose T. P.
+parse arg M, N
+do S = 0 to N - M + 1
+  do J = 1 to M
+    SpJ = S + J
+    if P.J &lt;&gt; T.SpJ then iterate S
+  end
+  say "Vzorek se nachází s posunutím" S
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+POROVNÁNÍ ŘETĚZCŮ
+<br><a href="a_simp.html">Porovnání skutečných řetězců</a>
+<br>
+<br><a href="a_boye.html">Algoritmus Boyera-Moora</a>
+<br>
+<br><a href="a_kmp.html">Algoritmus Knutha-Morrise-Pratta</a>
+</p><br>
+<h3>Literatura</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. <i>Introduction to Algorithms</i>
+ The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Generování všech permutací</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algoritmus pro generování všech
+	permutací" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_perm.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_perm.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>GENEROVÁNÍ VŠECH PERMUTACÍ</h1><hr>
+<h3>Problém</h3><p>
+Nechť <code>N</code> je přirozené číslo takové, že <code>N &gt;= 2</code>. 
+Vygenerujte všech <code><a href="a_fact.html#fact">FACT</a>(N)</code> 
+permutací množiny   &#123;<code>1, ..., N</code>&#125;. 
+<br>Pozn.: <code>FACT</code> označuje <a href="a_fact.html">faktoriál</a>
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka:  vnitřní podprogram
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>N &gt;= 2</code>
+<br>&nbsp;
+<br>Výsledek: podprogram zobrazí všechny permutace
+
+
+
+<a name="permute">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PERMUTATION: procedure
+parse arg N
+C. = 1; Pr. = 1
+do J = 1 to N; P.J = J; end
+C.N = 0
+say DISPLAY(N)
+J = 1
+do while J &lt; N
+  X = 0
+  do J = 1 while C.J = N - J + 1
+    Pr.J = \Pr.J; C.J = 1
+    if Pr.J then X = X + 1
+  end
+  if J &lt; N
+    then do
+      if Pr.J then K = C.J + X
+              else K = N - J + 1 - C.J + X
+      Kp1 = K + 1; W = P.K
+      P.K = P.Kp1; P.Kp1 = W
+      say DISPLAY(N)
+      C.J = C.J + 1
+    end
+end
+return
+ 
+DISPLAY: procedure expose P.
+parse arg N
+Permutation = P.N
+do J = N - 1 to 1 by -1
+  Permutation = P.J Permutation
+end
+return Permutation
+</code>
+</pre>
+</div>
+<h3>Příklad</h3>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 3; call PERMUTATION N
+exit
+PERMUTATION: procedure
+...
+/* vypíše na obrazovku:
+1 2 3
+2 1 3
+2 3 1
+3 2 1
+3 1 2
+1 3 2
+*/
+</code>
+</pre>
+</div>
+<h3>Další příklad</h3><p>
+Viz <a href="a_test.html">Technika: Testovací data</a>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_fact.html">Faktoriál</a>
+<br>
+<br><a href="a_ncom.html">Počet kombinací</a>
+<br>
+<br>
+<a href="a_shuf.html">Náhodná permutace</a>
+<br>
+<br><a href="a_gknl.html">Generování všech K-prvkových podmnožin</a>
+
+</p><br>
+<h3>Literatura</h3><p>
+
+Lipski W. <i>Kombinatoryka dla Programistow</i> Wydawnictwa 
+Naukowo-techniczne, Warszawa, 1982
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

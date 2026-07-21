@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Odstranění rekurze</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Příklady odstranění rekurze, 
+	Fibonacciho čísla, Největší společný dělitel, Quicksort" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_recu.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_recu.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: ODSTRANĚNÍ REKURZE</h1><hr>
+<br><p>
+
+Mnoho algoritmů z různých aplikačních oblastí může být zapsáno stručněji a 
+jasněji v rekurzívní formě. Uveďme si naopak příklad programu, který by 
+nikdy v rekurzívní formě neměl být používán. Jde o výpočet Fibonacciho 
+čísel, přičemž program přímo vychází z jejich definice:
+<br>
+<br><code>F<sub>0</sub>=0; F<sub>1</sub>=1; F<sub>N</sub>=F<sub>N-1</sub>+F<sub>N-2</sub></code>
+<br><br>
+Budeme-li <code>F</code> chápat jako funkci dostaneme se k programu
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+if N &lt;= 0 then return 0
+  else if N = 1 then return 1
+    else return FIB(N - 1) + FIB(N - 2)
+</code>
+</pre>
+</div>	
+	
+Tento program ale úplně zbytečně opakuje znovu a znovu tytéž výpočty a jeho
+ složitost proto roste exponenciálně!
+Budeme-li <code>F</code> v definici chápat jako pole, dostaneme se přímo k 
+iterativnímu programu:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+F.0 = 0; F.1 = 1
+do J = 2 to N
+  Jm1 = J - 1; Jm2 = J - 2
+  F.J = F.Jm1 + F.Jm2
+end
+return F.N
+</code>
+</pre>
+</div>	
+	
+Ve skutečnosti není nutné používat celé pole; potřebujeme jen dvě proměnné, 
+které by uchovaly hodnoty potřebné pro výpočet dalšího Fibonacciho čísla.
+ Ten správný, jednoduchý a rychlý program vypadá takto:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+if N = 0 | N = 1 then return N
+A = 0; B = 1
+do N - 1
+  parse value(B (B + A)) with A B
+end
+return B
+</code>
+</pre>
+</div>
+Dalším adeptem na rekurzívní program je 
+<a href="a_eucl.html">Euklidův algoritmus</a> na výpočet největšího 
+společného dělitele. Rekurzívní definice:
+<br><code>NSD(A, B) = NSD(B, A mod B)</code>
+<br>nás přivede k rekurzívní funkci
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSD: procedure
+parse arg A, B
+if B = 0 then return A
+  else return NSD(B, A // B)
+</code>
+</pre>
+</div>   
+Poslední akcí funkce je rekurzívní volání sebe sama. Tento typ rekurze 
+může být snadno transformován na iteraci, zaměníme-li rekurzívní volání 
+příkazy přiřazení a cyklem <code>do while</code>: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSD: procedure
+parse arg A, B
+do while B > 0
+  parse value(B A//B) with A B
+end
+return A
+</code>
+</pre>
+</div> 
+Rekurze je cenný nástroj, který umožňuje programátorovi soustředit se na 
+klíčové prvky algoritmu a nezabývat se podrobnostmi (... aplikuj tutéž akci 
+na podroblém menšího rozsahu!). Nádherným příkladem je slavný 
+<code>QUICKSORT</code>.
+
+<a name="recursive_quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+QUICKSORT_RECURSIVE: procedure expose A.
+parse arg L, R
+if L &lt; R then do
+  Q = PARTITION(L, R)
+  call QUICKSORT_RECURSIVE L, Q
+  call QUICKSORT_RECURSIVE Q + 1, R
+end
+return
+ 
+PARTITION: procedure expose A.
+parse arg L, R
+X = A.L; I = L - 1; J = R + 1;
+do forever
+  do until A.J &lt;= X; J = J - 1; end
+  do until A.I &gt;= X; I = I + 1; end
+  if I &lt; J
+    then do; W = A.I; A.I = A.J; A.J = W; end
+    else return J
+end
+</code>
+</pre>
+</div> 
+Rekurzívní volání může být obecně eliminováno pomocí zásobníku. V 
+následujícím programu jsem v roli zásobníku použil externí datovou frontu.
+
+
+
+<a name="nonrecursive_quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+QUICKSORT_ITERATIVE: procedure expose A.
+parse arg L, R
+push L R
+do while QUEUED() &gt; 0
+  pull L R
+  if L &lt; R
+    then do
+      Q = PARTITION(L, R)
+      push L Q; push Q + 1 R
+    end
+end
+return
+</code>
+</pre>
+</div> 
+Průměrnou dobu výpočtu po deseti pokusech porovnávající rekurzívní, 
+iterativní a <a href="a_quic.html#quicksort">sofistikovanou</a> verzi 
+<code>QUICKSORT</code>u  pro <code>N = 100 ,1000, 10000</code> uvádí 
+následující tabulka
+<a name="nonrecursive_quicksort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POROVNÁNÍ ALGORITMŮ
+
+Algoritmus        N=100   N=1000   N=10000
+Rekurzívní        0.060   0.489    7.410
+Iterativní        0.043   0.386    6.904
+Sofistikovaný     0.034   0.323    5.997
+</code>
+</pre>
+</div> 
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5. 
+</p>
+<h4>Další příklady</h4><p>
+<a href="a_diop.html">Diofantova rovnice</a>
+<br>
+<br><a href="a_minm.html">Minimum a maximum současně</a></div><p>
+</p><br>
+<h3>Literatura</h3><p>
+Kruse R. L. <i></i>Data Structures and Program Design</i> 
+Prentice Hall International Editions, ISBN 0-13-196049-0.
+<br>
+<br>Bird R. S. <i>Notes on Recursion Elimination</i> 
+CACM, June 1977, vol. 20, No. 6, pp. 434-439.
+<br>
+<br>Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

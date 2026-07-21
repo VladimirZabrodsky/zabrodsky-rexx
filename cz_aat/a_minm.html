@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Minimum a maximum soucasne</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Min a max současně, Časová složitost
+	jednoduchého algoritmu je kolem 2*N, časová složitost sofistikovaného 
+	algoritmu je 3*N/2">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_minm.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_minm.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>MINIMUM A MAXIMUM SOUČASNĚ</h1><hr>
+<h3>Problém</h3><p>
+
+Nalézt současně minimum i maximum zadaného číselného pole. 
+</p><br>
+<h3>Algoritmus</h3><p>
+Jednoduchý algoritmus <code>MINANDMAX</code> potřebuje k současnému nalezení
+ minima i maxima asi <code>2*N</code> porovnání.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: číselné pole <code>A.</code>
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>N</code> - počet prvlů v poli
+ <code>A.</code>
+<br>&nbsp;
+<br>Vrací: Hodnoty minima a maxima oddělené mezerou
+
+<a name="minandmax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MINANDMAX: procedure expose A.
+parse arg N
+Min = A.1; Max = A.1
+do J = 2 to N
+  if A.J &lt; Min then Min = A.J
+    else if A.J &gt; Max then Max = A.J
+end
+return Min Max
+ </code>
+</pre>
+</div> 
+Učebnice uvádějí, že efektivnější algoritmus má časovou složitost, 
+vyjádřenou počtem porovnání, <code>FORMAT(3*N/2 - 2,,0)</code>:
+
+<a name="minimax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MINIMAX: procedure expose A.
+parse arg J, N
+if N = J then return A.J A.J
+if N = J + 1
+  then if A.J &lt; A.N
+         then return A.J A.N
+         else return A.N A.J
+  else do
+    parse value MINIMAX(J, J + 1) with Min1 Max1
+    parse value MINIMAX(J + 2, N) with Min2 Max2
+    return MIN(Min1, Min2) MAX(Max1, Max2)
+  end
+ </code>
+</pre>
+</div>
+Nejprve upozornění, první vyvolání funkce musí být příkazem (např.) 
+<code>say MINIMAX(1,N)</code>, tedy se dvěma parametry. Za druhé,  
+implementační omezení na počet vnoření volání podprogramů znamená, že právě 
+uvedenou funkci nemůžeme použít  pro rozsáhlá pole. 
+<br><br>
+Thomas H. Cormen ... [a kol.] popisují prakticky použitelný program takto:
+<br><br><cite>
+Porovnáme páry prvků nejprve mezi sebou, větší pak srovnáme s momentálním maximem, 
+menší s momentálním minimem. Nastavení počátečn ích hodnot pro minimum a maximum závisí 
+na tom, zda je N liché nebo sudé. Je-li N liché, nastavíme hodnotu minima a maxima 
+rovnu prvnímu prvku a dále pokračujeme ve zpracování po párech. Je-li N sudé, porovnáme
+první dva prvky a určíme tak hodnotu minima a maxima. Dál pak pokračujeme po 
+párech jako když je N liché.
+<br>Celkový počet porovnání je <code>FORMAT(3*N/2,,0)</code>.
+</cite>
+Implementace v Rexxu:
+<a name="non_recursive_minimax">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NON_RECURSIVE_MINIMAX: procedure expose A. 
+parse arg N
+if (n // 2 = 0) then do
+  if (A.1 &gt; A.2)    
+    then do
+      Maximum = A.1
+      Minimum = A.2
+    end
+    else do
+      Minimum = A.1
+      Maximum = A.2
+    end
+    i = 3
+  end   
+  else do
+	Minimum = A.1
+	Maximum = A.1
+    i = 2
+  end
+do while (i &lt; n)
+  Ip1 = I + 1
+  if (A.I &gt; A.Ip1) then do 
+       if(A.I &gt; Maximum)  then Maximum = A.I
+       if(A.Ip1 &lt; Minimum) then Minimum = A.Ip1    
+  end
+  else do    
+    if (A.Ip1 &gt; Maximum) then Maximum = A.Ip1
+    if (A.I &lt; Minimum) then Minimum = A.I   
+  end
+  i = i + 2
+end        
+return Minimum Maximum
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_recu.html">Technika: Odstranění rekurze</a>
+<br>
+<br>NALEZENÍ K-TÉHO NEJMENŠÍHO PRVKU 
+<br><a href="a_find.html">Find</a>
+<br>
+<br><a href="a_modi.html">Modifind</a>
+<br>
+<br><a href="a_sele.html">Select</a>
+</p><br>
+<h3>Literatura</h3><p>
+Baudoin C., Meyer B. <i>Méthodes de programmation</i> 
+Edition Eyrolles 61, Bd Saint-Germain Paris 1978
+<br><br>
+Cormen Thomas H., Leiserson Charles E., Rivest Ronald L., Stein Clifford <i>Introduction to Algorithms
+Third Edition</i> The MIT Press
+Cambridge, Massachusetts London, England, 2009, ISBN 978-0-262-03384-8
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

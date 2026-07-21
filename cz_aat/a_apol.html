@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Soucet polynomu</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Součet polynomů. Reprezentace polynomů a řídkých polynomů." />
+	<link rel="stylesheet" href="../vzstyle.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_apol.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_apol.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>SOUČET POLYNOMŮ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Naším cílem je provádět výpočty jako (2 + 3*X + 6*X**2) + (2 - X**2) = (4 + 3*X + 5*X**2)
+<br>Jsou-li polynomy reprezentovány poli, pak následující podprogram pro součet polynomů je přímočarým řešením:
+</p><br>
+<h3>Implementace</h3><p>
+jednotka: vnitřní podprogram.
+<br>
+<br>Globální proměnné: pole <code>A.</code> s <code>N+1</code> koeficienty, pole <code>B.</code> s <code>N+1</code> koeficienty.
+<br>
+<br>Parametr: přirozené číslo <code>N</code> - stupeň polynomů <code>A.</code> a <code>B.</code>
+<br>
+<br>Výsledek: pole <code>A.</code> obsahuje koeficienty výsledného součtu polynomů.
+<a name="polyadd">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POLYADD: procedure expose A. B.
+parse arg N
+do J = 0 to N; A.J = A.J + B.J; end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Příklad</h3><p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+(12*X**54 + 65*X**80 + 3*X*10000) +
+(3*X**12 - 13*X**54 + 13*X**98 + 7*X**10000) =
+3*X**12 - X**54 + 65*X*80 + 13*X*98 + 10*X**10000
+</code>
+</pre>
+</div>
+Program:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+N = 10000
+A. = 0; A.54 = 12; A.80 = 65; A.10000 = 3
+B. = 0; B.12 = 3; B.54 = -13
+B.98 = 13; B.10000 = 7
+call POLYADD N
+do I = 1 to N
+  if A.I &lt;&gt; 0 then say I A.I
+end
+exit
+POLYADD: procedure expose A. B.
+...
+</code>
+</pre>
+</div>
+zobrazí:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+12 3
+54 -1
+80 65
+98 13
+10000 10
+</code>
+</pre>
+</div>
+</p>
+<a name="sparse_poly">&nbsp;</a>
+<h2>"ŘÍDKÉ" POLYNOMY</h2><p>
+Při práci s "řídkými" polynomy, tj. s polynomy, které mají mnoho nulových koeficientů, můžeme pracovat jen s nenulovými koeficienty. Řídký polynom 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+A.N*X**N+...+A.J*X**J+...+A.1*X+A.0
+</code>
+</pre>
+</div>
+<br>pak bude reprezentován polem dvojic <code>J A.J</code> jen pro nenulové koeficienty <code>A.J</code>
+</p><br><h3>Implementace</h3><p>
+Jednotka: nerekurzívní vnitřní podprogram
+<br>
+<br>Globální proměnné: vzestupně uspořádané pole <code>A.</code> obsahující <code>M</code> dvojic
+<code>koeficient mocnina</code>, vzestupně uspořádané pole <code>B.</code> obsahující <code>N</code> dvojic <code>koeficient mocnina</code>, 
+výstupní vzestupně uspořádané pole <code>C.</code> dvojic, jako součet polynomů <code>A.</code> a <code>B.</code>
+<br>
+<br>Parametry: přirozená čísla <code>M, N</code> - počet dvojic pole <code>A.</code> resp. pole <code>B.</code>
+<br>
+<br>Výsledek: Vrací počet dvojic výsledného pole <code>C.</code>, které obsahuje dvojice reprezentující součet polynomů.
+<a name="sparse_polyadd">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SPARSE_POLYADD: procedure expose A. B. C.
+parse arg M, N
+K = 1; L = 1; J = 0
+do while K &lt;= M &amp; L &lt;= N
+  parse var A.K Apower Acoef
+  parse var B.L Bpower Bcoef
+  select
+    when Apower &lt; Bpower
+      then do; J = J + 1; C.J = A.K; K = K + 1; end
+    when Apower &gt; Bpower
+      then do; J = J + 1; C.J = B.L; L = L + 1; end
+    otherwise
+      Sum = Acoef + Bcoef
+      if Sum &lt;&gt; 0
+        then do; J = J + 1; C.J = Apower Sum; end
+      K = K + 1; L = L + 1
+  end
+end
+do while K &lt;= M; J = J + 1; C.J = A.K; K = K + 1; end
+do while L &lt;= N; J = J + 1; C.J = B.L; L = L + 1; end
+return J
+</code>
+</pre>
+</div>
+</p>
+<h3>Příklad</h3><p>
+Následující program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+M = 3
+A.1 = 54 12; A.2 = 80 65; A.3 = 10000 3
+N = 4
+B.1 = 12 3; B.2 = 54 "-13"; B.3 = 98 13
+B.4 = 10000 7
+J = SPARSE_POLYADD(M, N)
+do I = 1 to J; say C.I; end
+exit
+SPARSE_POLYADD: procedure expose A. B. C.
+...
+</code>
+</pre>
+</div>
+
+vypíše na obrazovku
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+12 3
+54 -1
+80 65
+98 13
+10000 10
+</code>
+</pre>
+</div>
+</p><h3>Souvislosti</h3><p>
+<a href="a_horn.html">Hodnota polynomu</a>
+<br>
+<br><a href="a_ddpo.html">Hodnota polynomu a jeho derivací</a>
+<br>
+<br><a href="a_dpol.html">Dělení polynomů</a>
+<br>
+<br><a href="a_sent.html#merging">Slučování</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

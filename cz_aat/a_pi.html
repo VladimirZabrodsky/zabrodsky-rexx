@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Číslo Pi</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<META name="DESCRIPTION" content="Výpočet čísla Pi na tisíc 
+		desetinných míst, Algoritmus J. M. Borwein and P. B. Borwein" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_pi.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_pi.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>ČÍSLO <span class="serif lowercase">&pi;</span></h1><hr>
+<h3>Problém</h3><p>
+Určit číslo  <i>&pi;</i> s přesností na tisíce platných desítkových číslic.
+</p><br>
+<h3>Algoritmus</h3><p>
+... autorů J. M. Borweina a P. B. Borweina začíná s počátečním nastavením
+<code>X = SQRT(2); Pi = 2 + X; Y = SQRT(X)</code>
+a pokračuje iterací
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 0.5 * (SQRT(X) + 1 / SQRT(X)
+Pi = Pi * (X + 1) / (Y + 1)
+Y = Y * (SQRT(X) + 1 / SQRT(X)) / (Y + 1)
+</code>
+</pre>
+</div>
+</p>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější, ale pak bez 
+<code>procedure</code> příkazu
+<br>&nbsp;
+<br>Vazba: funkce <code><a href="a_sqrt.html#sqrt">SQRT</a></code>
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>P</code> - počet platných číslic 
+konstanty  &pi;, implicitně <code>P = 9</code>
+<br>&nbsp;
+<br>Vrací:</code> prvních <code>P</code> platných desítkových číslic 
+&pi;
+<a name="pi">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PI: procedure
+parse arg P
+if P = "" then P = 9; numeric digits P
+X = SQRT(2, P); Pi = 2 + X
+Y = SQRT(X, P); X = Y
+do forever
+  X = 0.5 * (X + 1 / X)
+  NewPi = Pi * (X + 1) / (Y + 1)
+  if Pi = NewPi then return Pi
+  Pi = NewPi
+  X = SQRT(X, P)
+  Y = (Y * X + 1 / X) / (Y + 1)
+end
+</code>
+</pre>
+</div>
+Hodnotu čísla &pi; stačí vypočítat jen jednou s dostatečnou 
+přesností. Uložíme-li ji do souboru na disku, pak lze vytvořit funkci, 
+která "vypočte" číslo &pi; s požadovanou přesností mnohem 
+rychleji než funkce <code>PI</code>. Příkladem je následující funkce 
+<code>PICONST</code>, kterou lze "vypočítat" prvních <code>P</code> 
+platných číslic čísla &pi;, pro <code>P = 1, ..., 200</code>. 
+Byla vytvořena automaticky programem popsaným v 
+<a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>.
+
+<a name="piconst">&nbsp;</a>
+<a name="pi">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PICONST: procedure; V = ''
+V = V || 3.14159265358979323846264338327950288419
+V = V || 7169399375105820974944592307816406286208
+V = V || 9986280348253421170679821480865132823066
+V = V || 4709384460955058223172535940812848111745
+V = V || 028410270193852110555964462294895493038196
+return V
+</code>
+</pre>
+</div>
+Příkaz <code>Number_P i= PI(1000)</code> provede 10-krát hlavní cyklus ve 
+funkci <code>PI</code> a trvá <code>79</code> sekund 
+(Windows 2000 Professional, počítač 132MB RAM and procesor x86Family 6 Mode 6 Stepping 5).
+</p><br>
+<h3>Souvislosti</h3><p>
+<div class=t><a href="a_sqrt.html">Druhá odmocnina kladného čísla</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+<br>
+<br><a href="reflexio.html#accuracy">P+n trik Waltera Pachla</a> v refle<span class="reflexio">XX</span>io
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Heapsort</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Heapsort, J. W. J. Williams, v 
+	nejhorším i v průměrném případě složitost O(N*lgN)" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_heap.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_heap.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Heapsort</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Je dáno pole <code>A.</code> obsahující <code>N</code> prvků. Výsledkem třídění v 
+místě  je přerovnání prvků pole <code>A.</code> takovým způsobem, že platí 
+ <code>A.1 &lt;= A.2 &lt;= ... &lt;=A.N</code>
+</p> 
+<br><h3>Algoritmus</h3><p>
+Heapsort J. W. J. Williamse je třídící algoritmus, který má v nejhorším i v průměrném
+ případě tutéž časovou složitost <i>O</i><code>(N*lgN)</code> v případě vstupního pole s  
+ <code>N</code> prvky.
+</p>  
+<br><h3>Praxe</h3><p>
+Následující tabulka porovnává 4 algoritmy třídění. Pole <code>A.</code> 
+obsahuje celá čísla z intervalu <code>1</code> až <code>Max</code>, kde 
+<code>Max=10,100,1000,40000</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Doba výpočtu v sekundách pro N=10000
+
+Algoritmus      Max=100     Max=1000    Max=40000   Max=99999
+QUICKSORT         4.66        4.53        4.89        4.59 
+HEAPSORT         10.26       10.67       11.58       11.18 
+SHELLSORT         7.45        8.89       10.58       10.13 
+COUNTING_SORT     1.88        1.95        7.93       31.85 
+</code>
+</pre>
+</div>
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5.
+<br><br>
+</p><h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: pole <code>A.</code> libovolných prvků
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>N</code> - počet prvků v poli <code>A.</code>
+<br>&nbsp;
+<br>Výsledek: Přeuspořádá vstupní pole tak, že platí 
+ <code>A.1 &lt;= A.2 &lt;= ... &lt;= A.N</code>
+<a name="heapsort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+HEAPSORT: procedure expose A.
+parse arg N
+do I = N % 2 to 1 by -1
+  call SIFT I, N
+end
+do I = N to 2 by -1
+  W = A.1; A.1 = A.I; A.I = W
+  call SIFT 1, I - 1
+end
+return
+ 
+SIFT: procedure expose A.
+parse arg L, R
+I = L; W = A.I; J = 2 * I
+Jp1 = J + 1
+if J &lt; R then
+  if A.J &lt; A.Jp1 then J = Jp1
+do while J &lt;= R
+  if W &gt;= A.J then leave
+  A.I = A.J; I = J; J = 2 * I
+  Jp1 = J + 1
+  if J &lt; R then
+    if A.J &lt; A.Jp1 then J = Jp1
+end
+A.I = W
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+TŘÍDĚNÍ
+<br><a href="a_coun.html">Distribuční třídění</a>
+<br>
+<br><a href="a_shel.html">Shellsort</a>
+<br>
+<br><a href="a_quic.html">Quicksort</a>
+<br>
+<br><a href="a_sent.html#merging">Slučování</a>
+</p><br>
+<h3>Literatura</h3><p>
+Wirth N. <i>Algorithms and data structure</i> New Jersey, Prentice Hall, Inc., 
+Engelwood Cliffs, 1986
+</p>
+<br>
+<h3>Poděkování</h3><p>Změnil jsem test z <code>Max=10 ... 40000</code> na 
+<code>Max=100  ... 99999</code>. Díky za nápad patří Walteru Pachlovi z Vídně.
+</p><br>
+<h3>Modifikace HEAPSORTu od Jamese Barbettiho</h3><p>
+James mi poslal podprogram HEAPSORT_RADIX3 napsaný ve Visual Basicu. 
+Komentuje ho takto:<br><br>
+<cite>
+Místo <code>~ 2*N*log(N)/log(2)</code> porovnání a výměn dostaneme v průměru 
+<code>~ 2*log(N)/log(3) + 2*N</code> porovnání a
+<code>~ N*log(N)/log(3) + N</code> výměn.</cite>
+<a name="heapsortradix3">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+HEAPSORT_RADIX3: procedure expose A.
+parse arg N
+do R = (N+1)%3 to 1 by -1
+  call SiftDown A.R, N, R
+end
+do R = N to 2 by -1
+  V = A.R; A.R = A.1
+  call SiftDown V, (R - 1), 1
+end
+return
+ 
+SIFTDOWN: procedure expose A.
+V = ARG(1); Count = ARG(2); I = ARG(3)
+J = I
+do forever
+  K = J * 3 - 1
+  if K &lt; Count - 1
+    then do
+      Kp1 = K + 1; Kp2 = K + 2
+      if A.K &lt; A.Kp1 then
+        if A.Kp1 &lt; A.Kp2 then K = Kp2
+          else K = Kp1
+        else if A.K &lt; A.Kp2 then K = Kp2
+    end
+    else do
+      if K &lt; Count
+        then do
+          Kp1 = K + 1
+          if A.K &lt; A.Kp1 then K = Kp1
+        end
+        else if Count &lt; K then leave
+    end
+  A.J = A.K
+  J = K
+end
+K = J
+do while K &gt; I
+  J = (K + 1) % 3
+  if A.J &gt; V then leave
+  A.K = A.J
+  K = J
+end
+A.K = V
+return
+</code>
+</pre>
+</div>
+Děkuji Jamesu Berbettimu za zajímavý programový kód. 
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

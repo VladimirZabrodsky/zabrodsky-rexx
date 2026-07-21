@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Umocnění</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algoritmus na výpočet mocniny,
+	celočíselný exponent, reálný exponent">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_powe.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_powe.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>UMOCNĚNÍ</h1><hr>
+<h2>Kapitola I - celočíselný exponent</h2>
+<h3>Problém</h3><p>
+Jak efektivně určit hodnotu <code>X**Z</code>, kde <code>X</code> je reálné 
+číslo a <code>Z</code> je nezáporné celé číslo? Běžně používáme operaci 
+umocnění s operátorem <code>**</code>. Algoritmus realizovaný funkcí 
+<code>POWER</code> uvedl poprvé matematik al-Kashi v roce 1414.
+
+</p><br><h3>Imlementace</h3><p>
+Jednotka: vnitřní funkce nebo vnější, ale pak bez <code>procedure</code> 
+příkazu
+<br>&nbsp;
+<br>Parametry: reálné <code>X</code>, nezáporné celé <code>Z</code>
+<br>&nbsp;
+<br>Vrací: <code>X**Z</code>
+
+<a name="power">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POWER: procedure
+parse arg X, Z; Pwr = 1
+do forever
+  if Z // 2 then Pwr = Pwr * X
+  Z = Z % 2
+  if Z = 0 then return Pwr
+  X = X * X
+end
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>
+[Regina] Provádění následujícího  programu bude násilně ukončeno a na 
+displeji se vypíše chybové hlášení:
+ <code>Error 26 ... line 3: Invalid whole number</code>. To je důsledek 
+ implementačního limitu pro velikost exponentu.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* BERNOULLI computes e */
+numeric digits 20; Z = 1E+9
+X = 1 + 1 / Z
+say "e =" FORMAT(X**Z,,8)
+</code>
+</pre>
+</div>
+Ale program 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+/* BERNOULLI computes e */
+numeric digits 20; Z = 1E+9
+X = 1 + 1 / Z
+say "e =" FORMAT(POWER(X,Z),,8)
+exit
+POWER: procedure
+...
+</code>
+</pre>
+</div>
+dokončí výpočet a zobrazí <code>e = 2.71828183</code>
+</p><br>
+<h2>Část II - reálný exponent</h2><br><p>
+Funkce <code>REPOWER</code> vypočte obecnou mocninu pro zadaná reálná 
+čísla <code>X</code> a <code>Z</code>. 
+
+</p><br><h3>Imlementace</h3><p>
+Jednotka: vnitřní funkce
+
+<br>&nbsp;
+<br>Parametry: reálná čísla <code>X</code> a <code>Z</code>, 
+přirozené číslo <code>P</code> - počet platných číslic v hodnotě výsledku,
+ implicitně <code>9</code>
+
+<br>&nbsp;
+<br>Vazby:  funkce <code><a href="a_exp.html#exp">EXP</a></code> a 
+<code><a href="a_ln.html#ln">LN</a></code>
+
+<br>&nbsp;
+<br>Vrací:</code>  <code>X**Z</code> nebo vypíše chybovou zprávu: 
+<code>REPOWER: Výsledek není definován</code>
+
+<a name="repower">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code> 
+REPOWER: procedure
+parse arg X, Z, P
+if P = "" then P = 9; P = P + 4; numeric digits P
+if DATATYPE(Z, "Whole_number")
+  then
+    if X = 0 & Z &lt;= 0
+      then call ERROR "REPOWER: Výsledek není definován"
+      else return X ** Z
+  else
+    select
+      when X &gt; 0 then return EXP(Z * LN(X, P), P)
+      when X = 0 &amp; Z &gt; 0 then return 0
+      otherwise
+        call ERROR "REPOWER: Výsledek není definován"
+    end
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_exp.html">Exponenciální funkce</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_bit2d.html">Technika: Bitové pole zakódované do čísla</a>
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E. <i>Seminumerical Algorithms, vol. 2 of 
+The Art of Computer Programming</i> Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

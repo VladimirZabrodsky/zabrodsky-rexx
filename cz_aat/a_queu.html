@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technika: Reprezentace zásobniku, fronty a bifronty</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Reprezentace zasobniku a fronty pomocí
+	externí datové fronty, pole, řetězce, lineární seznam, porovnání" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_queu.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_queu.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: REPREZENTACE ZÁSOBNÍKU, FRONTY A BIFRONTY</h1><hr>
+<br><p>
+Lineární seznam je množina <code>N &gt;= 0</code> prvků 
+<code>A.1, A.2, ..., A.N</code>. 
+Lineární seznamy, u kterých se operace vložení a odebrání aplikují pouze na 
+první nebo poslední prvky, jsou:
+<br>Zásobník - operace vložení i odebrání se provádí pouze na jednom konci 
+lineárního seznamu.
+<br>Fronta - operace vložení se provádí na jednom konci, operace odebrání na 
+druhém konci lineárního seznamu.
+<br>Bifronta - "fronta se dvěma konci" je lineární seznam, u kterého se 
+operace vložení i odebrání provádí na obou koncích.
+
+
+<h2>EXTERNÍ DATOVÁ FRONTA</h2><P>
+Následující velmi jednoduché podprogramy nám umožňují reprezentovat základní 
+typy lineárních seznamů:
+<br>Zásobník: pomocí <code>INSERT_ON_RIGHT</code> a 
+<code>DELETE_FROM RIGHT</code>
+<br>Frontu: pomocí <code>INSERT_ON_LEFT</code> a 
+<code>DELETE_FROM_RIGHT</code>
+<br>Bifrontu s omezeným výstupem: pomocí  
+<code>INSERT_ON_RIGHT, INSERT_ON_LEFT, DELETE_FROM_RIGHT</code>
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+INITIALIZE: do while \EMPTY(); pull; end; return
+ 
+INSERT_ON_RIGHT: push ARG(1); return
+ 
+INSERT_ON_LEFT: queue ARG(1); return
+ 
+DELETE_FROM_RIGHT:
+if EMPTY()
+  then do
+    call UNDERFLOW
+    return ""
+  end
+  else do
+    pull X
+    return X
+  end
+ 
+EMPTY: return QUEUED() = 0
+ 
+UNDERFLOW: return
+</code>
+</pre>
+</div>
+</p>
+
+<h2>POLE</h2><p>
+Nejjednodušší a nejpřirozenější způsob reprezentace zásobníku 
+v paměti počítače využívá pole. 
+<br>Zásobník: můžeme snadno reprezentovat pomocí podprogramů 
+<code>INSERT_ON_RIGHT</code> a <code>DELETE_FROM_RIGHT</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+INITIALIZE: procedure expose R
+R = 0; return
+ 
+INSERT_ON_RIGHT: procedure expose A. R
+R = R + 1; A.R = ARG(1)
+return
+ 
+DELETE_FROM_RIGHT: procedure expose A. R
+if EMPTY()
+  then do
+    call UNDERFLOW
+    return ""
+  end
+  else do
+    S = R; R = R - 1
+    return A.S
+  end
+ 
+EMPTY: procedure expose R; return R = 0
+ 
+UNDERFLOW: return
+</code>
+</pre>
+</div>
+</p>
+<h2>ŘETĚZEC</h2><P>
+Jsou-li prvky seznamu slova, můžeme k reprezentaci lineárního seznamu využít 
+řetězec slov. Jednotlivé struktury pak lze reprezentovat jednoduše takto:
+
+<br>Zásobník: pomocí <code>INSERT_ON_LEFT</code> a 
+<code>DELETE_FROM_LEFT</code>
+<br>Frontu: pomocí <code>INSERT_ON_RIGHT</code> a 
+<code>DELETE_FROM_LEFT</code>
+<br>Bifrontu s omezeným výstupem: pomocí  
+<code>INSERT_ON_RIGHT, INSERT_ON_LEFT, DELETE_FROM_LEFT</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+INITIALIZE: procedure expose A
+A = ""; return
+ 
+INSERT_ON_RIGHT: procedure expose A
+A = A ARG(1); return
+ 
+INSERT_ON_LEFT: procedure expose A
+A = ARG(1) A; return
+ 
+DELETE_FROM_LEFT: procedure expose A
+if EMPTY()
+  then do
+    call UNDERFLOW
+    return ""
+  end
+  else do
+    parse var A X A
+    return X
+  end
+ 
+EMPTY: procedure expose A
+return A = ""
+ 
+UNDERFLOW: return ""
+</code>
+</pre>
+</div>
+</p>
+<h3>Porovnání</h3><p>
+Časovou složitost různých reprezentací zásobníku jsem porovnal pomocí 
+následující programu. Zaznamenal jsem dobu běhu při práci s prvky seznamu o 
+délce <code>K</code>, kde <code>K</code> byl nejprve jen jeden znak a potom 
+deset tisíc znaků. 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Seed = RANDOM(,,481989); K = 10000
+String = COPIES("*", K)
+call TIME "R"
+call INITIALIZE
+do 1000000
+  Rnd = RANDOM(1)
+  if Rnd = 0 then call INSERT_ON_LEFT String
+             else X = DELETE_FROM_LEFT()
+end
+say TIME("R") seconds
+exit
+...
+</code>
+</pre>
+</div>
+Výsledek
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ČASOVÁ SLOŽITOST V SEKUNDÁCH
+
+Reprezentace               K = 1	K = 10000
+Externí datová fornta      37.96         464.78
+Pole                       67.39         241.51
+Řetězec                    59.32	   ?<sup>*)</sup>
+</code>
+</pre>
+</div>
+<sup>*)</sup> Násilně jsem výpočet ukončil po 3600 sekundách.
+<br>
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5. 
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_topo.html">Topologické třídění</a> - užití více reprezentací 
+fronty v jediném programu.
+<br><code><a href="a_quic.html#quicksort">QUICKSORT</a></code> a 
+<a href="a_recu.html">Eliminace rekurze</a> - užití zásobníku.
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E., <i>Fundamental Algorithms, vol. 1 of The Art of Computer 
+Programming</i> - 2nd ed. Addison-Wesley, 1973>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

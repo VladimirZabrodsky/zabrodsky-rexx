@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Aritmetika komplexních čísel</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Funkce implementující aritmetiku 
+	komplexních čísel, sečítání, odčítání, násobení, dělení, absolutní hodnota,
+	druhá odmocnina, násobení reálným číslem" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_cmpx.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_cmpx.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>ARITMETIKA KOMPLEXNÍCH ČÍSEL</h1><hr>
+<h3>Implementace</h3>
+<p>Komplexní číslo je řetězec obsahující reálnou a imaginární část oddělenou 
+mezerou. Funkce <code>COMPLEX</code> vytvoří komplexní číslo ze 
+zadané reálné a imaginární části.
+<a name="complex">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COMPLEX: procedure
+parse arg Re, Im
+return Re Im
+</code>
+</pre>
+</div> 
+Funkce <code>REAL</code> vrací reálnou část komplexního čísla; funkce
+ <code>IMAGINARY</code> vrací imaginární část komplexního čísla. 
+<a name="real_imaginary">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+REAL: procedure
+parse arg Re Im
+return Re
+ 
+IMAGINARY: procedure
+parse arg Re Im
+return Im
+</code>
+</pre>
+</div> 
+</p>
+<h2>Aritmetické operace</h2>
+<p>Uvedeme implementaci základních aritmetických operací.</p>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+<a name="cadd">&nbsp;</a>
+/* Sečítání */
+CADD: procedure
+parse arg Ca, Cb
+parse var Ca Ar Ai
+parse var Cb Br Bi
+return (Ar + Br) (Ai + Bi)
+<a name="csub">&nbsp;</a>
+/* Odčítání */
+CSUB: procedure
+parse arg Ca, Cb
+parse var Ca Ar Ai
+parse var Cb Br Bi
+return (Ar - Br) (Ai - Bi)
+<a name="cmul">&nbsp;</a>
+/* Násobení */
+CMUL: procedure
+parse arg Ca, Cb
+parse var Ca Ar Ai
+parse var Cb Br Bi
+return (Ar * Br - Ai * Bi),
+  (Ai * Br + Ar * Bi)
+<a name="cdiv">&nbsp;</a>
+/* Dělení */
+CDIV: procedure
+parse arg Ca, Cb
+parse var Ca Ar Ai
+parse var Cb Br Bi
+if ABS(Br) &gt;= ABS(Bi)
+  then do
+    R = Bi / Br
+    Den = Br + R * Bi
+    return,
+      (Ar + R * Ai)/Den (Ai - R * Ar)/Den
+  end
+  else do
+    R = Br / Bi
+    Den = Bi + R * Br
+    return,
+      (Ar * R + Ai)/Den (Ai * R - Ar)/Den
+  end
+<a name="cabs">&nbsp;</a>
+/* Absolutní hodnota */
+CABS: procedure
+parse arg Ar Ai
+X = ABS(Ar); Y = ABS(Ai)
+select
+  when X = 0 then return Y
+  when Y = 0 then return X
+  when X > Y
+    then do
+      W = Y/X
+      return X * SQRT(1 + W * W)
+    end
+  otherwise
+    W = X/Y
+    return Y * SQRT(1 + W * W)
+end
+<a name="csqrt">&nbsp;</a>
+/* Druhá odmocnina */
+CSQRT: procedure
+parse arg Ar Ai
+if Ar = 0 &amp; Ai = 0 then return 0 0
+X = ABS(Ar); Y = ABS(Ai)
+if X &gt;= Y
+  then do
+    R = Y/X
+    W = SQRT(X) *,
+      SQRT(0.5 * (1 + SQRT(1 + R)))
+  end
+  else do
+    R = X/Y
+    W = SQRT(Y) *,
+      SQRT(0.5 * (R + SQRT(1 + R)))
+  end
+if Ar &gt;= 0 then return W (Ai / (2 * W))
+  else do
+    if Ai &gt;= 0 then return Ai / (2 * W)
+      else return Ai / (2 * -W)
+  end
+<a name="csqrt">&nbsp;</a>
+/* Násobení reálným číslem */
+RCMUL: procedure
+parse arg C, R
+parse var C Ar Ai
+return R * Ar R * Ai
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>Program
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+C1 = COMPLEX(1, 2)
+C2 = COMPLEX(2, -1)
+C3 = COMPLEX(0, 3)
+say "C1 + C2 =" CADD(C1, C2)
+say "C1 - C2 =" CSUB(C1, C2)
+say "C1 * C2 =" CMUL(C1, C2)
+say "C1 / C2 =" CDIV(C1, C2)
+/*   |C1| = SQRT(5)               */
+say "|C1| =" CABS(C1)
+/* SQRT(C3) = SQRT(3/2) SQRT(3/2) */
+say "SQRT(C3) =" CSQRT(C3)
+exit
+...
+</code>
+</pre>
+</div>
+zobrazí: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+C1 + C2 = 3 1
+C1 - C2 = -1 3
+C1 * C2 = 4 3
+C1 / C2 = 0 1
+|C1| = 2.23606798
+SQRT(C3) = 1.22474487 1.22474487
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<a href="a_sqrt.html">Druhá odmocnina kladného reálného čísla</a></div>
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P., 
+<i>Numerical Recipes in C : the art of scientific computing</i> - 
+2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

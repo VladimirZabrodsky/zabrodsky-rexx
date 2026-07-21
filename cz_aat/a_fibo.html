@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Fibonacciho cisla</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+<META name="DESCRIPTION" content="algoritmus pro nalezení N-tého Fibonacciho čísla, Niclaus Wirth." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_fibo.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_fibo.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>FIBONACCIHO ČÍSLA</h1>
+<hr>
+<h3>Úvod</h3><p>
+Posloupnost <code>0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...</code>, ve které 
+je každý člen sumou předcházejících dvou členů, objevil v roce 1202 italský 
+matematik Leonardo Pisano (Leonardo z Pisy), kterého nazývali také Leonardo 
+Fibonacci (<i>Filius Bonacci</i>, tj. syn  Bonacciův). 
+<i>Fibonacciho čísla</i> jsou definována  vztahem:
+<code>F<sub>0</sub> = 0;
+F<sub>1</sub> = 1;
+...; 
+F<sub>N</sub> = F<sub>N-1</sub> + F<sub>N-2</sub> for N &gt;= 2
+</code>
+
+</p><br>
+<h3>Algoritmy</h3><p>
+Nejprve uvedu efektivní algoritmus 
+(viz <a href="a_recu.html">Technika: Odstranění rekurze</a>) 
+pro nalezení   <code>N</code>-tého Fibonacciho čísla.
+<a name="fib">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIB: procedure
+parse arg N
+if N = 0 | N = 1 then return N
+A = 0; B = 1
+do N - 1
+  parse value(B (B + A)) with A B
+end
+return B
+</code>
+</pre>
+</div>
+Nejhorší případ při výpočtu největšího společného dělitele pomocí 
+<a href="a_eucl.html">Euklidova algoritmu</a> nastane, když parametry 
+<code>A</code> a <code>B</code> jsou  dvě po sobě následující  Fibonacciho
+ čísla. Pro testování této vlastnosti je výhodné upravit funkci 
+ <code>FIB</code> tak, aby vracela právě ony dvě po sobě následující 
+ Fibonacciho čísla. Toho dosáhneme jednoduchou úpravou posledního příkazu 
+ na <code>return B A</code>. Volání funkce <code>FIB(N)</code> bude vracet  
+ <code>N</code>-té a (<code>N-1</code>)-ní Fibonacciho číslo. 
+V 9. kapitole své knihy  <i>Systematisches Programmieren</i>
+ (slovenský překlad <i>Systematické programovanie</i>, Alfa Bratislava, 
+ 1981) uvádí N. Wirth vzorec pro explicitní vyjádření  <code>N</code>-tého 
+ Fibonacciho čísla. Použijeme jej ve funkci <code>GENERAL_FIB</code>.
+<a name="general_fib">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GENERAL_FIB: procedure
+parse arg N, P
+if N = 1 then return 1
+Sqrt5 = SQRT(5, P); C = (1 + Sqrt5) / 2
+return FORMAT(C ** N / Sqrt5,,0)
+</code>
+</pre>
+</div>
+Program <code>FIB</code> počítá <code>N</code>-té Fibonacciho číslo, pro
+<code>N=10000</code> a <code>P=2100</code> celkem <code>8.34</code> sekund, 
+zatímco program <code>GENERAL_FIB</code> potřebuje <code>63.39</code> 
+sekund. Je zajímavé, že příliš nepomůže ani předvypočítat hodnotu 
+<code>SQRT(5,2100)</code> a vytvořit funkci 
+<code><a href="a_bcco.html#sqrt5">SQRT5</a></code> vracející jen tuto 
+hodnotu. <code>GENERAL_FIB</code> počítá <code>26.47</code> sekund.
+</p><br>
+<h3>Souvislosti</h3><p>
+<a href="a_eucl.html">Euklidův algoritmus pro výpočet NSD (a NSN)</a>
+<br>
+<br><a href="a_memfis.html"><i>K</i>-tý člen slavné celočíslelné 
+posloupnosti</a>
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E. <i>Fundamental Algorithms, vol. 1 of The Art of Computer Programming</i>
+ - 2nd ed. Addison-Wesley, 1973
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

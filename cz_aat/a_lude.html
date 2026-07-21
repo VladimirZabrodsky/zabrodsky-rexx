@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>LU rozklad</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Soustava lineárních rovnic, algoritmus LU 
+	rozkladu v místě, Crout." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_lude.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_lude.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>LU - rozklad</h1>
+<hr>
+<h3>Problém</h3><p>
+<div class=t>Zapsat čtvercovou matici <code>A.</code> řádu <code>N</code> 
+jako součin matice <code>L.</code> (<i>lower triangular</i>, tj. dolní 
+trojúhelníková matice) a matice <code>U.</code> (<i>upper triangular</i>,
+ tj. horní trojúhelníková matice).
+</p>
+<br><h3>Algoritmus</h3><p>
+Následující algoritmus (Press a kol. jej přisuzují Croutovi) je rozkladem v
+ místě (<i>in situ</i>). Předpokládá se, že diagonální prvky matice 
+ <code>L.</code> jsou rovny <code>1</code>: <code>L.J.J = 1</code> for 
+ <code>J = 1, ..., N</code>. Ostatní prvky matice  <code>L.</code>  budou 
+ uloženy pod hlavní diagonálou matice <code>A.</code>; Prvky matice 
+ <code>U.</code> budou uloženy v <code>A.</code> na hlavní diagonále a nad 
+ ní. Algoritmus neprovádí permutaci řádků. Zaznamenává ji však ve vektoru 
+ <code>Indx.</code>, který je jedním z výsledků výpočtu. <i>LU</i> rozklad  
+ provedený funkcí <code>LUDCMP</code> vyžaduje okolo 
+ <code>(1/3)* N** 3</code>  operací násobení a stejně tolik operací sečítání.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: vstupní čtvercová matice <code>A.</code> řádu 
+<code>N</code>, výstupní vektor <code>Indx.</code>
+<br>&nbsp;
+<br>Parametr: přirozené číslo <code>N</code>
+<br>&nbsp;
+<br>Vrací:</code> <code>+1</code> nebo <code>-1</code> v závislosti na tom,
+ zda počet výměn řádků byl sudý nebo lichý (využívá se při výpočtu 
+ <a href="a_dete.html">determinantu</a>)
+<br>&nbsp;
+<br>Výsledek: <code>Indx.</code> zaznamená permutaci řádků; <i>LU</i> rozklad
+ matice <code>A.</code> v místě
+
+</p>
+<br>
+<h4>
+Poznámka:
+</h4><p>
+W. H. Press a kol. ve své knize uvádí: <cite>"Je-li v daném kroku výpočtu hlavní
+ prvek nulový, matice je singulární. Pro práci se singulárními maticemi může 
+ být vhodné nahradit nulovou hodnotu prvku hodnotou <code>Tiny</code>"</cite> 
+ (doporučují volit <code>Tiny = 1E-20</code>).
+<a name="ludcmp">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LUDCMP: procedure expose A. Indx.
+parse arg N
+D = 1; Tiny = 1E-20
+do I = 1 to N
+  Max = 0
+  do J = 1 to N
+    W = ABS(A.I.J)
+    if W &gt; Max then Max = W
+  end
+  if Max = 0 then
+    call ERROR "LUDCMP: Chyba - singulární matice"
+  Vv.I = 1 / Max
+end
+do J = 1 to N
+  do I = 1 to J - 1
+    Sum = A.I.J
+    do K = 1 to I - 1
+      Sum = Sum - A.I.K * A.K.J
+    end
+    A.I.J = Sum
+  end
+  Max = 0
+  do I = J to N
+    Sum = A.I.J
+    do K = 1 to J - 1
+      Sum = Sum - A.I.K * A.K.J
+    end
+    A.I.J = Sum
+    W = Vv.I * ABS(Sum)
+    if W &gt;= Max then do; Max = W; Imax = I; end
+  end
+  if J &lt;&gt; Imax then do
+    do K = 1 to N
+      W = A.Imax.K; A.Imax.K = A.J.K; A.J.K = W
+    end
+    D = -D; Vv.Imax = Vv.J
+  end
+  Indx.J = Imax
+  if A.J.J = 0 then A.J.J = Tiny
+  if J &lt;&gt; N then do
+    W = 1 / A.J.J
+    do I = J + 1 to N
+      A.I.J = A.I.J * W
+    end
+  end
+end
+return D
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+SOUSTAVA LINEÁRNÍCH ROVNIC
+<br><a href="a_dete.html">Determinant matice</a>
+<br>
+<br><a href="a_inve.html">Inverze  matic</a>
+<br>
+<br><a href="a_slae.html">
+Řešení soustavy lineárních rovnic</a>
+</p>
+<br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical 
+Recipes in C : the art of scientific computing</i> - 2nd ed. University 
+Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+

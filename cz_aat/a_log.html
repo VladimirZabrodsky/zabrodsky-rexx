@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Logaritmy s jiným základem než e</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Výpočet logaritmu s jiným základem
+	než e, Eulerovo číslo" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_log.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_log.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>LOGARITMY S JINÝM ZÁKLADEM NEŽ E</h1><hr>
+<h3>Definice</h3><p>
+Je-li  <code>A &gt; 1</code> reálné číslo, pak pro každé kladné  
+<code>X &gt; 0</code> je definována hodnota  
+<code>LOGA(X) = Y</code>, kde <code>Y</code> je reálné číslo pro něž platí 
+<code>A**Y = X</code>. Funkce <code>LOGA</code> se nazývá logaritmická funkce
+ při základu <code>A</code>.
+
+</p><br><h3>Algoritmus</h3><p>
+Pro dané <code>A</code> a <code>X</code> je <code>LOGA(X)=LN(X)/LN(A)</code>,
+kde funkce <code><a href="a_ln.html#ln">LN</a></code> je 
+<a href="a_ln.html">přirozený logaritmus</a>. V této souvislosti se často 
+užívá konstant  <code>LN(2)</code> a <code>LN(10)</code> pro výpočet 
+binárního (dvojkového) nebo dekadického logaritmu. Dále uvedené funkce vrací 
+prvních <code>200</code> platných desítkových číslic těchto konstant. Pro 
+jejich výpočet jsem použil algoritmus podobný tomu z kapitoly 
+<a href="a_ln.html">Přirozený logaritmus</a>, viz funkce 
+<code><a href="a_ln.html#ln2p">LN2P</a></code>, a program pro automatické 
+vytváření funkce vracející hodnotu určité konstanty, viz 
+<a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>. 
+
+<a name="ln2">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LN2: procedure; V = ''
+V = V || 0.69314718055994530941723212145817656807
+V = V || 5500134360255254120680009493393621969694
+V = V || 7156058633269964186875420014810205706857
+V = V || 3368552023575813055703267075163507596193
+V = V || 0727570828371435190307038623891673471123350
+return V
+
+<a name="ln10">&nbsp;</a>
+LN10: procedure; V = ''
+V = V || 2.30258509299404568401799145468436420760
+V = V || 1101488628772976033327900967572609677352
+V = V || 4802359972050895982983419677840422862486
+V = V || 3340952546508280675666628736909878168948
+V = V || 2907208325554680843799894826233198528393505
+return V
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+<div class=t><a href="a_e.html">Eulerovo číslo e</a>
+<br>
+<br><a href="a_ln.html">Přirozený logaritmus</a>
+<br>
+<br><a href="a_bcco.html">Technika: Předem vypočtené konstanty</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

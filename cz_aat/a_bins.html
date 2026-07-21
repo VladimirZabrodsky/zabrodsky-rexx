@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Dichotomicke vyhledavani</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="dichotomicke vyhledavani - v prumeru vyzaduje jen  lg N porovnani" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_bins.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_bins.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DICHOTOMICKÉ VYHLEDÁVÁNÍ</h1><hr>
+<h3>Problém</h3>
+<p>Je dáno vzestupně uspořádané pole <code>A.1, ..., A.N</code> a hledaná 
+hodnota <code>V</code>.  Vyhledávací funkce vrací index 
+<code>V</code>, jestliže se <code>V</code> nachází v poli 
+<code>A.</code>, jinak vrací  <code>N + 1</code>. 
+</p>
+<br>
+<h3>Algoritmus</h3>
+<p>
+Rozdělíme pole na dvě části; určíme ve které z nich musí hledaný prvek být; 
+tuto část opět rozdělíme na dvě části ... (algoritmus se také nazývá 
+vyhledávání půlením intervalu). V průměru je potřeba 
+<code>lgN</code> porovnání.
+</p>
+<br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>
+Globální proměnné: uspořádané pole <code>A.1,&nbsp;...,&nbsp;A.N</code> 
+libovolných prvků
+<br>
+<br>Parametry: přirozené číslo <code>N</code>, libovolná hodnota
+ <code>V</code>
+ <br>
+<br>Vrací: index prvku <code>V</code> v poli <code>A.</code> nebo číslo
+ <code>N+1</code>, když <code>V</code> není prvkem pole. 
+<a name="binary_search">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+BINARY_SEARCH: procedure expose A.
+parse arg N, V
+L = 1; R = N
+do while L &lt;= R
+  M = (L + R) % 2
+  if V = A.M then leave
+  if V &lt; A.M then R = M - 1; else L = M + 1
+end
+if A.M = V then return M; else return N + 1
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3>
+<p>
+<a href="a_seqs.html">Sekvenční vyhledávání</a>
+<br>
+<br><a href="a_sent.html#sequential_search_without_sentinel">Sekvenční vyhledávání bez zarážky</a>
+<br>
+<br><a href="a_inte.html">Interpolační vyhledávání</a>
+<br>
+<br><a href="a_asoc.html">Vyhledávání v asociativním poli</a>
+<br>
+<br><a href="a_absc.html">Do kterého intervalu patří?</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

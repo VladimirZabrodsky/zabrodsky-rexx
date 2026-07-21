@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Distribuční třídění</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algoritmus trideni s casovou slozitosti 
+	O(N), Harold H. Seward, vstupní pole obsahuje celá čísla 1 až K, 
+	používá dočasné pole" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_coun.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_coun.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+
+<p>&nbsp;</p>
+<h1>DISTRIBUČNÍ TŘÍDĚNÍ</h1>
+<hr>
+<h3>Problém</h3>
+<p>
+Uspořádat pole <code>A.</code> obsahující <code>N</code> celých čísel z 
+intervalu <code>1</code> až <code>K</code>.   
+</p><br>
+<h3>Algoritmus</h3><p>
+Distribuční třídění objevil Harold H. Seward v roce 1954. Je použitelné jen 
+v případě, že každý prvek pole je celé číslo z intervalu <code>1</code> až 
+<code>K</code>. Pokud <code>K=O(N)</code>, 
+pak časová složitost tohoto algoritmu je <code>O(N)</code>. Algoritmus 
+využívá pracovní pole.
+</p>  
+<br><h3>Praxe</h3><p>
+Následující tabulka porovnává 4 algoritmy třídění. Pole <code>A.</code> 
+obsahuje celá čísla z intervalu <code>1</code> až <code>Max</code>, kde 
+<code>Max=10,100,1000,40000</code>.
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+Doba výpočtu v sekundách pro N=10000
+
+Algoritmus      Max=100     Max=1000    Max=40000   Max=99999
+QUICKSORT         4.66        4.53        4.89        4.59 
+HEAPSORT         10.26       10.67       11.58       11.18 
+SHELLSORT         7.45        8.89       10.58       10.13 
+COUNTING_SORT     1.88        1.95        7.93       31.85 
+</code>
+</pre>
+</div>
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5.
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: pole <code>A.</code> celých čísel z intervalu 
+<code>1</code> až <code>K</code>
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - počet prvků v 
+<code>A.</code>, přirozené číslo <code>K</code>
+<br>&nbsp;
+<br>Výsledek: Přeuspořádá vstupní pole tak, že platí 
+ <code>A.1 &lt;= A.2 &lt;= ... &lt;= A.N</code>
+
+
+<a name="counting_sort">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+COUNTING_SORT: procedure expose A.
+parse arg N, K
+C. = 0
+do J = 1 to N
+  Aj = A.J; C.Aj = C.Aj + 1
+end
+do J = 2 to K
+  Jm1 = J - 1; C.J = C.J + C.Jm1
+end
+do J = N to 1 by -1
+  Aj = A.J; CAj = C.Aj; B.CAj = A.J
+  C.Aj = CAj - 1
+end
+do J = 1 to N; A.J = B.J; end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+TŘÍDĚNÍ
+<br><a href="a_heap.html">Heapsort</a>
+<br>
+<br><a href="a_shel.html">Shellsort</a>
+<br>
+<br><a href="a_quic.html">Quicksort</a>
+<br>
+<br><a href="a_sent.html#merging">Slučování</a>
+</p><br>
+<h3>Literatura</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. <i>Introduction to 
+Algorithms</i> The MIT Press, Cambridge, 1990
+<br>
+<br>Sedgewick R., <i>Algorithms</i> Addison-Wesley, Reading, 
+Massachusetts, 1984
+</p>
+<br>
+<h3>Poděkování</h3><p>Změnil jsem test z <code>Max=10 ... 40000</code> na 
+<code>Max=100  ... 99999</code>. Díky za nápad patří Walteru Pachlovi z Vídně.
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+

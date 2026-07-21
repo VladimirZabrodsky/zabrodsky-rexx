@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Euklidův algoritmus pro výpočet NSD/NSN</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algoritmus na vypocet nejvetsiho
+	spolecneho delitele a nejmensiho spolecneho nasobku, Euklidův 
+	algoritmus, NSD, GCD, NSN, LCM" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_eucl.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_eucl.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>EUKLIDŮV ALGORITMUS PRO VÝPOČET NSD/NSN</h1><hr>
+<h2>NSD</h2><p>
+Jsou dána dvě celá čísla. Největší celé číslo, které je dělitelem každého 
+z nich, nazýváme jejich největší společný dělitel
+(<code>NSD</code>, anglicky <code>GCD</code>, 
+tj. <i>Greatest Common Divisor</i>). Definitoricky 
+<code>NSD(0, 0) = 0</code>. Následující rovnice ukazují,
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSD(A,B)=NSD(B,A)
+NSD(A,B)=NSD(-A,B)
+NSD(A,0)=ABS(A)
+</code>
+</pre>
+</div>
+že můžeme uvažovat jen nezáporné hodnoty <code>A</code> a <code>B</code>.
+</p><br>
+<h3>Algoritmus</h3><p>
+Eukleidos popsal tento algoritmus ve své knize <i>Základy</i> (kolem r. 300 
+před n. l.). Algoritmus je založen na platnosti rekurzívního vztahu:
+<code>NSD(A,B) = NSD(B,A//B)</code>
+</p>
+<br><h3>Implementace</h3><p>
+Jednotka:
+rekurzívní vnitřní funkce nebo vnější funkce, ale pak bez
+ <code>procedure</code> příkazu
+<br>&nbsp;
+<br>Parametry: nezáporné číslo <code>A</code>, nezáporné číslo 
+<code>B</code>
+<br>&nbsp;
+<br>Vrací: <code>NSD(A,B)</code>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSD: procedure
+parse arg A, B
+if B = 0 then return A
+  else return NSD(B, A // B)
+</code>
+</pre>
+</div>  
+  
+Funkci můžeme snadno přepsat do iterativní formy, podívejte se na kapitolu
+ <a href="a_recu.html">Technika: Odstranění rekurze</a>.
+
+<a name="euclid">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSD: procedure
+parse arg A, B
+do while B &gt; 0
+  parse value(B A//B) with A B
+end
+return A
+</code>
+</pre>
+</div>  
+
+Nejhorší případ nastane, když <code>A</code> a <code>B</code> jsou dvě po 
+sobě následující   <a href="a_fibo.html">Fibonacciho čísla</a>. 
+Počet průchodů cyklem ale nikdy nepřevýší
+ <code>FORMAT(4.8*<a href="a_ln.html#ln">LN</a>(B)/<a href="a_log.html#ln10">LN10</a>(),,0)
+ </code>
+</p><br>
+<h2>NSN</h2><p>
+
+Nejmenší společný násobek <code>NSN</code>
+ (anglicky <code>LCM</code> - <i>least common multiple</i>) dvou celých 
+ čísel  <code>A</code> a <code>B</code> je nejmenší kladné celé číslo, 
+ které je násobkem jak čísla <code>A</code> tak i čísla <code>B</code>. 
+
+</p><br>
+<h3>Algoritmus</h3><p>
+Rovnice <code>A*B = NSD(A,B) * NSN(A,B)</code> redukuje výpočet 
+<code>NSN</code> na výpočet <code>NSD</code>.
+
+<a name="lcm">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NSN: procedure
+parse arg A, B
+return A * B / NSD(A, B)
+</code>
+</pre>
+</div> 
+
+
+</p>
+<h3>Souvislosti</h3><p>
+
+<a href="a_exeu.html">Rozšířený Euklidův algoritmus</a>
+<br>
+<br><a href="a_equs.html">Modulární lineární rovnice</a>
+<br>
+<br><a href="a_fibo.html">Fibonacciho čísla</a>
+<br>
+<br><a href="a_prim.html">Prvočísla</a></div>
+</p><br>
+<h3>Literatura</h3><p>
+Knuth D. E., <i>Seminumerical Algorithms, vol. 2 of The Art of 
+Computer Programming</i> Addison-Wesley, 1973
+<br><br>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i>
+The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Algoritmus Knutha-Morrise-Pratta</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Porovnání řetězců. Časová složitost algoritmu 
+	Knutha-Morrise-Pratta je O(M+N)">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_kmp.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_kmp.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>ALGORITMUS KNUTHA-MORRISE-PRATTA</h1>
+<hr>
+<h3>Problém</h3><p>
+Text je pole <code>T.1, T.2,..., T.N</code> a vzorek je pole 
+<code>P.1, P.2,..., P.M</code>. Prvky <code>P.</code> a <code>T.</code> 
+jsou znaky konečné abecedy <code>Sigma.</code>, <code>Sigma.</code> 
+je pole <code>R</code> prvků. Řekneme, že vzorek <code>P.</code> se 
+nachází v textu <code>T.</code> s posunutím <code>S</code>, jestliže 
+<code>0 &lt;= S &lt; =N - M</code> a <code>T.SpJ=P.J</code>, kde 
+<code>SpJ</code> 
+označuje <code>S + J</code>, pro <code>J = 1, ..., M</code>. Problém 
+porovnání 
+řetězců spočívá v nalezení všech těchto posunutí. 
+
+ 
+</p><br><h3>Algoritmus</h3><p>
+Algoritmus Knutha-Morrise-Pratta má časovou složitost v průměrném i v 
+nejhorším případě <i>O</i><code>(M + N)</code>. 
+</p><br><h3>Praxe</h3><p>
+Jsou-li text  i vzorek skutečné řetězce znaků, pak nejrychlejší řešení nabízí 
+<a href="a_simp.html#real_string_matcher">
+<code>REAL_STRING_MATCHER</code></a>. 
+V obecném případě tu není jednoznačný vítěz a nejlépe uděláme, když si 
+podprogramy otestujeme na typických datech (testovací prostředí: Windows 2000 Professional,  
+132MB RAM, procesor x86Family 6 Mode 6 Stepping 5).
+
+Uveďme si příklad, ve kterém <code>M</code> označuje počet prvků 
+<code>P.</code>, <code>R</code> označuje počet prvků <code>Sigma.</code> 
+a <code>S</code> označuje počet objevených posunutí:
+
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+DOBA BĚHU V SEKUNDÁCH PRO N=100000
+
+Algorithm      M=10,R=1999,S=50     M=10,R=4,S=10000     M=100,R=4,S=10000
+Naivní               16                    25                    150 
+KMP                  21                    22                     23 
+Boyer-Moore           4                    15                    138 
+</code>
+</pre>
+</div>
+Kde:
+<br><a href="a_naiv.html#naive_string_matcher">Naivní algoritmus</a>
+<br><a href="a_boye.html#boyer_moore_matcher">Boyer-Moore algoritmus</a>
+</p><br><h3>Implementace</h3><p>
+Jednotka: vnitřní podprogram
+<br>&nbsp;
+<br>Globální proměnné: pole <code>T.1, ..., T.N</code> řetězců, pole 
+<code>P.1, ..., P.M</code> řetězců
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - počet prvků 
+<code>T.</code>, přirozené číslo <code>M</code> - počet prvků 
+<code>P.</code>
+<br>&nbsp;
+<br>Výstup: Pro všechna nalezená posunutí zobrazí <code>Vzorek se nachází s 
+posunutím</code> <i>S</i>
+
+<a name="kmp_matcher">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+KMP_MATCHER: procedure expose T. P.
+parse arg M, N
+call COMPUTE_PREFIX_FUNCTION M
+Q = 0
+do I = 1 to N
+  Qp1=Q + 1
+  do while Q &gt; 0 &amp; P.Qp1 <> T.I
+    Q = Pi.Q; Qp1 = Q + 1
+  end
+  if P.Qp1 = T.I then Q = Q + 1
+  if Q = M
+    then do
+      say "Vzorek se nachází s posunutím" I - M
+      Q = Pi.Q
+    end
+end
+return
+ 
+COMPUTE_PREFIX_FUNCTION:
+procedure expose Pi. P.
+parse arg M
+Pi.1 = 0; K = 0
+do Q = 2 to M
+  Kp1 = K + 1
+  do while K &gt; 0 &amp; P.Kp1 <> P.Q
+    K = Pi.K; Kp1 = K + 1
+  end
+  if P.Kp1 = P.Q then K = K + 1
+  Pi.Q = K
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+POROVNÁNÍ ŘETĚZCŮ
+<br><a href="a_simp.html">Porovnání skutečných řetězců</a>
+<br>
+<br><a href="a_naiv.html">Naivní algoritmus porovnání</a>
+<br>
+<br><a href="a_boye.html">Algoritmus Boyera-Moora</a>
+</p><br>
+<h3>Literatura</h3><p>
+Cormen T. H., Leiserson Ch. E., Rivest R. L. 
+<i>Introduction to Algorithms</i> The MIT Press, Cambridge, 1990
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>

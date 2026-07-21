@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().gecodeime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'hcodeps://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>MODIFIND</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Algoritmus nalezení K-tého nejmenšího
+	prvku, jehož časová složitost je v průměru O(N); v nejhorším případě však
+	O(N**2), počet výměn je vždy menší než u SELECT a FIND. Zábrodský" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="hcodeps://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_modi.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_modi.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>Modifind</h1><hr>
+<h3>Problém</h3><p>
+Nalezení <code>K</code>-tého nejmenšího z <code>N</code> prvků: Je dáno 
+pole 
+ <code>A.</code>, obsahující <code>N</code> (různých) prvků, a přirozené 
+ číslo <code>K</code>, <code>1 &lt;= K &lt;= N</code>, určete 
+ <code>K</code>-tý nejmenší prvek <code>A.</code> a přerovnejte pole tak, 
+ aby tento prvek byl  v <code>A.K</code> a všechny prvky s indexy menšími 
+ než  <code>K</code> neměly větší hodnotu než <code>A.K</code> a všechny 
+ prvky s indexy většími než <code>K</code> neměly hodnotu menší než 
+ <code>A.K</code>. 
+ 
+</p><br>
+<h3>Algoritmus</h3><p>
+Robert W. Floyd a Ronald L. Rivest vyvinuli patrně nejdokonaleší verzi
+ algoritmu s vynikajícími výsledky v průměru. Ve svém článku napsali:
+ "Výsledky ukazují, že se SELECT v počet potřebných porovnání velmi blíží
+ optimálnímu řešení."
+</p><br>
+<h3>Praxe</h3><p>
+Algoritmy <code><a href="a_modi.html">MODIFIND</a></code> a 
+<code><a href="a_sele.html">SELECT</a></code> jsou téměř vždy rychlejší  
+než <code>FIND</code>. <code>SELECT</code> potřebuje méně operací porovnání 
+než <code>MODIFIND</code>; <code>MODIFIND</code> potřebuje méně operací 
+výměn prvků než <code>SELECT</code>. Následující tabulka uvádí průměrnou
+ dobu výpočtu <code>10</code>. testů naměřenou algoritmům <code>FIND</code>, 
+ <code>MODIFIND</code>, a <code>SELECT</code> při určování mediánu z  
+ <code>10000</code> prvků - řetězců délky <code>L &lt;= 6</code> 
+ (jen čísla), 
+ <code>L &lt;= 7</code>, <code>L &lt;= 500</code>:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+POROVNÁNÍ ALGORITMŮ
+Algoritmus     L&lt;=6           L&lt;=7           L&lt;=500
+FIND           0.957          1.475          4.104
+MODIFIND       0.929          1.212          1.476
+SELECT         0.602          0.828          0.985
+</code>
+</pre>
+</div>   
+<span class="green">POZNÁMKA</span>: Tento test běžel v prostředí Windows 2000 Professional 
+na počítači se 132MB RAM a procesorem typu x86Family 6 Mode 6 Stepping 5. 
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: pole <code>A.</code> libovolných prvků
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code> - počet prvků v 
+<code>A.</code>, přirozené číslo <code>K</code>, 
+<code>1 &lt;= K &lt;= N</code>
+<br>&nbsp;
+<br>Výsledek: Přerovnání vstupního pole tak, že v <code>A.K</code> je 
+uložena tatáž hodnota, jakou bychom tu našli, kdyby bylo pole utříděno, 
+<code>L &lt; =I &lt;= K</code> implikuje <code>A.I &lt;= A.K</code>, a 
+<code>K &lt;= I &lt; = R</code> implikuje <code>A.I &gt;= A.K</code>
+<br>&nbsp;
+<br>Vrací: <code>A.K</code>
+
+<a name="modifind">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MODIFIND: procedure expose A.
+parse arg N, K
+L = 1; R = N
+do while L &lt; R
+  X = A.K; I = L; J = R
+  do until J &lt; K | K &lt; I
+    do while A.I &lt; X; I = I + 1; end
+    do while X &lt; A.J; J = J - 1; end
+    W = A.I; A.I = A.J; A.J = W
+    I = I + 1; J = J - 1
+  end
+  if J &lt; K then L = I
+  if K &lt; I then R = J
+end
+return A.K
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+NALEZENÍ K-TÉHO NEJMENŠÍHO PRVKU 
+<br><a href="a_minm.html">Minimum a maximum současně</a>
+<br>
+<br><a href="a_find.html">Find</a>
+<br>
+<br><a href="a_sele.html">Select</a>
+
+</p><br>
+<h3>Literatura</h3><p>
+Hoare C. A. R. <i>Proof of a Program: FIND</i> CACM, Vol 14, No. 1, 
+January 1971, pp. 39-45
+<br>
+<br>Wirth N. <i>Algorithms and data strucure</i>New Jersey, 
+Prentice Hall, Inc., 
+Engelwood Cliffs, 1986
+<br>
+<br>Zabrodsky V. <i>Variace na klasicke tema</i> Elektronika
+ (former Czech computer 
+journal), No. 6, 1992, pp. 33-34
+<br>
+<br>Zabrodsky V. <code><a href="../3alg.html">FIND, SELECT, MODIFIND</a></code>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Interpolace a extrapolace racionální funkcí</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Interpolace a extrapolace funkce 
+	zadane N vstupnimi body pomoci racionalni funkce, J. Stoer a R. Bulirsh">
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_rfie.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_rfie.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>INTERPOLACE A EXTRAPOLACE RACIONÁLNÍ FUNKCÍ</h1><hr>
+<h3>Problém</h3><p>
+Jsou dány hodnoty funkce v bodech 
+<code>A.1 &lt; A.2 &lt; ... &lt; A.N</code>. 
+Odhadněte hodnotu funkce v libovolném bodě <code>V</code>.
+</p><br>
+<h3>Algoritmus</h3><p>
+V případě interpolace (tj. když <code>A.1 &lt;= V &lt; A.N</code>) je 
+racionální funkce konstruována  tak, aby procházela všemi zadanými 
+hodnotami. Pro případ extrapolace, <code>V</code> je mimo interval 
+[<code>A.1, A.N</code>],  se používá algoritmus objevený 
+J. Stoerem a R. Bulirshem.
+
+</p><br><h3>Implementace</h3><p>
+Jednotka: vnitřní funkce
+<br>&nbsp;
+<br>Globální proměnné: rostoucí posloupnost 
+<code>A.1, ..., A.N</code>, pole funkčních hodnot <code>B.</code>
+<br>&nbsp;
+<br>Parametry: přirozené číslo <code>N</code>, reálné číslo <code>V</code>
+<br>&nbsp;
+<br>Vrací: dvojici hodnot oddělených mezerou - <code>Y</code> a odhad chyby
+  <code>Dy</code>
+
+<a name="ratint">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+RATINT: procedure expose A. B.
+parse arg N, V
+Tiny = 1E-25; Ns = 1; Hh = ABS(V - A.1)
+do I = 1 to N
+  H = ABS(V - A.I)
+  if H = 0
+    then do
+      Y = B.I; Dy = 0
+      return Y Dy
+    end
+    else if H &lt; Hh
+           then do; Ns = I; Hh = H; end
+  C.I = B.I; D.I = B.I + Tiny
+end
+Y = B.Ns; Ns = Ns - 1
+do M = 1 to N - 1
+  do I = 1 to N - M
+    Ip1 = I + 1; W = C.Ip1 - D.I
+    IpM = I + M; H = A.IpM - V
+    T = (A.I - V) * D.I / H
+    Dd = T - C.Ip1
+    if Dd = 0 then
+      call ERROR "RATINT: Error -",
+        "the interpolating function has",
+        "a pole at the requested value V"
+    Dd = W / Dd; D.I = C.Ip1 * Dd; C.I = T * Dd
+  end
+  if 2 * Ns &lt; (N - M)
+    then do; Nsp1 = Ns + 1; Dy = C.Nsp1; end
+    else do; Dy = D.Ns; Ns = Ns - 1; end
+  Y = Y + Dy
+end
+return Y Dy
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+
+<a href="a_piae.html">Interpolace a extrapolace polynomy</a>
+<br>
+<br><a href="a_spli.html">Interpolace kubickými spliny</a>
+</p><br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. 
+<i>Numerical Recipes in C : the art of scientific computing</i>
+ - 2nd ed. University Press, Cambridge, 1992
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

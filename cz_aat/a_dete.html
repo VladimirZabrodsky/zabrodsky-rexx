@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Determinant</TITLE>
+<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Vypocet determinantu pomoci 
+	LU rozkladu" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_dete.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_dete.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>DETERMINANT MATICE</h1>
+<hr>
+<h3>Algoritmus</h3><p>
+Součin prvků v hlavní diagonále matice získané <i>LU</i> rozkladem je roven 
+determinantu původní matice. Determinant matice  <code>A.</code> typu  
+<code>N*N</code> vypočítáme pomocí funkce 
+<code><a href="a_lude.html#ludcmp">LUDCMP</a></code>
+</p><br>
+<h3>Implementace</h3><p>
+Jednotka: fragment programu
+<br>&nbsp;
+<br>Vazby:
+ <code><a href="a_lude.html#ludcmp">LUDCMP</a></code>
+<br>&nbsp;
+<br>Výsledek:
+ Program zobrazí hodnotu determinantu matice <code>A.</code>
+
+<a name="determinant">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* read an input N by N matrix A. */
+...
+D = LUDCMP(N)
+do J = 1 to N; D = D * A.J.J; end
+say "Determinant =" D
+</code>
+</pre>
+</div>
+</p>
+<h4>Příklad</h4><p>
+Determinant následující vstupní matice  <code>A.</code> 
+(<i>kombinatorické matice</i>)
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+A. = Y
+do J = 1 to N
+  A.J.J = X + Y
+end
+</code>
+</pre>
+</div>
+je roven <code>(X + N*Y) * X**(N-1)</code>. 
+Výpočet determinantu pro <code>N=100,X=1,Y=2</code> a 
+<code>numeric digits 9</code> trvá <code>17.57</code> 
+sekund. Výsledek je: <br><br><code>Determinant = 201.001499</code> 
+</p>
+<br>
+<h3>Souvislosti</h3><p>
+SOUSTAVA LINEÁRNÍCH ROVNIC
+<br><a href="a_inve.html">Inverze matic</a>
+<br>
+<br><a href="a_lude.html">LU rozklad</a>
+<br>
+<br><a href="a_slae.html">Řešení soustavy lineárních rovnic</a>
+</p>
+<br>
+<h3>Literatura</h3><p>
+Press W.H., Teukolsky S.A., Vetterling W.T., Flannery B.P. <i>Numerical 
+Recipes in C : the art of scientific computing</i> - 2nd ed. University 
+Press, Cambridge, 1992
+<br>
+<br>Faddejev A.K., Sominskij J.S. <i>Sbornik zadač po vyššej algebre</i>
+ Nauka, Moskva 1964
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+

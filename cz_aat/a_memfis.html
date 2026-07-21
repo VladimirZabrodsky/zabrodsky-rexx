@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Created by Vladimir Zabrodsky 1998 - 2021-->
+<html lang="cs">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>K-TÝ ČLEN SLAVNÉ CELOČÍSELNÉ POSLOUPNOSTI</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<META name="DESCRIPTION" content="Teorie čísel, celočíselné posloupnosti, algoritmy určení k-tého členu,
+	Wendy Krieger, Fibonacciho čísla, obecná Fibonacciho čísla,
+	Lucasova čísla, Pellova čísla, Pell-Lucasova čísla, 
+	posloupnost trojúhelníků Fleenora-Herona, Newman–Shanks–Williamsova prvočísla,
+	test prvočíselnosti Mersenneho čísla, modifikace funkcí pro určení 
+	k-tého čísla slavné celočíselné posloupnosti, NWS." />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../cz_index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+    <a href="a_memfis.html"    class="active">Algoritmy</a>
+    <a href="../aat/a_memfis.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1><i>K</i>-TÝ ČLEN SLAVNÉ CELOČÍSELNÉ POSLOUPNOSTI</h1>
+<hr><br>
+<p>Wendy Krieger vytvořila efektivní funkce <code>ISOQUAD, ADDQUAD</code> 
+pro určení 
+<code>K</code>-tého členu známých celočíslených posloupností a 
+pro test prvočíselnosti Mersennova čísla.
+<br>
+<br><code>ADDQUAD</code> - Pracuje s posloupnostmi <code>A(N) = K*A(N-1)+A(N-2)</code>.  Fibonacciho a Pellova čísla jsou příklady s hodnotou <code>K=1</code>
+ respektive <code>K=2</code>. Úkolem funkce je předpřipravit vstupní údaje a předat je funkci <code>ISOQUAD</code>.
+Pro posloupnost definovanou rekurentním vztahem <code>A(N)=K*A(N-1)+A(N-2)</code> je vyvolána funkce <code>ADDQUAD(K,N,A(0),A(1))</code>. Kde <code>N</code> nabývá kladné nebo záporné hodnoty.
+<br>
+<br><code>ISOQUAD</code> - je určena pro posloupnost definovanou obecně rekurentním vztahem <code>A(N) = K*A(N-1) - A(N-2)</code>.  
+<!-- Alternating members of <code>ADDQUAD</code>  
+series form an <code>ISOQUAD</code> series with <code>K <- K*K+2</code>.  The call to this is the same as for <code>ADDQUAD</code>. -->
+Příkladem využití <code>ISOQUAD</code> je poslopupnost trojúhelníků Fleenora-Herona. V tomto případě může být pomocí testování <code>N = 2**P</code> určeno, zda <code>(2**P)-1</code> je prvočíslo.
+<!--
+<br>Volání funkce <code>ISOQUAD(2*COS(PI/P),N,K,K*COS(PI/P))</code>  vrací <code>K*COS(N*PI/P)</code>.
+<br>Volání <code>ISOQUAD(2*COS(PI/P),N,0,1)</code>  vrací délku <code>N</code>-té tětivy mnohoúhelníku. -->
+<br>Volání <code>ISOQUAD(2,N,0,1)</code>  vrací <code>N</code>.  
+
+<a name="isoquad">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ADDQUAD: procedure
+parse arg G0, I0, T0, T1
+if I0 &lt; 1 then do
+  I0 = 1 - I0; T2 = T1; T1 = T0; T0 = T2; G0 = -G0
+I1 = TRUNC(I0 / 2); I2 = I0 - 2 * I1
+if I2 = 0 then T2 = T1
+  else do
+    T2 = MMV(G0,T1,-T0); T0 = T1
+  end
+T1 = MMV(G0, T2, -T0); G0 = MMV(G0, G0, -2, P); I0 = I1
+return ISOQUAD(G0, I0, T0, T1)
+ 
+ISOQUAD: procedure
+parse arg G0, I0, T0, T1
+if I0 &lt; 1 then do
+  I0 = 1 - I0; T2 = T1; T1 = T0; T0 = T2
+end
+do forever
+  if I0 = 1 then leave
+  I1 = TRUNC(I0 / 2); I2 = I0 - 2 * I1
+  if I2 = 0 then T2 = T1
+    else do
+      T2 = MMV(G0, T1, T0); T0 = T1
+    end
+  T1 = MMV(G0, T2, T0); G0 = MMV(G0, G0, 2); I0 = I1
+end
+return T1
+
+MMV: procedure
+parse arg X0, X1, X2
+return X0 * X1 - X2
+</code>
+</pre>
+</div>
+</p>
+<h3>FIBONACCIHO ČÍSLA</h3><p>Posloupnost začínající <code>0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144 ...  </code>
+<br>Rekurzivní definice této posloupnosti je: <br><code>A(0) = 0; A(1) = 1; A(N) = A(N-1) + A(N-2)</code> pro <code>N &gt; 1</code>
+<br>Pro přirozené číslo <code>K >= 0</code>, funkce <code>FIBON</code> vrací hodnotu <code>K</code>-tého členu Fibonacciho posloupnosti:
+
+<a name="fibon">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIBON: procedure
+parse arg T0
+return ADDQUAD(1, T0, 0, 1)
+</code>
+</pre>
+</div>
+</p>
+<h3>OBECNÁ FIBONACCIHO ČÍSLA</h3><p>Rekurentní vztah pro  obecná Fibonacciho čísla je: <code>G(0) = A</code>; 
+<code>G(1) = B</code>; <code>G(n) = G(n – 1) + G(n – 2)</code> pro 
+<code>N</code> 
+větší než jedna nebo <code>N</code> záporné.
+
+<a name="gabfi">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+GABFI: procedure
+parse arg T0, A, B
+return ADDQUAD(1, T0, A, B)
+</code>
+</pre>
+</div>
+</p>
+<h3>LUCASOVA ČÍSLA</h3><p>
+Lucasovo číslo je označení čísla z posloupnosti čísel pojmenované po 
+Édouardu Lucasovi (1842–91).
+<br>Posloupnost začíná 
+<code>2, 1, 3, 4, 7, 11, 18, 29, 47, 76, 123, 199 ...  </code>
+<br>Rekurzivní definice této posloupnosti je: <br><code>A(0) = 2; A(1) = 1; 
+A(N) = A(N-1) + A(N-2)</code> pro <code>N &gt; 1</code>.
+<br>Pro dané přirozené <code>K &gt;= 0</code>, funkce <code>LUCAS</code> 
+vrací K-té Lucasovo číslo:
+
+<a name="lucas">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+LUCAS: procedure
+parse arg T0
+return ADDQUAD(1, T0, 2, 1)
+</code>
+</pre>
+</div>
+</p>
+<h3>PELLOVA ČÍSLA</h3><p>
+Posloupnost čísel začínající: <code>0, 1, 2, 5, 12, 29, 70, 169, 408, 985, 2378  ... </code>
+<br>Rekurzivní definice této posloupnosti je: <br><code>A(0) = 0; A(1) = 1; 
+A(N) = 2*A(N-1) + A(N-2)</code> pro <code>N &gt; 1</code>.
+Jedná se o posloupnost, jejímž autorem je John Pell. 
+<br>Pro přirozené <code>K &gt;= 0</code>, funkce <code>PELL</code> vrací 
+hodnotu K-tého čísla této posloupnosti:
+<a name="pell">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PELL: procedure
+parse arg T0
+return ADDQUAD(2, T0, 0, 1)
+</code>
+</pre>
+</div>
+</p>
+<h3>PELL-LUCASOVA ČÍSLA</h3><p>
+Posloupnost: <code> 2, 2, 6, 14, 34, 82, 198, 478, 1154, 2786, 6726, 16238 ...</code>
+<br>Je definovaná rekurentním vztahem: <br><code>A(0) = 2; A(1) = 2; A(N) = 2*A(N-1) + A(N-2)</code> pro <code>N &gt; 1</code>.
+<br>Pro zadané přirozené číslo <code>K &gt;= 0</code>, funkce <code>PELL_LUCAS</code> vracís <code>K</code>-té Pell-Lucasova číslo:
+<br>
+
+<a name="pell_lucas">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+PELL_LUCAS: procedure
+parse arg T0
+return ADDQUAD(2, T0, 2, 2)
+</code>
+</pre>
+</div>
+</p>
+<h3>POSLOUPNOST TROJÚHELNÍKŮ FLEENORA-HERONA</h3><p>
+Posloupnost: <code>2, 4, 14, 52, 194, 724, 2702, 10084, 37634, 140452 ... </code>  označuje zjednodušeně poslopnost trojúhelníků Fleenora-Herona: 
+<code>(1,2,3); (3,4,5); (13,14,15); (51,52,53); (193,194,195); (723,724,725) ... </code>
+<br>V geometrii se trojúhelník, jehož strany i obsah jsou vyjádřeny celými čísly, nazývá Heronův (Hérón Alexandrijský, zvaný Mechanikos). 
+Heronův trojúhelník, jehož strany jsou po sobě následující tři celá čísla, se nazývá Fleenorův (podle Charlese R. Fleenora)
+<br>Pro celé číslo <code>K &gt;= 0</code>, funkce <code>FLEENOR_HERON</code> vrací K-tou hodnotu posloupnosti čísel Fleenora-Herona:
+<a name="fleenor_heron">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FLEENOR_HERON: procedure
+parse arg T0
+return ISOQUAD(4, T0, 2, 4)
+</code>
+</pre>
+</div>
+</p>
+<h3>NEWMAN–SHANKS–WILLIAMSOVA PRVOČÍSLA</h3><p>
+Posloupnost: <code>1,  1,  3,  7, 17, 41, 99, 239, 577, 1393 ...  </code> Takzvaná NSW prvočísla byla poprvé popsána Morrisem Newmanem, Danielem Shanksem and Hughem C. Williamsem in 1981.
+<br>Rekurzivní definice této posloupnosti je:
+<br><code>A(0) = 1; A(1) = 1; A(N) = 2*A(N-1) + A(N-2)</code> pro <code>N &gt; 1</code>.  
+<br>Dále je uvedena implementace pro určení <code>K</code>-tého NWS prvočísla: 
+<a name="nws">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+NWS: procedure
+parse arg T0
+return ADDQUAD(2, T0, 1, 1)
+</code>
+</pre>
+</div>
+Existuje zajímavý vztah mezi Pell-Lucasovými čísly a NWS prvočísly, neboť 
+platí: <code> NWS(K) = PELL_LUCAS(K)/2</code>.
+<br><br>
+</p>
+<h3>VÝPOČTY S VELKÝMI ČÍSLY</h3><p>
+Protože při výpočtech mohou hodnoty čísel rychle narůstrat, místo výše 
+uvedených funkcí doporučuje Wendy Krieger používat funkce 
+<code>ADDMOD, ISOMOD a MMP</code> s parametrem 
+<code>P</code> s hodnotou <code>10**(DIGITS()%2)</code>. Pro 
+<code>numeric digits 1000</code> použijeme <code>P</code> rovno 500. 
+Funkce <code>MMP</code> je upravena pro výpočty s velkými čísly.
+Povšimněte si použití funkce <code>TRUNC()</code>, která zajistí, aby 
+vrácená hodnota podílu byla vždy celé číslo.
+<br><br>
+Platí, že <code>FIBONMOD(X*Y,FIBON(X)) = 0</code>, pro celá čísla 
+<code>X, Y &gt; 1</code>. Tj. všechna Fibonacciho čísla <code>F(X*Y)</code> 
+jsou násobky <code>F(X)</code>.  
+Pro 1000 ciferné <code>X &lt; 2380</code>, může být <code>Y</code> libovolně 
+velké.
+<code>FIBONMOD(202120212021202120212021, FIBON(2021))</code> vrací 
+<code>0</code>, změníme-li však poslední cifru prvního čísla na 
+<code>0</code> nebo <code>2</code> 
+dostaneme stejný, nenulový výsledek.
+<a name="addmod-isomod">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ADDMOD: procedure
+parse arg G0, I0, T0, T1, P
+if I0 &lt; 1 then do
+  I0 = 1 - I0; T2 = T1; T1 = T0; T0 = T2; G0 = -G0
+end
+I1 = TRUNC(I0/2); I2 = I0 - 2 * I1
+if I2 = 0 then T2 = T1
+  else do
+    T2 = MMP(G0,T1,-T0,P); T0 = T1
+  end
+T1 = MMP(G0, T2, -T0, P); G0 = MMP(G0, G0, -2, P); I0 = I1
+return ISOMOD(G0, I0, T0, T1, P)
+
+ISOMOD: procedure
+parse arg G0, I0, T0, T1, P
+if I0 &lt; 1 then do
+  I0 = 1 - I0; T2 = T1; T1 = T0; T0 = T2
+end
+do forever
+  if I0 = 1 then leave
+  I1 = TRUNC(I0 / 2); I2 = I0 - 2 * I1
+  if I2 = 0 then T2 = T1
+    else do
+    T2 = MMP(G0, T1, T0, P); T0 = T1
+  end
+  T1 = MMP(G0, T2, T0, P); G0 = MMP(G0, G0, 2, P); I0 = I1
+end
+return T1
+
+MMP: procedure
+parse arg X0, X1, X2, P
+R1 = X0 * X1 - X2; R2 = TRUNC(R1 / P)
+R2 = R1 - R2 * P
+if R2 &lt; 0 then R2 = R2 + P
+return R2
+</code>
+</pre>
+</div>
+</p>
+<h3>TEST PRVOČÍSELNOSTI MERSENNEHO ČÍSLA</h3><p>
+Mersenneho číslo má tvar <code>2**K-1</code>, kde <code>K</code> je 
+prvočíslo (pojmenováno po francouzském matematikovi Marinu Mersennovi, 
+1588–1648). 
+Srovnejte s 
+<a href="a_prim.html#first_24_mersenne">Prvních 24 Mersenneho prvočísel</a>.
+Test prvočíselnosti Mersenneho čísla <code>2**K-1</code> využívá funkci 
+<code>ISOMOD</code> pro přirozené číslo <code>K &gt;= 2</code>:
+<a name="mertest">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+/* Test prvočíselnosti Mersenneho čísla */
+if ISOMOD(4, 2**(K - 2), 2, 4, 2**K - 1) = 0
+  then say "2**"K" - 1 is prime."
+</code>
+</pre>
+</div>
+</p>
+<!--
+To funguje pro mnoho <code>(K*2**(P-2), K*2**P-1)</code>, když <code>K*2**P-1=
+7, mod 24</code>.  Například, <code>(4, (79+1)/4, 2, 4, 79)</code> dává <code>0</code>.  
+Poznamenejme, že zatímco Fleenor-Heronova posloupnost začíná <code>A(0)=0, A(1)=1</code> jako as the chord-series like the
+Fibonacci and Pell series, the Messerine test uses the same trick as for
+<code>2 * COSH(N * ACOSH 4) = 0</code> -->
+<h3>MODIFIKOVANÉ FUNKCE PRO URČENÍ <i>K</i>-TÉHO ČÍSLA SLAVNÉ CELOČÍSELNÉ 
+POSLOUPNOSTI</h3><p>
+Následující funkce předpokládají hodnotu <code>P = 10**(DIGITS()%2)</code>, 
+na první parametr se vztahuje stejné omezení jako u funkcí 
+<code>"QUAD"</code> verze (<code>FIBON, PELL, ...</code>). 
+<a name="modversion">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+FIBONMOD: procedure
+parse arg T0, P
+return ADDMOD(1, T0, 0, 1, P)
+
+LUCASMOD: procedure
+parse arg T0, P
+return ADDMOD(1, T0, 2, 1, P)
+
+PELLMOD: procedure
+parse arg T0, P
+return ADDMOD(2, T0, 0, 1, P)
+
+PELL_LUCASMOD: procedure
+parse arg T0, P
+return ADDMOD(2, T0, 2, 2, P)
+
+FLEENOR_HERONMOD: procedure
+parse arg T0, P
+return ISOMOD(4, T0, 2, 4, P)
+
+NWSMOD: procedure
+parse arg T0, P
+return ADDMOD(2, T0, 1, 1, P)
+</code>
+</pre>
+</div>
+
+</p>
+<br>
+<h3>Souvislosti</h3><p>
+<a href="reflexio.html#fib10000">Nalezení <i>K</i>-tého Fibonacciho čísla, <i>K</i> = 10000</a> v refle<span class="reflexio">XX</span>io
+</p>
+<br>
+<h3>Spoluautor</h3><p>
+Wendy Krieger - všechny funkce a text na této stránce.
+</p>
+<br>
+<h3>Literatura</h3><p>
+OEIS Foundation Inc. (2021), <i>The On-Line Encyclopedia of Integer Sequences</i>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000045"    onClick=openWindow() target="windowname">http://oeis.org/A000045</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000032"    onClick=openWindow() target="windowname">http://oeis.org/A000032</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A000129"    onClick=openWindow() target="windowname">http://oeis.org/A000129</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A003500"    onClick=openWindow() target="windowname">http://oeis.org/A003500</a>
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://oeis.org/A001333"    onClick=openWindow() target="windowname">http://oeis.org/A001333</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+

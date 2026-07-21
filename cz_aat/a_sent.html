@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" />
+<TITLE>Technika: Zarážky</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Zarážka zajistí ukončení cyklu bez 
+	nutnosti testovat, zda byly prozkoumány všechny prvky pole" />
+	<link rel="stylesheet" href="../vzstyle.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_sent.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_sent.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>TECHNIKA: ZARÁŽKY</h1><hr>
+<br><p>
+Zarážka je zvláštní prvek dodaný na konec pole či seznamu. Zajistí ukončení 
+cyklu bez nutnosti testovat, zda byly prozkoumány všechny prvky pole. 
+Jednoduchým příkladem využití zarážky je algoritmus 
+<code><a href="a_seqs.html">SEQUENTIAL_SEARCH</a></code>:
+<a name="sequential_search">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SEQUENTIAL_SEARCH: procedure expose A.
+parse arg N, V
+Np1 = N + 1; A.Np1 = V
+do J = 1 until A.J = V; end
+return J
+</code>
+</pre>
+</div>
+Je bezesporu elegantní a trošku rychlejší než obvyklé řešení. Pro 
+<code>N = 15000</code> v průměru o <code>20%</code>, ale hovoříme tu o 
+rozdílu mezi 0.28 sec a 0.22 sec:
+
+<a name="sequential_search_without_sentinel">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+SEQUENTIAL_SEARCH_WITHOUT_SENTINEL:
+procedure expose A.
+parse arg N, V
+do J = 1 to N
+  if A.J = V then leave
+end
+return J
+</code>
+</pre>
+</div>
+</p>
+<h4>Example - Merging</h4><p>
+<a name="merging">&nbsp;</a>
+Předpokládejme, že máme dvě vzestupně uspořádaná celočíselná pole 
+<code>A.1, ..., A.M</code> a <code>B.1, ..., B.N</code>, která chceme 
+sloučit do jediného vzestupně uspořádaného pole <code>C.</code> rozsahu 
+<code>M + N</code>. Užití zarážky  vede k velmi jednoduchému algoritmu
+ (srovnej se slučováním bez zarážky u 
+ <code><a href="a_apol.html#sparse_poly">SPARSE_POLYADD</a></code>). 
+ <div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+MERGING: procedure expose A. B. C.
+parse arg M, N
+Mp1 = M + 1; Np1 = N + 1
+if A.M &gt; B.N
+  then B.Np1 = A.M
+  else A.Mp1 = B.N
+K = 1; L = 1
+do J = 1 to N + M
+  if A.K &lt; B.L
+    then do
+      C.J = A.K; K = K + 1
+    end
+    else do
+      C.J = B.L; L = L + 1
+    end
+end
+return
+</code>
+</pre>
+</div>
+</p>
+<h4>Další příklady </h4><p>
+PROBLÉM SOUČTU PODMNOŽIN
+<br><a href="a_sube.html#exact_subset_sum">Přesný algoritmus s exponenciální složitostí</a>
+<br>
+<br><a href="a_dyna.html#dps">Přesný algoritmus - dynamické programování</a>
+<br>
+<br><a href="a_suba.html#approx_subset_sum">Aproximační algoritmus s polynomiální složitostí</a>
+</p><br>
+<h3>Literatura</h3><p>
+Kruse R. L. <i>Data Structures and Program Design</i> 
+Prentice Hall International Editions, ISBN 0-13-196049-0.
+<br>
+<br>Sedgewick R., <i>Algorithms</i> 
+Addison-Wesley, Reading, Massachusetts, 1984
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

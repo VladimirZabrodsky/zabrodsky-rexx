@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<!--Vytvoril Vladimir Zabrodsky 2021-->
+<html lang="cs">
+<HEAD>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5GLJ2V9');</script>
+<!-- End Google Tag Manager -->
+	<meta charset="utf-8" /><TITLE>Obsah trojuhelnika</TITLE>
+	<link rel="icon" 
+      type="image/x-icon" 
+      href="favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<META name="DESCRIPTION" content="Numericky nestabilni a numericky stabilni vypocet obsahu trojuhelnika. Algoritmus Herona z Alexandrie, vylepšení W. Kahana." />
+	<link rel="stylesheet" href="../vzstyle.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</HEAD>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5GLJ2V9"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="topnav" id="myTopnav">
+    <a href="../index.html">REXX</a>
+    <a href="index.html">Album</a>
+    <a href="a_contents.html">Obsah</a>
+    <a href="a_recdex.html">Index</a>
+    <a href="reflexio.html">refleXXio</a>
+     <a href="a_atria.html"    class="active">Algoritmus</a>
+    <a href="../aat/a_atria.html">English</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+<div class="site-container">
+<div style="padding-left:16px">
+
+<div class="mylink">
+<!-- start of page -->
+<h1>OBSAH TROJÚHELNÍKA</h1><hr>
+<h3>Problém</h3>
+<p>
+Jsou dány tři strany trojúhelníka <code>X</code>, <code>Y</code>, 
+<code>Z</code>, máme vypočítat jeho obsah. 
+</p><br>
+<h2>I. Nestabilní řešení</h2><p>
+Klasický vzorec pochází od Herona z  Alexandrie. Využívá jej 
+následující funkce <code>HERON</code>.
+</p>
+<br>
+<h3>Implementace</h3><p>
+Jednotka:  vnitřní funkce
+<br>
+<br>Vazba: funkce <code><a href="a_sqrt.html#sqrt">SQRT</a></code>
+<br>
+<br>Parametry: kladná reálná čísla <code>X</code>, <code>Y</code>, <code>Z</code> - délky stran trojúhelníka, přirozené  <code>P</code> -  počet platných číslic v hodnotě výsledku, implicitně <code>9</code>
+<br>
+<br>Vrací: obsah trojúhelníka
+<a name="heron">&nbsp;</a>
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+HERON: procedure
+parse arg X, Y, Z, P
+if P = "" then P = 9; numeric digits P
+S = (X + Y + Z) / 2
+return SQRT(S * (S - X) * (S - Y) * (S - Z), P)
+</code>
+</pre>
+</div>
+Tato funkce je numericky nestabilní pro trojúhelníky s jedním velmi 
+malým úhlem - vypadají jako jehly. </p>
+<br>
+<a name="atrian">&nbsp;</a>
+<h2>II. Stabilní řešení</h2><p>
+W. Kahan popisuje následující 
+numericky stabilní funkci: 
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ATRIAN: procedure
+parse arg X, Y, Z, P
+if P = "" then P = 9; numeric digits P
+if Y &gt; X
+  then do; W = X; X = Y; Y = W; end
+if Z &gt; X
+  then do; W = X; X = Z; Z = W; end
+if Z &gt; Y
+  then do; W = Y; Y = Z; Z = W; end
+if Z &lt; (X - Y)
+  then call ERROR "Takový trojúhelník neexistuje"
+  else do
+    W1 = Y + Z + X; W2 = Y - X + Z
+    W3 = X - Y + Z; W4 = Y - Z + X
+    return SQRT(W1 * W2 * W3 * W4, P) / 4
+  end
+ 
+ERROR: say ARG(1); exit
+ATRIAN: procedure
+parse arg X, Y, Z, P
+if P = "" then P = 9; numeric digits P
+if Y &gt; X
+  then do; W = X; X = Y; Y = W; end
+if Z &gt; X
+  then do; W = X; X = Z; Z = W; end
+if Z &gt; Y
+  then do; W = Y; Y = Z; Z = W; end
+if Z &lt; (X - Y)
+  then call ERROR "No such triangle exist"
+  else do
+    W1 = Y + Z + X; W2 = Y - X + Z
+    W3 = X - Y + Z; W4 = Y - Z + X
+    return SQRT(W1 * W2 * W3 * W4, P) / 4
+  end
+ 
+ERROR: say ARG(1); exit
+</code>
+</pre>
+</div>
+</p>
+<h3>Příklad (W. Kahan)</h3><p>
+Program:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+X = 100.01; Y = 99.995; Z = 0.025
+say " 5 platných. č. Heron" HERON(X, Y, Z, 5)
+say "20 platných. č. Heron" HERON(X, Y, Z, 20)
+say " 5 platných. č. Kahan" ATRIAN(X, Y, Z, 5)
+say "20 platných. č. Kahan" ATRIAN(X, Y, Z, 20)
+exit
+...
+</code>
+</pre>
+</div>
+zobrazí na displeji:
+<div class="scrolling-wrapper-flexbox">
+<pre>
+<code>
+ 5 platných. č. Heron 1.5813
+20 platných. č. Heron 1.0000249921876952771
+ 5 platných. č. Kahan 1.0000
+20 platných. č. Kahan 1.0000249921876952771
+</code>
+</pre>
+</div>
+</p>
+<h3>Souvislosti</h3><p>
+Funkce <a href="a_sqrt.html#sqrt">SQRT</a>.
+</p><br>
+<h3>Literatura</h3><p>
+Kahan W., <i>Mathematics Written in Sand</i> Version of 22 Nov. 1983<br>
+ <a href="http://www.cs.berkeley.edu/~wkahan/MathSand.pdf">http://www.cs.berkeley.edu/~wkahan/MathSand.pdf</a>
+</p>
+<!-- end of page --> 
+<br><br>
+<hr><p>
+aktualizováno 16. srpna 2021 Copyright &copy; 1998-2021 Vladimír Zábrodský, Blansko
+</p>
+<code class="green wrap">zabrodsky(DOT)v(AT)seznam(DOT)cz</code>
+</div>
+</div>
+</div>
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+</body>
+</html>
+
